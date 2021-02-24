@@ -12,7 +12,7 @@ public class BattleController : MonoBehaviour
 
     // get from somewhere later
     [SerializeField] List<Enemy> _enemies;
-    [SerializeField] List<PartyMember> _playerParty;
+    [SerializeField] List<PartyMember> _partyMembers;
 
     List<BattleParticipant> _battleParticipants;
     List<PartyMember> _activePlayerParty;
@@ -31,10 +31,10 @@ public class BattleController : MonoBehaviour
 
         yield return new WaitForSeconds(0.25f); // for UI to sub to events
 
-        _activePlayerParty = new List<PartyMember>(_playerParty);
+        _activePlayerParty = new List<PartyMember>(_partyMembers);
         _activeEnemies = new List<Enemy>(_enemies);
 
-        InitBattleParticipants(_playerParty, _enemies);
+        InitBattleParticipants(_partyMembers, _enemies);
 
         _currentIndex = 0;
 
@@ -44,9 +44,11 @@ public class BattleController : MonoBehaviour
             loopNumber++;
             Debug.Log($"battle loop: {loopNumber}");
 
-            yield return _commandManager.Init(_playerParty, _enemies);
-            yield return _commandManager.PlayerSetup();
+            yield return _commandManager.Init(_partyMembers, _enemies);
+            yield return _commandManager.PlayerSetup();     
             yield return _commandManager.EnemySetup();
+
+            // play commands here one by one so we can check for deaths
             yield return _commandPlayer.Play(_commandManager.GetOrderedCommands());
 
             if (AllEnemiesAreDead())
@@ -65,17 +67,19 @@ public class BattleController : MonoBehaviour
         Debug.Log("battle ended");
     }
 
-    void InitBattleParticipants(List<PartyMember> playerParty, List<Enemy> enemies)
+    void InitBattleParticipants(List<PartyMember> partyMembers, List<Enemy> enemies)
     {
         _battleParticipants = new List<BattleParticipant>();
         
-        foreach (var partyMember in _playerParty)
+        foreach (var partyMember in _partyMembers)
             _battleParticipants.Add(partyMember); 
         
         foreach (var enemy in _enemies)
             _battleParticipants.Add(enemy); 
 
         _battleParticipants = _battleParticipants.OrderByDescending(bp => bp.CharacterStats.CurrentSpeed).ToList();
+        
+        BattleEvents.InvokePartyUpdated(_partyMembers, null);        
     }
 
     IEnumerator CheckDeadParticipants()

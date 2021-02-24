@@ -38,29 +38,42 @@ public class CommandManager : MonoBehaviour
     public IEnumerator PlayerSetup()
     {
         _currentPartyMemberIndex = 0;
-        
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+
         while (true)
         {
             Debug.Log($"setting command for {CurrentPartyMember.Name}");
 
-            
             if (Input.GetKeyDown(KeyCode.Tab) && _pendingPartyMembers.Count > 1) // change
             {
                 _currentPartyMemberIndex = (_currentPartyMemberIndex + 1) % _pendingPartyMembers.Count;
-                Debug.Log("changed");
+                BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+
                 UpdateText();
             }
 
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                Debug.Log("setting");
                 var enemy = GetRandomEnemy();
-                _allBattleCommands.Add(new AttackCommand(CurrentPartyMember, CurrentPartyMember.RandomAttack, enemy));
+                var command = new AttackCommand(CurrentPartyMember, CurrentPartyMember.RandomAttack, enemy);
+                _allBattleCommands.Add(command);
+                BattleEvents.InvokePartyMemberCommandSet(CurrentPartyMember);
+
+                var nextIndex = (_currentPartyMemberIndex + 1) % _pendingPartyMembers.Count;
+                var nextPartyMember = _pendingPartyMembers[nextIndex];
                 Debug.Log($"added command: {CurrentPartyMember.Name} to attack {enemy.Name}");
 
                 _pendingPartyMembers.Remove(CurrentPartyMember);
 
+                _currentPartyMemberIndex = _pendingPartyMembers.IndexOf(nextPartyMember);
+
+
                 if (_pendingPartyMembers.Count != 0)
                     _currentPartyMemberIndex %= _pendingPartyMembers.Count;
+
+                BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+                
                 UpdateText();
             }
 
@@ -91,6 +104,8 @@ public class CommandManager : MonoBehaviour
             {
                 Debug.Log("confirmed");
                 _playerConfirmed = true;
+                BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+
                 break;
             }
 
@@ -109,13 +124,19 @@ public class CommandManager : MonoBehaviour
     IEnumerator RemoveLastCommand()
     {
         var lastCommand = _allBattleCommands[_allBattleCommands.Count - 1];
+        var partyMember = lastCommand.Actor as PartyMember;
         _allBattleCommands.Remove(lastCommand);
-        _pendingPartyMembers.Add(lastCommand.Actor as PartyMember);
+        _pendingPartyMembers.Add(partyMember);
+
+        BattleEvents.InvokePartyMemberCommandUnset(partyMember);
 
         if (_pendingPartyMembers.Count == 1)
             _currentPartyMemberIndex = 0;
         else if (_pendingPartyMembers.Count != 0)
             _currentPartyMemberIndex %= _pendingPartyMembers.Count;
+
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+
 
         UpdateText();
         yield return null;
@@ -146,10 +167,6 @@ public class CommandManager : MonoBehaviour
 
     PartyMember GetRandomPartyMember() => _partyMembers[UnityEngine.Random.Range(0, _partyMembers.Count)];
     Enemy GetRandomEnemy() => _enemies[UnityEngine.Random.Range(0, _enemies.Count)];
-
-    void Update()
-    {
-    }
 
     void UpdateText()
     {
