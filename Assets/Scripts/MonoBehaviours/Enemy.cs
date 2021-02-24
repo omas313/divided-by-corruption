@@ -6,11 +6,17 @@ using UnityEngine;
 
 public class Enemy : BattleParticipant
 {
+    const float DAMAGE_REDUCTION_FACTOR = 0.25f;
+
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
 
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
+
+
+    AttackType _lastAttackTypeReceived;
+
     // [SerializeField] EnemyDefinition _definition;
 
     // public void Initialize(EnemyDefinition definition)
@@ -27,17 +33,33 @@ public class Enemy : BattleParticipant
     //     attacks = _definition.Attacks;
     // }
 
-    PartyMember GetTarget(List<PartyMember> playerParty) => playerParty[UnityEngine.Random.Range(0, playerParty.Count)];
-
-    IEnumerator PerformAttack(BattleParticipant attackReceiver)
+    public override IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver)
     {
-        var randomAttack = attacks[UnityEngine.Random.Range(0, attacks.Length)];
-        
         // do animations and other stuff
-        yield return attackReceiver.ReceiveAttack(new BattleAttack(randomAttack.Damage));
-        Debug.Log($"{Name} {randomAttack.Name} does {randomAttack.Damage} damage to {attackReceiver.Name}");
+        yield return new WaitForSeconds(0.5f);
+        
+        var attack = new BattleAttack(attackDefinition);
+        // add bonus from stats.damage later
+
+        yield return receiver.ReceiveAttack(attack);
+
+        Debug.Log($"{Name} {attack.Name} does {attack.Damage} damage to {receiver.Name}");
     }
     
+    public override IEnumerator ReceiveAttack(BattleAttack attack)
+    {
+        Debug.Log($"{Name} ReceiveAttack");
+        
+        if (attack.AttackType == _lastAttackTypeReceived)
+            attack.Damage = (int)(attack.Damage * DAMAGE_REDUCTION_FACTOR);
+
+        _stats.ReduceCurrentHP(attack.Damage);
+
+        _lastAttackTypeReceived = attack.AttackType;
+
+        yield return new WaitForSeconds(0.5f);
+    }
+
     public override IEnumerator Die()
     {
         Debug.Log($"{Name} died");
@@ -48,18 +70,6 @@ public class Enemy : BattleParticipant
     void Awake()
     {
         // Initialize(_definition);
-    }
-
-    public override IEnumerator SetCommand(List<PartyMember> playerParty, List<Enemy> enemies)
-    {
-        Debug.Log($"{Name} SetCommand");
-        yield return null;
-    }
-
-    public override IEnumerator ReceiveAttack(BattleAttack attack)
-    {
-        Debug.Log($"{Name} ReceiveAttack");
-        yield return null;
     }
 }
 

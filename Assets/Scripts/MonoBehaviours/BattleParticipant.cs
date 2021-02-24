@@ -13,7 +13,7 @@ public abstract class BattleParticipant : MonoBehaviour
 
     [SerializeField] protected AttackDefinition[] attacks;
 
-    public abstract IEnumerator SetCommand(List<PartyMember> playerParty, List<Enemy> enemies);
     public abstract IEnumerator Die();
+    public abstract IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver);
     public abstract IEnumerator ReceiveAttack(BattleAttack attack);
 }

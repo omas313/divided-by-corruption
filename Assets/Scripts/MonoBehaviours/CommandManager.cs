@@ -147,11 +147,11 @@ public class CommandManager : MonoBehaviour
     PartyMember GetRandomPartyMember() => _partyMembers[UnityEngine.Random.Range(0, _partyMembers.Count)];
     Enemy GetRandomEnemy() => _enemies[UnityEngine.Random.Range(0, _enemies.Count)];
 
-    private void Update()
+    void Update()
     {
     }
 
-    private void UpdateText()
+    void UpdateText()
     {
         if (_pendingPartyMembers == null)
             return;

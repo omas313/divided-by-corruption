@@ -1,9 +1,13 @@
 public class BattleAttack
 {
+    public string Name { get; }
     public int Damage { get; set; }
+    public AttackType AttackType { get; set; }
 
-    public BattleAttack(int damage)
+    public BattleAttack(AttackDefinition attackDefinition)
     {
-        Damage = damage;
+        Name = attackDefinition.Name;
+        Damage = attackDefinition.Damage;
+        AttackType = attackDefinition.AttackType;
     }
 }

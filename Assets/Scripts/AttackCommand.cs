@@ -15,6 +15,7 @@ public class AttackCommand : BattleCommand
     public override IEnumerator Execute()
     {
         Debug.Log($"{Actor.Name} attack command executed");
-        yield return new WaitForSeconds(0.5f);
+
+        yield return Actor.PerformAttack(AttackDefinition, Target);
     }
 }
