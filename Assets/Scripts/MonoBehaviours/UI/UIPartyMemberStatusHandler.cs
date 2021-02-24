@@ -6,6 +6,7 @@ using UnityEngine;
 public class UIPartyMemberStatusHandler : MonoBehaviour
 {
     [SerializeField] UIPartyMemberStatusBar _barPrefab;
+    [SerializeField] RectTransform _barsParent;
     
     UIPartyMemberStatusBar[] _bars;
     Dictionary<PartyMember, UIPartyMemberStatusBar> _partyBars;
@@ -35,7 +36,7 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         _bars = new UIPartyMemberStatusBar[party.Count];
         for (var i = 0; i < party.Count; i++)
         {
-            var bar = Instantiate(_barPrefab, transform.position, Quaternion.identity, transform);
+            var bar = Instantiate(_barPrefab, _barsParent.position, Quaternion.identity, _barsParent);
             _bars[i] = bar;
             _partyBars[party[i]] = bar;
         }
