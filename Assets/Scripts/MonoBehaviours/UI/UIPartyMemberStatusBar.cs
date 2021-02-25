@@ -11,6 +11,8 @@ public class UIPartyMemberStatusBar : UIItem
     [SerializeField] TextMeshProUGUI _nameText;
     [SerializeField] TextMeshProUGUI _hpText;
     [SerializeField] TextMeshProUGUI _mpText;
+    [SerializeField] GameObject _koText;
+    [SerializeField] GameObject _stats;
 
 
     public void Init(string name, string hp, string mp, bool isActive = false)
@@ -25,13 +27,21 @@ public class UIPartyMemberStatusBar : UIItem
     
     public void SetCommandStatus(bool hasCommand)
     {
-        Debug.Log($"setting {gameObject.name} to {hasCommand}");
         _commandSetText.gameObject.SetActive(hasCommand);
+    }
+
+    public void SetDeathStatus(bool isDead)
+    {
+        SetCommandStatus(false);
+        _koText.SetActive(isDead);
+        _stats.SetActive(!isDead);
     }
 
     protected override void Awake()
     {
         base.Awake();
         SetCommandStatus(false);
+        SetDeathStatus(false);
     }
+
 }

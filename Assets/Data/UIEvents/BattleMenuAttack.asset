@@ -9,6 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8c8381fe79f6674893f0930d2d7c701, type: 3}
+  m_Script: {fileID: 11500000, guid: 32bac55cdf3b6c3488c5ebc17ecc5c94, type: 3}
   m_Name: BattleMenuAttack
   m_EditorClassIdentifier: 

@@ -5,16 +5,29 @@ using UnityEngine;
 
 public class UIBattleMenu : MonoBehaviour
 {
-   
     UIBattleMenuItem[] _items;
     CanvasGroup _canvasGroup;
     int _currentIndex;
     bool _isActive;
 
     public void Hide() => _canvasGroup.alpha = 0f;
+
     public void Show() => _canvasGroup.alpha = 1f;
 
+    public void StartSelection()
+    {
+        StartCoroutine(StartSelectionAfterDelay(0.15f));
+    }
 
+    IEnumerator StartSelectionAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        _currentIndex = 0;
+        _isActive = true;
+        UpdateActiveStates();
+        Show();
+    }
+    
     void OnPartyMembersUpdated(List<PartyMember> party, PartyMember currentPartyMember)
     {
         if (currentPartyMember == null)
@@ -24,11 +37,7 @@ public class UIBattleMenu : MonoBehaviour
             return;
         }
 
-        Show();
-        _isActive = true;
-        _currentIndex = 0;
-
-        UpdateActiveStates();
+        StartSelection();
     }
 
     void UpdateActiveStates()
@@ -70,22 +79,19 @@ public class UIBattleMenu : MonoBehaviour
 
     void ConfirmSelection()
     {
-
-    }
-
-    void Start()
-    {
-        BattleEvents.PartyMembersUpdated += OnPartyMembersUpdated;
-    }
-
-    void Awake()
-    {
-        _canvasGroup = GetComponent<CanvasGroup>();
-        _items = GetComponentsInChildren<UIBattleMenuItem>();
+        _items[_currentIndex].RaiseEvent();
+        _isActive = false;
     }
 
     void OnDestroy()
     {
         BattleEvents.PartyMembersUpdated -= OnPartyMembersUpdated;
+    }
+    
+    void Awake()
+    {
+        _canvasGroup = GetComponent<CanvasGroup>();
+        _items = GetComponentsInChildren<UIBattleMenuItem>();
+        BattleEvents.PartyMembersUpdated += OnPartyMembersUpdated;
     }
 }

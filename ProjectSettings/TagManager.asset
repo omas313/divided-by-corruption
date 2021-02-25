@@ -38,6 +38,24 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: BG
+    uniqueID: 156059567
+    locked: 0
+  - name: BG Props
+    uniqueID: 908544853
+    locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: PartyMembers
+    uniqueID: 4282505789
+    locked: 0
+  - name: Enemies
+    uniqueID: 659017929
+    locked: 0
+  - name: FGProps
+    uniqueID: 1588230301
+    locked: 0
+  - name: Particles
+    uniqueID: 571383441
     locked: 0

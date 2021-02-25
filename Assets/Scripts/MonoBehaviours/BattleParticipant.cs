@@ -16,4 +16,5 @@ public abstract class BattleParticipant : MonoBehaviour
     public abstract IEnumerator Die();
     public abstract IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver);
     public abstract IEnumerator ReceiveAttack(BattleAttack attack);
+    public abstract void SetRendererSortingOrder(int order);
 }

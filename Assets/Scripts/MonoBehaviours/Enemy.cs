@@ -14,8 +14,8 @@ public class Enemy : BattleParticipant
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
 
-
-    AttackType _lastAttackTypeReceived;
+    SpriteRenderer _spriteRenderer;
+    DamageType _lastAttackTypeReceived;
 
     // [SerializeField] EnemyDefinition _definition;
 
@@ -48,14 +48,12 @@ public class Enemy : BattleParticipant
     
     public override IEnumerator ReceiveAttack(BattleAttack attack)
     {
-        Debug.Log($"{Name} ReceiveAttack");
-        
-        if (attack.AttackType == _lastAttackTypeReceived)
+        if (attack.DamageType == _lastAttackTypeReceived)
             attack.Damage = (int)(attack.Damage * DAMAGE_REDUCTION_FACTOR);
 
         _stats.ReduceCurrentHP(attack.Damage);
 
-        _lastAttackTypeReceived = attack.AttackType;
+        _lastAttackTypeReceived = attack.DamageType;
 
         yield return new WaitForSeconds(0.5f);
     }
@@ -63,12 +61,19 @@ public class Enemy : BattleParticipant
     public override IEnumerator Die()
     {
         Debug.Log($"{Name} died");
+        BattleEvents.InvokeEnemyDied(this);
         yield return new WaitForSeconds(0.25f); 
         // do animatiosn
     }
 
+    public override void SetRendererSortingOrder(int order)
+    {
+        _spriteRenderer.sortingOrder = order;
+    }
+
     void Awake()
     {
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
         // Initialize(_definition);
     }
 }

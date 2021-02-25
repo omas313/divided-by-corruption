@@ -13,14 +13,14 @@ public class CommandManager : MonoBehaviour
     
     public PartyMember CurrentPartyMember => _pendingPartyMembers[_currentPartyMemberIndex];
 
+    List<BattleCommand> _allBattleCommands = new List<BattleCommand>();
+    List<Enemy> _enemies;
     List<PartyMember> _partyMembers;
     List<PartyMember> _pendingPartyMembers;
     int _currentPartyMemberIndex;
 
-    List<Enemy> _enemies;
-
-    List<BattleCommand> _allBattleCommands = new List<BattleCommand>();
-    bool _playerConfirmed;
+    bool _playerConfirmedCommands;
+    bool _attackSelected;
 
     public IEnumerator Init(List<PartyMember> partyMembers, List<Enemy> enemies)
     {
@@ -28,124 +28,11 @@ public class CommandManager : MonoBehaviour
         _pendingPartyMembers = new List<PartyMember>(_partyMembers);
         _enemies = enemies;
         _allBattleCommands.Clear();
-        _playerConfirmed = false;
+        _playerConfirmedCommands = false;
+        _attackSelected = false;
 
-        Debug.Log("initialized command manager");
+        // Debug.Log("initialized command manager");
 
-        yield return null;
-    }
-
-    public IEnumerator PlayerSetup()
-    {
-        _currentPartyMemberIndex = 0;
-        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
-
-        while (true)
-        {
-            Debug.Log($"setting command for {CurrentPartyMember.Name}");
-
-            if (Input.GetKeyDown(KeyCode.Tab) && _pendingPartyMembers.Count > 1) // change
-            {
-                _currentPartyMemberIndex = (_currentPartyMemberIndex + 1) % _pendingPartyMembers.Count;
-                BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
-
-                UpdateText();
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Debug.Log("setting");
-                var enemy = GetRandomEnemy();
-                var command = new AttackCommand(CurrentPartyMember, CurrentPartyMember.RandomAttack, enemy);
-                _allBattleCommands.Add(command);
-                BattleEvents.InvokePartyMemberCommandSet(CurrentPartyMember);
-
-                var nextIndex = (_currentPartyMemberIndex + 1) % _pendingPartyMembers.Count;
-                var nextPartyMember = _pendingPartyMembers[nextIndex];
-                Debug.Log($"added command: {CurrentPartyMember.Name} to attack {enemy.Name}");
-
-                _pendingPartyMembers.Remove(CurrentPartyMember);
-
-                _currentPartyMemberIndex = _pendingPartyMembers.IndexOf(nextPartyMember);
-
-
-                if (_pendingPartyMembers.Count != 0)
-                    _currentPartyMemberIndex %= _pendingPartyMembers.Count;
-
-                BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
-                
-                UpdateText();
-            }
-
-            if (Input.GetKeyDown(KeyCode.LeftControl) && _allBattleCommands.Count != 0)
-                yield return RemoveLastCommand();
-
-            if (Input.GetKeyDown(KeyCode.F) || _pendingPartyMembers.Count == 0) 
-                yield return TryConfirm();
-
-            if (_playerConfirmed)
-                yield break;
-
-            UpdateText();
-            yield return null;
-        }
-    }
-
-    IEnumerator TryConfirm()
-    {
-        yield return new WaitForSeconds(0.25f);
-
-        while (true)
-        {
-            Debug.Log("confirm ??");
-
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                Debug.Log("confirmed");
-                _playerConfirmed = true;
-                BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
-
-                break;
-            }
-
-            if (Input.GetKeyDown(KeyCode.LeftControl))
-            {
-                Debug.Log("did not confirm");
-
-                yield return RemoveLastCommand();
-                break;
-            }
-
-            yield return null;
-        }
-    }
-
-    IEnumerator RemoveLastCommand()
-    {
-        var lastCommand = _allBattleCommands[_allBattleCommands.Count - 1];
-        var partyMember = lastCommand.Actor as PartyMember;
-        _allBattleCommands.Remove(lastCommand);
-        _pendingPartyMembers.Add(partyMember);
-
-        BattleEvents.InvokePartyMemberCommandUnset(partyMember);
-
-        if (_pendingPartyMembers.Count == 1)
-            _currentPartyMemberIndex = 0;
-        else if (_pendingPartyMembers.Count != 0)
-            _currentPartyMemberIndex %= _pendingPartyMembers.Count;
-
-        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
-
-
-        UpdateText();
-        yield return null;
-    }
-
-    IEnumerator ClearAllCommands()
-    {
-        _allBattleCommands.Clear();
-        Debug.Log("clearing commands...");
         yield return null;
     }
 
@@ -165,29 +52,144 @@ public class CommandManager : MonoBehaviour
             .ToList();
     }
 
-    PartyMember GetRandomPartyMember() => _partyMembers[UnityEngine.Random.Range(0, _partyMembers.Count)];
-    Enemy GetRandomEnemy() => _enemies[UnityEngine.Random.Range(0, _enemies.Count)];
-
-    void UpdateText()
+    public IEnumerator PlayerSetup()
     {
-        if (_pendingPartyMembers == null)
-            return;
+        _currentPartyMemberIndex = 0;
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+        _partyMembers.ForEach(pm => BattleEvents.InvokePartyMemberCommandUnset(pm));
 
-        var stringBuilder = new StringBuilder();
-
-        stringBuilder.AppendLine($"pending:");
-        foreach (var partyMember in _pendingPartyMembers)
+        while (true)
         {
-            var isCurrent = partyMember == CurrentPartyMember ? " [current]" : "";
-            stringBuilder.AppendLine($"\t{partyMember.Name}{isCurrent}");
+            // Debug.Log($"setting command for {CurrentPartyMember.Name}");
+
+            if (Input.GetButtonDown("Change") && _pendingPartyMembers.Count > 1) 
+                yield return ChangeActivePartyMember();
+            
+            if (Input.GetButtonDown("Back") && _allBattleCommands.Count != 0)
+                yield return RemoveLastCommand();
+
+            if (_pendingPartyMembers.Count == 0) 
+                yield return TryConfirm();
+
+            if (_playerConfirmedCommands)
+                yield break;
+
+            yield return null;
+        }
+    }
+
+    void AddAttackCommand(BattleParticipant target)
+    {
+        if (!_attackSelected || target == null)
+        {
+            Debug.Log($"Trying to AddAttackCommand with _attackSelected:{_attackSelected}, target:{target}");
+            return;
         }
 
-        stringBuilder.AppendLine($"-------------");
+        var command = new AttackCommand(CurrentPartyMember, CurrentPartyMember.RandomAttack, target);
+        _allBattleCommands.Add(command);
+        BattleEvents.InvokePartyMemberCommandSet(CurrentPartyMember);
 
-        stringBuilder.AppendLine($"commands:");
-        foreach (var command in _allBattleCommands)
-            stringBuilder.AppendLine($"\t{command.Description}");
+        if (IsThisLastPendingPartyMember())
+        {
+            _pendingPartyMembers.Remove(CurrentPartyMember);
+            BattleEvents.InvokePartyUpdated(_partyMembers, null);        
+            return;
+        }
+        
+        SetNextActivePartymember();
+    }
 
-        _text.SetText(stringBuilder.ToString());
+    bool IsThisLastPendingPartyMember() => _pendingPartyMembers.Count == 1;
+
+    void SetNextActivePartymember()
+    {
+        var nextIndex = (_currentPartyMemberIndex + 1) % _pendingPartyMembers.Count;
+        var nextPartyMember = _pendingPartyMembers[nextIndex];
+        
+        _pendingPartyMembers.Remove(CurrentPartyMember);
+
+        _currentPartyMemberIndex = _pendingPartyMembers.IndexOf(nextPartyMember);
+        if (_pendingPartyMembers.Count != 0)
+            _currentPartyMemberIndex %= _pendingPartyMembers.Count;
+
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+    }
+
+
+    IEnumerator ChangeActivePartyMember()
+    {
+        _currentPartyMemberIndex = (_currentPartyMemberIndex + 1) % _pendingPartyMembers.Count;
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+
+        yield return null;
+    }
+
+    IEnumerator TryConfirm()
+    {
+        BattleEvents.InvokePartyUpdated(_partyMembers, null);
+        BattleEvents.InvokeRequestedCommandsConfirmation();
+
+        yield return new WaitUntil(() => _playerConfirmedCommands || _pendingPartyMembers.Count != 0);
+    }
+
+    IEnumerator RemoveLastCommand()
+    {
+        var lastCommand = _allBattleCommands[_allBattleCommands.Count - 1];
+        var partyMember = lastCommand.Actor as PartyMember;
+        _allBattleCommands.Remove(lastCommand);
+        _pendingPartyMembers.Add(partyMember);
+
+        BattleEvents.InvokePartyMemberCommandUnset(partyMember);
+
+        if (_pendingPartyMembers.Count == 1)
+            _currentPartyMemberIndex = 0;
+        else if (_pendingPartyMembers.Count != 0)
+            _currentPartyMemberIndex %= _pendingPartyMembers.Count;
+
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+
+        yield return null;
+    }
+
+    PartyMember GetRandomPartyMember() => _partyMembers[UnityEngine.Random.Range(0, _partyMembers.Count)];
+
+    Enemy GetRandomEnemy() => _enemies[UnityEngine.Random.Range(0, _enemies.Count)];
+
+    // void OnSkillSelected(SkillDefinition skillDefinition) => _skillSelected = skillDefinition;
+
+    void OnCommandsConfirmed() => _playerConfirmedCommands = true;
+    void OnCommandsNotConfirmed() => StartCoroutine(RemoveLastCommand());
+
+    void OnAttackSelected() => _attackSelected = true;
+
+    void OnTargetSelected(BattleParticipant target)
+    {
+        if (_attackSelected)
+            AddAttackCommand(target);
+        // else if (_skillSelected != null)
+        //     AddSkillCommand(target);
+
+        _attackSelected = false;
+        // _skillSelected = null;
+    } 
+
+    void Awake()
+    {
+        BattleEvents.TargetSelected += OnTargetSelected;    
+        BattleEvents.AttackSelected += OnAttackSelected;    
+        // BattleEvents.SkillSelected += OnSkillSelected;    
+        BattleEvents.CommandsConfirmed += OnCommandsConfirmed;
+        BattleEvents.CommandsNotConfirmed += OnCommandsNotConfirmed;
+    }
+
+
+    void OnDestroy()
+    {
+        BattleEvents.TargetSelected -= OnTargetSelected;    
+        BattleEvents.AttackSelected -= OnAttackSelected;    
+        // BattleEvents.SkillSelected -= OnSkillSelected;    
+        BattleEvents.CommandsConfirmed -= OnCommandsConfirmed;
+        BattleEvents.CommandsNotConfirmed -= OnCommandsNotConfirmed;
     }
 }

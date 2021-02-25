@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
   m_Name: Smash
   m_EditorClassIdentifier: 
-  _attackType: {fileID: 11400000, guid: a972cad9b5fbff44ea25afd8b7c82646, type: 2}
+  _attackType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
+  _damageType: {fileID: 11400000, guid: a972cad9b5fbff44ea25afd8b7c82646, type: 2}
   _damage: 5
   _name: Smash

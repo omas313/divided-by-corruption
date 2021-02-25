@@ -7,7 +7,7 @@ public class GameEvent : ScriptableObject
 {
     private List<GameEventListener> _listeners = new List<GameEventListener>();
 
-    public void Raise()
+    public virtual void Raise()
     {
         _listeners.ForEach(l => l.OnEventRaised());
     }

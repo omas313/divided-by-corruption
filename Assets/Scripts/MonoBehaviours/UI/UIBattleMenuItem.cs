@@ -10,9 +10,10 @@ public class UIBattleMenuItem : UIItem
         this.isActive = isActive;
         SetState();
     }
-    
-    protected override void Awake()
+
+    public void RaiseEvent()
     {
-        base.Awake();
+        if (_event != null)
+            _event.Raise();
     }
 }

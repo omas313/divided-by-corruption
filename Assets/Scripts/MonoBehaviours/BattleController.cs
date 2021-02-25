@@ -8,8 +8,6 @@ using System.Collections;
 
 public class BattleController : MonoBehaviour
 {
-    public BattleParticipant CurrentParticipant => _battleParticipants[_currentIndex];
-
     // get from somewhere later
     [SerializeField] List<Enemy> _enemies;
     [SerializeField] List<PartyMember> _partyMembers;
@@ -19,7 +17,6 @@ public class BattleController : MonoBehaviour
     List<Enemy> _activeEnemies;
     CommandManager _commandManager;
     CommandPlayer _commandPlayer;
-    int _currentIndex;
     bool _hasBattleStarted;
 
 
@@ -35,21 +32,19 @@ public class BattleController : MonoBehaviour
         _activeEnemies = new List<Enemy>(_enemies);
 
         InitBattleParticipants(_partyMembers, _enemies);
-
-        _currentIndex = 0;
+        BattleEvents.InvokeBattleStarted(_partyMembers, _enemies);
 
         int loopNumber = 0;
         while (true)
         {
             loopNumber++;
-            Debug.Log($"battle loop: {loopNumber}");
+            // Debug.Log($"battle loop: {loopNumber}");
 
-            yield return _commandManager.Init(_partyMembers, _enemies);
+            yield return _commandManager.Init(_activePlayerParty, _activeEnemies);
             yield return _commandManager.PlayerSetup();     
             yield return _commandManager.EnemySetup();
 
-            // play commands here one by one so we can check for deaths
-            yield return _commandPlayer.Play(_commandManager.GetOrderedCommands());
+            yield return PlayCommands(_commandManager.GetOrderedCommands());
 
             if (AllEnemiesAreDead())
             {
@@ -82,6 +77,20 @@ public class BattleController : MonoBehaviour
         BattleEvents.InvokePartyUpdated(_partyMembers, null);        
     }
 
+    IEnumerator PlayCommands(List<BattleCommand> battleCommands)
+    {
+        foreach (var command in battleCommands)
+        {
+            if (command.Actor.IsDead || command.Target.IsDead)
+                continue;
+
+            yield return command.Execute();
+            yield return new WaitForSeconds(0.5f);
+
+            yield return CheckDeadParticipants();
+        }
+    }
+
     IEnumerator CheckDeadParticipants()
     {
         var deadParticipants = new List<BattleParticipant>();
@@ -92,36 +101,18 @@ public class BattleController : MonoBehaviour
         if (deadParticipants.Count == 0)
             yield break;
 
-        var nextParticipant = _battleParticipants[_currentIndex];
-        while (nextParticipant.IsDead)
+        foreach (var participant in deadParticipants)
         {
-            _currentIndex = (_currentIndex + 1) % _battleParticipants.Count;
-            nextParticipant = _battleParticipants[_currentIndex];
-        }
-
-        yield return KillAndRemoveParticipants(deadParticipants);
-
-        _currentIndex = _battleParticipants.IndexOf(nextParticipant);
-    }
-
-    IEnumerator KillAndRemoveParticipants(List<BattleParticipant> deadParticipants)
-    {
-        foreach (var deadParticipant in deadParticipants)
-        {
-            yield return deadParticipant.Die();
+            yield return participant.Die();
             
-            _battleParticipants.Remove(deadParticipant);
+            _battleParticipants.Remove(participant);
 
-            if (deadParticipant is Enemy)
-                _activeEnemies.Remove(deadParticipant as Enemy);
+            if (participant is Enemy)
+                _activeEnemies.Remove(participant as Enemy);
             else
-                _activePlayerParty.Remove(deadParticipant as PartyMember);
+                _activePlayerParty.Remove(participant as PartyMember);
         }
     }
-
-    bool AllEnemiesAreDead() => _activeEnemies.Count == 0;
-
-    bool AllPartyMembersAreDead() => _activePlayerParty.Count == 0;
 
     IEnumerator BattleVictory()
     {
@@ -136,6 +127,10 @@ public class BattleController : MonoBehaviour
 
         yield return null;
     }
+
+    bool AllEnemiesAreDead() => _activeEnemies.Count == 0;
+
+    bool AllPartyMembersAreDead() => _activePlayerParty.Count == 0;
 
     private void Awake()
     {

@@ -12,9 +12,12 @@ public class PartyMember : BattleParticipant
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
 
+    SpriteRenderer _spriteRenderer;
+
     public override IEnumerator Die()
     {
         Debug.Log($"{Name} Die");
+        BattleEvents.InvokePartyMemberDied(this);
         yield return null;
     }
 
@@ -36,5 +39,15 @@ public class PartyMember : BattleParticipant
         yield return receiver.ReceiveAttack(attack);
 
         Debug.Log($"{Name} {attack.Name} does {attack.Damage} damage to {receiver.Name}");
+    }
+
+    public override void SetRendererSortingOrder(int order)
+    {
+        _spriteRenderer.sortingOrder = order;
+    }
+
+    void Awake()
+    {
+        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
     }
 }
