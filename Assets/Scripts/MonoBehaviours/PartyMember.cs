@@ -16,14 +16,14 @@ public class PartyMember : BattleParticipant
 
     public override IEnumerator Die()
     {
-        Debug.Log($"{Name} Die");
+        Debug.Log($"{Name} Died");
         BattleEvents.InvokePartyMemberDied(this);
         yield return null;
     }
 
     public override IEnumerator ReceiveAttack(BattleAttack attack)
     {
-        Debug.Log($"{Name} ReceiveAttack");
+        // Debug.Log($"{Name} ReceiveAttack");
         _stats.ReduceCurrentHP(attack.Damage);
         yield return null;
     }

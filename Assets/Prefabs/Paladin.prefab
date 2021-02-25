@@ -48,7 +48,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
   _name: Paladin
   _stats:
-    _currentHP: 10
+    _currentHP: 2
     _baseHP: 10
     _currentMP: 0
     _baseMP: 10
@@ -79,8 +79,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5137837008274537850}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0.92, z: 0}
+  m_LocalScale: {x: 1, y: 1.74, z: 1}
   m_Children: []
   m_Father: {fileID: 5137837007951962431}
   m_RootOrder: 0
@@ -122,8 +122,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: -12461507
+  m_SortingLayer: 1
   m_SortingOrder: 0
   m_Sprite: {fileID: 7482667652216324306, guid: db750325989564987a34393247d883b4, type: 3}
   m_Color: {r: 0.98039216, g: 0.776426, b: 0.023529401, a: 1}

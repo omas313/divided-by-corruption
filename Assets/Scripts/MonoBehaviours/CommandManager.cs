@@ -10,6 +10,7 @@ public class CommandManager : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI _text;
     
+    [SerializeField] BattleParticipantMarker _currentActorMarker;
     
     public PartyMember CurrentPartyMember => _pendingPartyMembers[_currentPartyMemberIndex];
 
@@ -56,6 +57,7 @@ public class CommandManager : MonoBehaviour
     {
         _currentPartyMemberIndex = 0;
         BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+        _currentActorMarker.PlaceAt(CurrentPartyMember.transform.position);
         _partyMembers.ForEach(pm => BattleEvents.InvokePartyMemberCommandUnset(pm));
 
         while (true)
@@ -93,7 +95,8 @@ public class CommandManager : MonoBehaviour
         if (IsThisLastPendingPartyMember())
         {
             _pendingPartyMembers.Remove(CurrentPartyMember);
-            BattleEvents.InvokePartyUpdated(_partyMembers, null);        
+            BattleEvents.InvokePartyUpdated(_partyMembers, null);    
+            _currentActorMarker.Hide();
             return;
         }
         
@@ -113,14 +116,17 @@ public class CommandManager : MonoBehaviour
         if (_pendingPartyMembers.Count != 0)
             _currentPartyMemberIndex %= _pendingPartyMembers.Count;
 
-        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);     
+        _currentActorMarker.PlaceAt(CurrentPartyMember.transform.position);
     }
 
 
     IEnumerator ChangeActivePartyMember()
     {
         _currentPartyMemberIndex = (_currentPartyMemberIndex + 1) % _pendingPartyMembers.Count;
-        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);       
+
+        _currentActorMarker.PlaceAt(CurrentPartyMember.transform.position);
 
         yield return null;
     }
@@ -147,7 +153,9 @@ public class CommandManager : MonoBehaviour
         else if (_pendingPartyMembers.Count != 0)
             _currentPartyMemberIndex %= _pendingPartyMembers.Count;
 
-        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);        
+        BattleEvents.InvokePartyUpdated(_partyMembers, CurrentPartyMember);  
+
+        _currentActorMarker.PlaceAt(CurrentPartyMember.transform.position);
 
         yield return null;
     }

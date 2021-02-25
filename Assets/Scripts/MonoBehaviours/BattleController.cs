@@ -85,7 +85,7 @@ public class BattleController : MonoBehaviour
                 continue;
 
             yield return command.Execute();
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(1f);
 
             yield return CheckDeadParticipants();
         }

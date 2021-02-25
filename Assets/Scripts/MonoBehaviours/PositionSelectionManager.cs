@@ -10,7 +10,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     [SerializeField] GameEvent _rightPressedEvent;
     [SerializeField] GameEvent _leftPressedEvent;
     [SerializeField] GameEvent _confirmedPressedEvent;
-    [SerializeField] TargetMarker _targetMarker;
+    [SerializeField] BattleParticipantMarker _targetMarker;
     [SerializeField] Color _selectionMarkerColor;
 
     List<Transform> _activePositions;
