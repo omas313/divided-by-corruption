@@ -13,6 +13,7 @@ public class Enemy : BattleParticipant
 
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
+    public bool HasArmour => _stats.CurrentArmour >= 0;
 
     [SerializeField] string _name;
     [SerializeField] EnemyStats _stats;
@@ -45,34 +46,40 @@ public class Enemy : BattleParticipant
         // add bonus from stats.damage later
 
         yield return receiver.ReceiveAttack(attack);
-
-        Debug.Log($"{Name} {attack.Name} does {attack.Damage} damage to {receiver.Name}");
     }
     
-    public bool HasArmour => _stats.CurrentArmour >= 0;
-    public bool ShouldReduceAttackDamage(DamageType damageType) => HasArmour && damageType == _lastDamageTypeReceived;
 
     public override IEnumerator ReceiveAttack(BattleAttack attack)
     {
         var damageToInflict = attack.Damage;
 
+        bool wasReduced = false;
         if (ShouldReduceAttackDamage(attack.DamageType))
+        {
             damageToInflict = (int)(attack.Damage * DAMAGE_REDUCTION_FACTOR);
+            wasReduced = true;
+        }
 
         if (HasArmour)
         {
+            _lastDamageTypeReceived = attack.DamageType;
+
+            var previousArmourValue = _stats.CurrentArmour;
             damageToInflict -= _stats.CurrentArmour;
             _stats.SetCurrentArmour(damageToInflict >= 0 ? 0 : -damageToInflict);
 
             BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
 
-            _lastDamageTypeReceived = attack.DamageType;
+            var armourDamage = previousArmourValue - _stats.CurrentArmour;
+            var colour = wasReduced ? Color.grey : attack.DamageType.Color;
+            BattleEvents.InvokeArmourDamageReceived(transform.position, armourDamage, colour);
         }
         
         if (damageToInflict > 0)
         {
             _stats.ReduceCurrentHP(damageToInflict);
             BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
+            BattleEvents.InvokeHealthDamageReceived(transform.position, damageToInflict, attack.DamageType.Color);
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -90,6 +97,8 @@ public class Enemy : BattleParticipant
     {
         _spriteRenderer.sortingOrder = order;
     }
+
+    bool ShouldReduceAttackDamage(DamageType damageType) => HasArmour && damageType == _lastDamageTypeReceived;
 
     void Awake()
     {

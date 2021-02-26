@@ -25,6 +25,7 @@ public class PartyMember : BattleParticipant
     {
         // Debug.Log($"{Name} ReceiveAttack");
         _stats.ReduceCurrentHP(attack.Damage);
+        BattleEvents.InvokeHealthDamageReceived(transform.position, attack.Damage, attack.DamageType.Color);
         yield return null;
     }
 

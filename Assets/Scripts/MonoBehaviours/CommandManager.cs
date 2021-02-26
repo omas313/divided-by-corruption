@@ -42,7 +42,6 @@ public class CommandManager : MonoBehaviour
         foreach (var enemy in _enemies)
             _allBattleCommands.Add(new AttackCommand(enemy, enemy.RandomAttack, GetRandomPartyMember()));
 
-        Debug.Log("setting up enemy commands...");
         yield return null;
     }
 

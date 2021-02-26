@@ -23,8 +23,9 @@ public class BattleEvents
     public static event Action<Enemy> EnemyDied;
     public static event Action<Enemy, int, int> EnemyHealthChanged;
     public static event Action<Enemy, int, int> EnemyArmourChanged;
-    public static event Action<Enemy, int> EnemyHealthDamageReceived;
-    public static event Action<Enemy, int> EnemyArmourDamageReceived;
+
+    public static event Action<Vector3, int, Color> HealthDamageReceived;
+    public static event Action<Vector3, int, Color> ArmourDamageReceived;
 
 
     public static void InvokeBattleStarted(List<PartyMember> partyMembers, List<Enemy> enemies) => BattleStarted?.Invoke(partyMembers, enemies);
@@ -45,7 +46,8 @@ public class BattleEvents
     public static void InvokeEnemyDied(Enemy enemy) => EnemyDied?.Invoke(enemy);
     public static void InvokeEnemyHealthChanged(Enemy enemy, int currentValue, int baseValue) => EnemyHealthChanged?.Invoke(enemy, currentValue, baseValue);
     public static void InvokeEnemyArmourChanged(Enemy enemy, int currentValue, int baseValue) => EnemyArmourChanged?.Invoke(enemy, currentValue, baseValue);
-    public static void InvokeEnemyHealthDamageReceived(Enemy enemy, int damage) => EnemyHealthDamageReceived?.Invoke(enemy, damage);
-    public static void InvokeEnemyArmourDamageReceived(Enemy enemy, int damage) => EnemyArmourDamageReceived?.Invoke(enemy, damage);
+
+    public static void InvokeHealthDamageReceived(Vector3 position, int damage, Color color) => HealthDamageReceived?.Invoke(position, damage, color);
+    public static void InvokeArmourDamageReceived(Vector3 position, int damage, Color color) => ArmourDamageReceived?.Invoke(position, damage, color);
 
 }
