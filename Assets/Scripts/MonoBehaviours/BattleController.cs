@@ -13,22 +13,17 @@ public class BattleController : MonoBehaviour
     [SerializeField] List<PartyMember> _partyMembers;
 
     List<BattleParticipant> _battleParticipants;
-    List<PartyMember> _activePlayerParty;
+    List<PartyMember> _activePartyMembers;
     List<Enemy> _activeEnemies;
     CommandManager _commandManager;
-    CommandPlayer _commandPlayer;
-    bool _hasBattleStarted;
-
 
     void StartBattle() => StartCoroutine(TurnBasedBattle());
 
     IEnumerator TurnBasedBattle()
     {
-        _hasBattleStarted = true;
-
         yield return new WaitForSeconds(0.25f); // for UI to sub to events
 
-        _activePlayerParty = new List<PartyMember>(_partyMembers);
+        _activePartyMembers = new List<PartyMember>(_partyMembers);
         _activeEnemies = new List<Enemy>(_enemies);
 
         InitBattleParticipants(_partyMembers, _enemies);
@@ -40,7 +35,7 @@ public class BattleController : MonoBehaviour
             loopNumber++;
             // Debug.Log($"battle loop: {loopNumber}");
 
-            yield return _commandManager.Init(_activePlayerParty, _activeEnemies);
+            yield return _commandManager.Init(_activePartyMembers, _activeEnemies);
             yield return _commandManager.PlayerSetup();     
             yield return _commandManager.EnemySetup();
 
@@ -81,14 +76,35 @@ public class BattleController : MonoBehaviour
     {
         foreach (var command in battleCommands)
         {
-            if (command.Actor.IsDead || command.Target.IsDead)
+            if (command.Actor.IsDead)
+                continue;
+
+            if (command.Target.IsDead)
+                command.Target = GetAnother(command.Target);
+
+            if (command.Target == null)
                 continue;
 
             yield return command.Execute();
-            yield return new WaitForSeconds(1f);
-
             yield return CheckDeadParticipants();
         }
+    }
+
+    BattleParticipant GetAnother(BattleParticipant target)
+    {
+        if (target is Enemy && _activeEnemies.Count == 0)
+            return null;
+        
+        if (target is Enemy)
+            return _activeEnemies.FirstOrDefault(e => e != target);
+
+        if (target is PartyMember && _activePartyMembers.Count == 0)
+            return null;
+        
+        if (target is PartyMember)
+            return _activeEnemies.FirstOrDefault(pm => pm != target);
+
+        return null;
     }
 
     IEnumerator CheckDeadParticipants()
@@ -110,7 +126,7 @@ public class BattleController : MonoBehaviour
             if (participant is Enemy)
                 _activeEnemies.Remove(participant as Enemy);
             else
-                _activePlayerParty.Remove(participant as PartyMember);
+                _activePartyMembers.Remove(participant as PartyMember);
         }
     }
 
@@ -130,12 +146,11 @@ public class BattleController : MonoBehaviour
 
     bool AllEnemiesAreDead() => _activeEnemies.Count == 0;
 
-    bool AllPartyMembersAreDead() => _activePlayerParty.Count == 0;
+    bool AllPartyMembersAreDead() => _activePartyMembers.Count == 0;
 
     private void Awake()
     {
         StartBattle();
         _commandManager = GetComponent<CommandManager>();
-        _commandPlayer = GetComponent<CommandPlayer>();
     }
 }

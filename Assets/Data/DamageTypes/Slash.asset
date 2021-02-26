@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Slash
   m_EditorClassIdentifier: 
   _name: Slash
-  _color: {r: 0.764151, g: 0, b: 0, a: 1}
+  _color: {r: 0.7311321, g: 1, b: 0.95522875, a: 1}

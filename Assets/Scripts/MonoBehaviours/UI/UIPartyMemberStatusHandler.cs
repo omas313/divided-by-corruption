@@ -57,12 +57,19 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         _partyBars[partyMember].SetDeathStatus(true);
     }
 
+    void OnCommandsConfirmed()
+    {
+        foreach (var bar in _bars)
+            bar.SetCommandStatus(false);
+    }
+
     void Awake()
     {
         BattleEvents.PartyMembersUpdated += OnPartyUpdated;       
         BattleEvents.PartyMemberCommandSet += OnPartyMemberCommandSet;
         BattleEvents.PartyMemberCommandUnset += OnPartyMemberCommandUnset;
         BattleEvents.PartyMemberDied += OnPartyMemberDied;
+        BattleEvents.CommandsConfirmed += OnCommandsConfirmed;
     }
 
     void OnDestroy()
@@ -71,5 +78,6 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         BattleEvents.PartyMemberCommandSet -= OnPartyMemberCommandSet;
         BattleEvents.PartyMemberCommandUnset -= OnPartyMemberCommandUnset;
         BattleEvents.PartyMemberDied -= OnPartyMemberDied;
+        BattleEvents.CommandsConfirmed -= OnCommandsConfirmed;
     }
 }

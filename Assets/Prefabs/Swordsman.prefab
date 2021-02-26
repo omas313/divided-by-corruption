@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3761183044502570730}
   - component: {fileID: 3761183044502570731}
+  - component: {fileID: 50926748}
   m_Layer: 0
   m_Name: Swordsman
   m_TagString: Untagged
@@ -48,12 +49,31 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9a902cd8780713044be4f3b7a6ed0ed6, type: 2}
   _name: Swordsman
   _stats:
-    _currentHP: 2
-    _baseHP: 10
+    _currentHP: 30
+    _baseHP: 30
     _currentMP: 0
     _baseMP: 10
     _currentSpeed: 10
     _baseSpeed: 10
+--- !u!95 &50926748
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3761183044502570729}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63eb2b9d91794f14084a680741b1d326, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &3761183045139185041
 GameObject:
   m_ObjectHideFlags: 0
@@ -125,7 +145,7 @@ SpriteRenderer:
   m_SortingLayerID: -12461507
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: -6920628443857365153, guid: 12d66abc7d127534aaf63825d9e48d37, type: 3}
+  m_Sprite: {fileID: -1401237552787162679, guid: 284a1ffef8eca2a4ca698909af53b715, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

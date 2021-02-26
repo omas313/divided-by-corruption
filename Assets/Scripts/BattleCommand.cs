@@ -7,7 +7,7 @@ public abstract class BattleCommand
     public abstract string Description { get; }
 
     public BattleParticipant Actor { get; }
-    public BattleParticipant Target { get; }
+    public BattleParticipant Target { get; set; }
 
     public BattleCommand(BattleParticipant actor, BattleParticipant target)
     {

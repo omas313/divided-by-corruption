@@ -7,19 +7,27 @@ using UnityEngine;
 public class UIDamageDisplayer : MonoBehaviour
 {
     [SerializeField] UIFloatingText _damageTextPrefab;
+    [SerializeField] float _yOffset;
 
     UIFloatingText[] _texts;
+    Vector3 _offset;
 
-    void OnHealthDamageReceived(Vector3 position, int damage, Color color)
+    void OnHealthDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
     {
         var text = GetInactiveText();
-        text.Play(damage.ToString(), position, color);
+        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+
+        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, attack.DamageType.Color);
     }
 
-    void OnArmourDamageReceived(Vector3 position, int damage, Color color)
+    void OnArmourDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
     {
         var text = GetInactiveText();
-        text.Play(damage.ToString(), position, color);
+        var colour = attack.WasReduced ? Color.grey : attack.DamageType.Color;
+        var blockedText = attack.WasReduced ? " (blocked)" : "";
+        _offset.x = UnityEngine.Random.Range(-0.5f, 0.5f);
+
+        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, colour, blockedText);
     }
 
     UIFloatingText GetInactiveText()
@@ -43,6 +51,7 @@ public class UIDamageDisplayer : MonoBehaviour
 
     void Awake()
     {
+        _offset.y = _yOffset;
         _texts = GetComponentsInChildren<UIFloatingText>();
 
         BattleEvents.HealthDamageReceived += OnHealthDamageReceived;        

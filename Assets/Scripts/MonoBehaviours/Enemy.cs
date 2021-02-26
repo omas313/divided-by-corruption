@@ -5,21 +5,23 @@ using System.Linq;
 using UnityEngine;
 
 public class Enemy : BattleParticipant
-{
+{    
+    const string HIT_ANIMATION_BOOL_KEY = "IsGettingHit";
+    const string DEATH_ANIMATION_BOOL_KEY = "IsDead";
+    const string ATTACK_ANIMATION_TRIGGER_KEY = "Attack";
+    const string IDLE_ANIMATION_TRIGGER_KEY = "Idle";
     const float DAMAGE_REDUCTION_FACTOR = 0.25f;
-
-    public event Action<int, int> HealthChanged;
-    public event Action<int, int> ArmourChanged;
 
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
-    public bool HasArmour => _stats.CurrentArmour >= 0;
+    public bool HasArmour => _stats.CurrentArmour > 0;
 
     [SerializeField] string _name;
     [SerializeField] EnemyStats _stats;
 
     SpriteRenderer _spriteRenderer;
     DamageType _lastDamageTypeReceived;
+    Animator _animator;
 
     // [SerializeField] EnemyDefinition _definition;
 
@@ -39,25 +41,27 @@ public class Enemy : BattleParticipant
 
     public override IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver)
     {
-        // do animations and other stuff
-        yield return new WaitForSeconds(0.5f);
-        
         var attack = new BattleAttack(attackDefinition);
         // add bonus from stats.damage later
 
-        yield return receiver.ReceiveAttack(attack);
+        _animator.SetTrigger(ATTACK_ANIMATION_TRIGGER_KEY);
+        yield return CurrentAnimationFinished(_animator);
+
+        yield return receiver.ReceiveAttack(this, attack);
     }
     
 
-    public override IEnumerator ReceiveAttack(BattleAttack attack)
+    public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)
     {
+        _animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
+
+        Debug.Log("reeive att");
         var damageToInflict = attack.Damage;
 
-        bool wasReduced = false;
         if (ShouldReduceAttackDamage(attack.DamageType))
         {
             damageToInflict = (int)(attack.Damage * DAMAGE_REDUCTION_FACTOR);
-            wasReduced = true;
+            attack.WasReduced = true;
         }
 
         if (HasArmour)
@@ -70,27 +74,33 @@ public class Enemy : BattleParticipant
 
             BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
 
-            var armourDamage = previousArmourValue - _stats.CurrentArmour;
-            var colour = wasReduced ? Color.grey : attack.DamageType.Color;
-            BattleEvents.InvokeArmourDamageReceived(transform.position, armourDamage, colour);
+            attack.Damage = previousArmourValue - _stats.CurrentArmour;
+            BattleEvents.InvokeArmourDamageReceived(attacker, this, attack);
+            
+            if (!HasArmour)
+                BattleEvents.InvokeArmourBreak(this);
         }
+
         
         if (damageToInflict > 0)
         {
             _stats.ReduceCurrentHP(damageToInflict);
             BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
-            BattleEvents.InvokeHealthDamageReceived(transform.position, damageToInflict, attack.DamageType.Color);
+
+            attack.Damage = damageToInflict;
+            BattleEvents.InvokeHealthDamageReceived(attacker, this, attack);
         }
 
         yield return new WaitForSeconds(0.5f);
+        _animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
     }
 
     public override IEnumerator Die()
     {
         Debug.Log($"{Name} died");
         BattleEvents.InvokeEnemyDied(this);
+        _animator.SetBool(DEATH_ANIMATION_BOOL_KEY, true);
         yield return new WaitForSeconds(0.25f); 
-        // do animatiosn
     }
 
     public override void SetRendererSortingOrder(int order)
@@ -103,6 +113,9 @@ public class Enemy : BattleParticipant
     void Awake()
     {
         _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
+
+        _animator.SetTrigger(IDLE_ANIMATION_TRIGGER_KEY);
         // Initialize(_definition);
     }
 }

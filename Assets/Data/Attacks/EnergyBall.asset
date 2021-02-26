@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
   m_Name: EnergyBall
   m_EditorClassIdentifier: 
-  _attackType: {fileID: 11400000, guid: 54a8238354fbca34bada5c5795a1d5fc, type: 2}
+  _attackType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
+  _damageType: {fileID: 11400000, guid: 54a8238354fbca34bada5c5795a1d5fc, type: 2}
   _damage: 4
-  _name: Eneergy Ball
+  _name: Eneegy Ball
+  _prefab: {fileID: 0}

@@ -15,6 +15,12 @@ public abstract class BattleParticipant : MonoBehaviour
 
     public abstract IEnumerator Die();
     public abstract IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver);
-    public abstract IEnumerator ReceiveAttack(BattleAttack attack);
+    public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
     public abstract void SetRendererSortingOrder(int order);
+
+    protected IEnumerator CurrentAnimationFinished(Animator animator)
+    {
+        yield return new WaitForSeconds(0.15f);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
+    }
 }

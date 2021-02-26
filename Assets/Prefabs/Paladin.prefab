@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5137837007951962431}
   - component: {fileID: 5137837007951962428}
+  - component: {fileID: 202823269}
   m_Layer: 0
   m_Name: Paladin
   m_TagString: Untagged
@@ -48,12 +49,31 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
   _name: Paladin
   _stats:
-    _currentHP: 2
-    _baseHP: 10
+    _currentHP: 30
+    _baseHP: 30
     _currentMP: 0
     _baseMP: 10
     _currentSpeed: 6
     _baseSpeed: 6
+--- !u!95 &202823269
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5137837007951962430}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 63eb2b9d91794f14084a680741b1d326, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5137837008274537850
 GameObject:
   m_ObjectHideFlags: 0
