@@ -37,8 +37,6 @@ public class PartyMember : BattleParticipant
         // add bonus from stats.damage later
 
         yield return receiver.ReceiveAttack(attack);
-
-        Debug.Log($"{Name} {attack.Name} does {attack.Damage} damage to {receiver.Name}");
     }
 
     public override void SetRendererSortingOrder(int order)

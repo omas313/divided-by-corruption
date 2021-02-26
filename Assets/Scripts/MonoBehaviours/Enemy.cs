@@ -8,14 +8,17 @@ public class Enemy : BattleParticipant
 {
     const float DAMAGE_REDUCTION_FACTOR = 0.25f;
 
+    public event Action<int, int> HealthChanged;
+    public event Action<int, int> ArmourChanged;
+
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
 
     [SerializeField] string _name;
-    [SerializeField] CharacterStats _stats;
+    [SerializeField] EnemyStats _stats;
 
     SpriteRenderer _spriteRenderer;
-    DamageType _lastAttackTypeReceived;
+    DamageType _lastDamageTypeReceived;
 
     // [SerializeField] EnemyDefinition _definition;
 
@@ -46,14 +49,31 @@ public class Enemy : BattleParticipant
         Debug.Log($"{Name} {attack.Name} does {attack.Damage} damage to {receiver.Name}");
     }
     
+    public bool HasArmour => _stats.CurrentArmour >= 0;
+    public bool ShouldReduceAttackDamage(DamageType damageType) => HasArmour && damageType == _lastDamageTypeReceived;
+
     public override IEnumerator ReceiveAttack(BattleAttack attack)
     {
-        if (attack.DamageType == _lastAttackTypeReceived)
-            attack.Damage = (int)(attack.Damage * DAMAGE_REDUCTION_FACTOR);
+        var damageToInflict = attack.Damage;
 
-        _stats.ReduceCurrentHP(attack.Damage);
+        if (ShouldReduceAttackDamage(attack.DamageType))
+            damageToInflict = (int)(attack.Damage * DAMAGE_REDUCTION_FACTOR);
 
-        _lastAttackTypeReceived = attack.DamageType;
+        if (HasArmour)
+        {
+            damageToInflict -= _stats.CurrentArmour;
+            _stats.SetCurrentArmour(damageToInflict >= 0 ? 0 : -damageToInflict);
+
+            BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
+
+            _lastDamageTypeReceived = attack.DamageType;
+        }
+        
+        if (damageToInflict > 0)
+        {
+            _stats.ReduceCurrentHP(damageToInflict);
+            BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
+        }
 
         yield return new WaitForSeconds(0.5f);
     }
