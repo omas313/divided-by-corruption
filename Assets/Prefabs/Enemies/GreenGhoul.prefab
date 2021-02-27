@@ -17,7 +17,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _name
-      value: Green Monster
+      value: Green Ghoul
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: attacks.Array.size
@@ -105,3 +105,65 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+--- !u!4 &6476719613512231734 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5696124140707043625, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+  m_PrefabInstance: {fileID: 1652078439281029663}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &2442566722219001733
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 6476719613512231734}
+    m_Modifications:
+    - target: {fileID: 3691999784815211965, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_Name
+      value: ToxicParticles
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_RootOrder
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5837301604222690115, guid: 9f476e24893b420419e01b287eb48673, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9f476e24893b420419e01b287eb48673, type: 3}
