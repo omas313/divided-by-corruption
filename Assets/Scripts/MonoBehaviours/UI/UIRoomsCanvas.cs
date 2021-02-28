@@ -8,17 +8,7 @@ public class UIRoomsCanvas : MonoBehaviour
     [SerializeField] Animation _fadeIn;
     [SerializeField] Animation _fadeOut;
 
-    void OnPlayerTeleported()
-    {
-        StartCoroutine(FadeOut());
-    }
-
-    void OnPlayerTeleporting()
-    {
-        StartCoroutine(FadeIn());
-    }
-
-    IEnumerator FadeIn()
+    public IEnumerator FadeIn()
     {
         _fadeOut.gameObject.SetActive(false);
         _fadeIn.gameObject.SetActive(true);
@@ -32,7 +22,7 @@ public class UIRoomsCanvas : MonoBehaviour
         EnvironmentEvents.InvokeFadeInCompleted();
     }
 
-    IEnumerator FadeOut()
+    public IEnumerator FadeOut()
     {
         _fadeOut.gameObject.SetActive(true);
         _fadeIn.gameObject.SetActive(false);
@@ -44,6 +34,16 @@ public class UIRoomsCanvas : MonoBehaviour
 
         _fadeOut.gameObject.SetActive(false);
         EnvironmentEvents.InvokeFadeOutCompleted();
+    }
+
+    void OnPlayerTeleported()
+    {
+        StartCoroutine(FadeOut());
+    }
+
+    void OnPlayerTeleporting()
+    {
+        StartCoroutine(FadeIn());
     }
 
     void Awake()

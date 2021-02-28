@@ -18,6 +18,7 @@ public class PartyMember : BattleParticipant
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
 
+    [SerializeField] Transform _castPoint;
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
 
@@ -52,6 +53,7 @@ public class PartyMember : BattleParticipant
         var attack = new BattleAttack(attackDefinition);
         // add bonus from stats.damage later
 
+        // can mvoe to SO
         if (attackDefinition.IsLunge)
         {
             _initialPosition = transform.position;
@@ -60,8 +62,14 @@ public class PartyMember : BattleParticipant
             yield return FadeIn();
         }
 
-        _animator.SetTrigger(ATTACK_ANIMATION_TRIGGER_KEY);
-        yield return CurrentAnimationFinished(_animator);
+        // can mvoe to SO
+        if (attackDefinition.IsSpell)
+            yield return CastSpell(attackDefinition.EffectsPrefab, receiver);
+        else
+        {
+            _animator.SetTrigger(ATTACK_ANIMATION_TRIGGER_KEY);
+            yield return CurrentAnimationFinished(_animator);
+        }
 
         yield return receiver.ReceiveAttack(this, attack);
 
@@ -71,6 +79,24 @@ public class PartyMember : BattleParticipant
             yield return MoveToPosition(_initialPosition);
             yield return FadeIn();
         }
+
+         if (attackDefinition.IsSpell)
+            _animator.SetBool(CAST_ANIMATION_BOOL_KEY, false);
+    }
+
+    IEnumerator CastSpell(GameObject attackPrefab, BattleParticipant receiver)
+    {
+        _animator.SetBool(CAST_ANIMATION_BOOL_KEY, true);
+
+        var angle = Vector2.SignedAngle(Vector2.left, (receiver.transform.position - _castPoint.position).normalized);
+        var rotation = Quaternion.Euler(0f, 0f, angle);
+        var particles = Instantiate(attackPrefab, _castPoint.position, rotation);
+        var particleSystemMain = particles.GetComponent<ParticleSystem>().main;
+        particleSystemMain.startRotation = new ParticleSystem.MinMaxCurve(Mathf.Deg2Rad * -angle);
+
+        yield return new WaitForSeconds(2f);
+
+        _animator.SetBool(CAST_ANIMATION_BOOL_KEY, false);
     }
 
     public override void SetRendererSortingOrder(int order)

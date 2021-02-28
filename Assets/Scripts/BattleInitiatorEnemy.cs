@@ -6,7 +6,7 @@ using UnityEngine;
 public class BattleInitiatorEnemy : MonoBehaviour
 {
     [SerializeField] float _moveSpeed = 2f;
-    [SerializeField] float _stoppingDistance = 1f;
+    [SerializeField] float _stoppingDistance = 1.5f;
     [SerializeField] BattleDataDefinition _battleDefinition;
 
     Transform _target;
@@ -50,6 +50,7 @@ public class BattleInitiatorEnemy : MonoBehaviour
 
     void OnDrawGizmos()
     {
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, _stoppingDistance);    
     }
 }

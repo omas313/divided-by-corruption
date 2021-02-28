@@ -309,8 +309,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c94846e3476f01a4bbc81cba22e5fde4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _confiner: {fileID: 3881965110467048685}
   _effectsParent: {fileID: 3881965110591586571}
   _groundLevel: {fileID: 3881965111260863575}
+  _leftDoor: {fileID: 0}
+  _rightDoor: {fileID: 0}
+  _roomNumber: 0
 --- !u!61 &3881965109577644862
 BoxCollider2D:
   m_ObjectHideFlags: 0

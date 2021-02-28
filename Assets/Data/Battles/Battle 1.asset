@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 461d4856af8c3ae41b2470476cbe30ef, type: 3}
+  m_Name: Battle 1
+  m_EditorClassIdentifier: 
+  _playerParty:
+  - {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
+  _enemies:
+  - {fileID: 6447435800757866537, guid: ca7d90baac827b543bf800189f0f35f4, type: 3}

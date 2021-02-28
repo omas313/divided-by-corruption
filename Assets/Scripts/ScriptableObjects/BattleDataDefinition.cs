@@ -5,9 +5,9 @@ using UnityEngine;
 public class BattleDataDefinition : ScriptableObject
 {
     public List<PartyMember> PlayerParty => _playerParty;
-    public List<EnemyDefinition> Enemies => _enemiesDefinitions;
+    public List<Enemy> Enemies => _enemies;
     
 
     [SerializeField] List<PartyMember> _playerParty;
-    [SerializeField] List<EnemyDefinition> _enemiesDefinitions;
+    [SerializeField] List<Enemy> _enemies;
 }

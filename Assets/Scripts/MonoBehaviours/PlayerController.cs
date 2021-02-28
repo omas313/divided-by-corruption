@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -14,6 +15,8 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D _rigidbody;
     float _xThrow;
     Vector3 _scale;
+
+    Vector3 _preBattlePosition;
     
 
     void Update()

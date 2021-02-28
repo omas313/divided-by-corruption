@@ -5,14 +5,18 @@ using UnityEngine;
 
 public class TeleportingDoor : Interactable
 {
+    public RoomAttendant RoomAttendant => GetComponentInParent<RoomAttendant>();
+    public RoomAttendant DestinationRoomAttendant => _destinationDoor != null ? _destinationDoor.GetComponentInParent<RoomAttendant>() : null;
+    public bool HasDestination => _destinationDoor != null;
+
     [SerializeField] TeleportingDoor _destinationDoor;
     Transform _groundLevel;
-
     PlayerController _player;
 
     public void CatchPlayer(Transform playerTransform)
     {
         playerTransform.position = new Vector2(transform.position.x, _groundLevel.position.y);
+        EnvironmentEvents.InvokePlayerTeleported();
     }
 
     protected override void PerformInteraction()
@@ -33,7 +37,6 @@ public class TeleportingDoor : Interactable
             _player = FindObjectOfType<PlayerController>();
 
         _destinationDoor.CatchPlayer(_player.transform);
-        EnvironmentEvents.InvokePlayerTeleported();
     }
 
     void OnDrawGizmos()
@@ -50,7 +53,7 @@ public class TeleportingDoor : Interactable
         else
         {
             Gizmos.color = Color.green;
-            Gizmos.DrawLine(transform.position + offset, _destinationDoor.transform.position + offset);
+            Gizmos.DrawLine(transform.position + offset, _destinationDoor.transform.position);
         }
     }
 
