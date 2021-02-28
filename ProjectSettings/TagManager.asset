@@ -11,11 +11,11 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - PlayerBody
+  - PlayerInteraction
+  - Interactables
+  - Enemies
+  - PlayerSensor
   - 
   - 
   - 
@@ -58,4 +58,7 @@ TagManager:
     locked: 0
   - name: Particles
     uniqueID: 571383441
+    locked: 0
+  - name: UI
+    uniqueID: 2662231671
     locked: 0
