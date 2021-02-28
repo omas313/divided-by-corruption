@@ -6,8 +6,11 @@ using UnityEngine;
 public class BattleInitiatorEnemy : MonoBehaviour
 {
     [SerializeField] float _moveSpeed = 2f;
+    [SerializeField] float _stoppingDistance = 1f;
+    [SerializeField] BattleDataDefinition _battleDefinition;
 
     Transform _target;
+    bool _isMoving;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -27,12 +30,26 @@ public class BattleInitiatorEnemy : MonoBehaviour
 
     void Update()
     {
-        if (_target != null)
-            MoveTowardsTarget();    
+        if (_target != null && !_isMoving)
+            StartCoroutine(BeginBattleInitiation());           
     }
 
-    void MoveTowardsTarget()
+    IEnumerator BeginBattleInitiation()
     {
-        transform.Translate((_target.transform.position - transform.position) * Time.deltaTime * _moveSpeed);
+        _isMoving = true;
+
+        EnvironmentEvents.InvokeBattleInitiated(_battleDefinition);
+
+        while (Vector2.Distance(transform.position, _target.position) > _stoppingDistance)
+        {
+            transform.Translate((_target.transform.position - transform.position) * Time.deltaTime * _moveSpeed);
+            yield return null;
+        }
+        gameObject.SetActive(false);
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(transform.position, _stoppingDistance);    
     }
 }

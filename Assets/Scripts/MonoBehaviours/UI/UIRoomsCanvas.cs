@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RoomsCanvas : MonoBehaviour
+public class UIRoomsCanvas : MonoBehaviour
 {
     [SerializeField] Animation _fadeIn;
     [SerializeField] Animation _fadeOut;

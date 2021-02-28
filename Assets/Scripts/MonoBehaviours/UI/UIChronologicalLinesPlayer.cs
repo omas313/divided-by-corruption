@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 
-public class ChronologicalLinesPlayer : MonoBehaviour
+public class UIChronologicalLinesPlayer : MonoBehaviour
 {
     [SerializeField] float _delayBetweenLines = 2f;
     [SerializeField] float _canvasFadeSpeed = 2f;
@@ -14,6 +14,8 @@ public class ChronologicalLinesPlayer : MonoBehaviour
     CanvasGroup _canvasGroup;
     TextMeshProUGUI _text;
     string[] _lines;
+
+    bool _isPlaying;
 
     public void Init(string[] lines)
     {
@@ -34,6 +36,8 @@ public class ChronologicalLinesPlayer : MonoBehaviour
 
     public IEnumerator LinePlayer()
     {
+        _isPlaying = true;
+
         _text.SetText("");
         _cursor.SetActive(false);
 
@@ -48,6 +52,8 @@ public class ChronologicalLinesPlayer : MonoBehaviour
         _hasFinished.Raise();
 
         yield return FadeOutCanvas();
+
+        _isPlaying = false;
     }
 
     IEnumerator FadeInCanvas()
@@ -94,6 +100,12 @@ public class ChronologicalLinesPlayer : MonoBehaviour
     
     void OnInteractedWithObject(Interactable interactable, string[] lines)
     {
+        if (_isPlaying)
+        {
+            StopAllCoroutines();
+            _canvasGroup.alpha = 0f;
+        }
+
         _lines = lines;
         StartCoroutine(LinePlayer());
     }

@@ -13,7 +13,8 @@ public class PlayerController : MonoBehaviour
     Animator _animator;
     Rigidbody2D _rigidbody;
     float _xThrow;
-    private Vector3 _scale;
+    Vector3 _scale;
+    
 
     void Update()
     {

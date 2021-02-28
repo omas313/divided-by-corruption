@@ -4,41 +4,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(BoxCollider2D))]
-public abstract class Interactable : MonoBehaviour
+public class Interactable : MonoBehaviour
 {
-    // public string Text => _text;
-    
     protected bool isInteracting;
+    protected Collider2D colliderComponent;
+    protected SpriteRenderer spriteRenderer;
 
     [SerializeField] CanvasGroup _canvas;
     [SerializeField] bool _canUse = true;
     [SerializeField] [TextArea(1, 5)] string[] _cantUseTextLines;
     
-    Collider2D _collider;
     Animation _interactionAnimation;
     bool _isPlayerDetected;
 
-    public abstract void PerformInteraction();
+    protected virtual void PerformInteraction() {}
 
-    void OnTriggerEnter2D(Collider2D other)
+    protected virtual void OnTriggerEnter2D(Collider2D other)
     {
         _isPlayerDetected = true;
         ShowInteractionButton();
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    protected virtual void OnTriggerExit2D(Collider2D other)
     {
         _isPlayerDetected = false;
         HideInteractionButton();
     }
 
-    void ShowInteractionButton()
+    protected void ShowInteractionButton()
     {
         _canvas.alpha = 1f;
         _interactionAnimation.Play();
     }
 
-    void HideInteractionButton()
+    protected void HideInteractionButton()
     {
         _canvas.alpha = 0f;
         _interactionAnimation.Stop();
@@ -46,7 +45,6 @@ public abstract class Interactable : MonoBehaviour
 
     void Interact()
     {
-        HideInteractionButton();
         isInteracting = true;
 
         if (!_canUse)
@@ -74,8 +72,9 @@ public abstract class Interactable : MonoBehaviour
     {
         _interactionAnimation = _canvas.GetComponentInChildren<Animation>();
 
-        _collider = GetComponent<Collider2D>();
-        _collider.isTrigger = true;
+        colliderComponent = GetComponent<Collider2D>();
+        colliderComponent.isTrigger = true;
+        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
 
         HideInteractionButton();
     }

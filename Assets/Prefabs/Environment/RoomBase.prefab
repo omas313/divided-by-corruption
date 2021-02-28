@@ -1,5 +1,35 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &3459506571423971735
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7480043458076463442}
+  m_Layer: 10
+  m_Name: Pickups
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7480043458076463442
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3459506571423971735}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 3881965109577644857}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3881965109226331950
 GameObject:
   m_ObjectHideFlags: 0
@@ -261,6 +291,7 @@ Transform:
   - {fileID: 3881965110816654900}
   - {fileID: 3881965110591586571}
   - {fileID: 4384536916874831385}
+  - {fileID: 7480043458076463442}
   - {fileID: 3881965110914725403}
   - {fileID: 3881965111013715997}
   m_Father: {fileID: 0}
@@ -279,6 +310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _effectsParent: {fileID: 3881965110591586571}
+  _groundLevel: {fileID: 3881965111260863575}
 --- !u!61 &3881965109577644862
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -570,7 +602,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 3881965109577644857}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3881965111013715996
 GameObject:
@@ -600,9 +632,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3881965111047940685}
-  - {fileID: 8672689639735036821}
   m_Father: {fileID: 3881965109577644857}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3881965111144657194
 GameObject:
@@ -727,113 +758,6 @@ Transform:
   m_Father: {fileID: 3881965109577644857}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &3881965110325262916
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 3881965111013715997}
-    m_Modifications:
-    - target: {fileID: 5585615775675953616, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_Name
-      value: DoorRight
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_RootOrder
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 12.427377
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3.52
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _canUse
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _canvas
-      value: 
-      objectReference: {fileID: 7181327639459786718}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _cantUseText
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _destination
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _groundLevel
-      value: 
-      objectReference: {fileID: 3881965111260863575}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _destinationDoor
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _noInteractionText
-      value: The only way to move is forward. That is what they would have wanted.
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _cantUseTextLines.Array.size
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _cantUseTextLines.Array.data[0]
-      value: The only way to go is forward.
-      objectReference: {fileID: 0}
-    - target: {fileID: 8100989598408048390, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-      propertyPath: _cantUseTextLines.Array.data[1]
-      value: That is what they would have wanted.
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
---- !u!4 &8672689639735036821 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-  m_PrefabInstance: {fileID: 3881965110325262916}
-  m_PrefabAsset: {fileID: 0}
---- !u!225 &7181327639459786718 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 6230362589127529882, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-  m_PrefabInstance: {fileID: 3881965110325262916}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8672689640454708124
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -927,13 +851,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
---- !u!225 &3327355852814749190 stripped
-CanvasGroup:
-  m_CorrespondingSourceObject: {fileID: 6230362589127529882, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
-  m_PrefabInstance: {fileID: 8672689640454708124}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3881965111047940685 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5585615775675953617, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
+  m_PrefabInstance: {fileID: 8672689640454708124}
+  m_PrefabAsset: {fileID: 0}
+--- !u!225 &3327355852814749190 stripped
+CanvasGroup:
+  m_CorrespondingSourceObject: {fileID: 6230362589127529882, guid: 449a2bc463fd14c4db83a5f81ccab895, type: 3}
   m_PrefabInstance: {fileID: 8672689640454708124}
   m_PrefabAsset: {fileID: 0}

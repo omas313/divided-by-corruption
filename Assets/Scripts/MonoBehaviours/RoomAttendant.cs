@@ -5,7 +5,10 @@ using UnityEngine;
 
 public class RoomAttendant : MonoBehaviour
 {
+    public Transform GroundLevel => _groundLevel;
+
     [SerializeField] Transform _effectsParent;
+    [SerializeField] Transform _groundLevel;
 
     void OnTriggerEnter2D(Collider2D other)
     {
