@@ -76,10 +76,13 @@ public class UIChronologicalLinesPlayer : MonoBehaviour
     
     IEnumerator PlayLinesWithDelay()
     {
+        _cursor.SetActive(true);
+
         for (int i = 0; i < _lines.Length; i++)
         {
             _text.SetText(_lines[i].Trim());
-            yield return new WaitForSeconds(_delayBetweenLines);
+            yield return new WaitForSeconds(0.5f);
+            yield return new WaitUntil(() => Input.GetButtonDown("Confirm"));
         }
     }
 

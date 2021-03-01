@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attackType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
   _damageType: {fileID: 11400000, guid: 54a8238354fbca34bada5c5795a1d5fc, type: 2}
-  _damage: 8
+  _damage: 5
   _name: Fireball
   _effectsPrefab: {fileID: 6392100636865404471, guid: 19f0fd8e2e431624bb86b0a05259eaeb, type: 3}
   _isLunge: 0

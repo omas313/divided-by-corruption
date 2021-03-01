@@ -10,6 +10,21 @@ public class GameManager : MonoBehaviour
 
     BattleDataDefinition _currentBattelDefinition;
 
+    public void LoadMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void LoadEndScene()
+    {
+        SceneManager.LoadScene("End");
+    }
+
+    public void LoadRooms()
+    {
+        SceneManager.LoadScene("Rooms");
+    }
+
     void OnBattleInitiated(BattleDataDefinition battleDataDefinition)
     {
         _currentBattelDefinition = battleDataDefinition;
@@ -21,21 +36,44 @@ public class GameManager : MonoBehaviour
     {
         yield return FindObjectOfType<UIRoomsCanvas>().FadeIn();
 
-        // var asyncOperation = SceneManager.LoadSceneAsync("Battle", LoadSceneMode.Additive);
-        // asyncOperation.completed += OnBattleSceneLoadOperationCompleted;
+        var asyncOperation = SceneManager.LoadSceneAsync("Battle", LoadSceneMode.Additive);
+        asyncOperation.completed += OnBattleSceneLoadOperationCompleted;
 
-        // RoomsSceneManager.Instance.DisableSceneObjects();
+        RoomsSceneManager.Instance.DisableSceneObjects();
     }
 
     void OnBattleSceneLoadOperationCompleted(AsyncOperation asyncOperation)
     {
-        // initiate battle controller with battle definition
+        FindObjectOfType<BattleController>().InitBattleAndStart(_currentBattelDefinition.PlayerParty, _currentBattelDefinition.Enemies);
     }
 
-    void OnBattleEnded()
+    void OnBattleEnded(bool hasWon)
     {
-        _currentBattelDefinition = null;
-        RoomsSceneManager.Instance.ActivateScene();
+        if (hasWon)
+        {
+            _currentBattelDefinition = null;
+            var asyncOperation = SceneManager.UnloadSceneAsync("Battle");
+            asyncOperation.completed += op => RoomsSceneManager.Instance.ActivateScene();
+        }
+        else
+            ReloadBattle();
+    }
+
+    void ReloadBattle()
+    {
+        var asyncOperation = SceneManager.UnloadSceneAsync("Battle");
+        asyncOperation.completed += ReloadBattleScene;
+    }
+
+    void ReloadBattleScene(AsyncOperation asyncOperation)
+    {
+        var loadOperation = SceneManager.LoadSceneAsync("Battle", LoadSceneMode.Additive);
+        loadOperation.completed += OnBattleSceneLoadOperationCompleted;
+    }
+
+    private void OnPlayerOpenedMainDoor()
+    {
+        LoadEndScene();
     }
 
     void Awake()
@@ -48,12 +86,15 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         EnvironmentEvents.BattleInitiated += OnBattleInitiated;    
-        // BattleEvents.BattleEnded += OnBattleEnded;    
+        BattleEvents.BattleEnded += OnBattleEnded;    
+        EnvironmentEvents.PlayerOpenedMainDoor += OnPlayerOpenedMainDoor;    
+        
     }
 
     void OnDestroy()
     {
         EnvironmentEvents.BattleInitiated -= OnBattleInitiated;
-        // BattleEvents.BattleEnded -= OnBattleEnded;    
+        BattleEvents.BattleEnded -= OnBattleEnded;    
+        EnvironmentEvents.PlayerOpenedMainDoor -= OnPlayerOpenedMainDoor;    
     }
 }

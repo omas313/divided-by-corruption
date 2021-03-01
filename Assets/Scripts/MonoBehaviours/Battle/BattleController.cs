@@ -8,14 +8,23 @@ using System.Collections;
 
 public class BattleController : MonoBehaviour
 {
-    // get from somewhere later
-    [SerializeField] List<Enemy> _enemies;
-    [SerializeField] List<PartyMember> _partyMembers;
-
+    List<Enemy> _enemies = new List<Enemy>();
+    List<PartyMember> _partyMembers = new List<PartyMember>();
     List<BattleParticipant> _battleParticipants;
     List<PartyMember> _activePartyMembers;
     List<Enemy> _activeEnemies;
     CommandManager _commandManager;
+
+    public void InitBattleAndStart(List<PartyMember> partyMembersPrefabs, List<Enemy> enemiesPrefabs)
+    {
+        foreach (var partyMemberPrefab in partyMembersPrefabs)
+            _partyMembers.Add(Instantiate(partyMemberPrefab));
+            
+        foreach (var enemyPrefab in enemiesPrefabs)
+            _enemies.Add(Instantiate(enemyPrefab));
+
+        StartBattle();
+    }
 
     void StartBattle() => StartCoroutine(TurnBasedBattle());
 
@@ -132,16 +141,17 @@ public class BattleController : MonoBehaviour
 
     IEnumerator BattleVictory()
     {
+        yield return new WaitForSeconds(2f);
+        BattleEvents.InvokeBattleEnded(hasWon: true);
         Debug.Log("Battle ended in victory");
 
-        yield return null;
     }
 
     IEnumerator BattleLoss()
     {
-        Debug.Log("Battle ended in loss");
+        yield return new WaitForSeconds(2f);
+        BattleEvents.InvokeBattleEnded(hasWon: false);
 
-        yield return null;
     }
 
     bool AllEnemiesAreDead() => _activeEnemies.Count == 0;
@@ -150,7 +160,7 @@ public class BattleController : MonoBehaviour
 
     private void Awake()
     {
-        StartBattle();
+        // StartBattle();
         _commandManager = GetComponent<CommandManager>();
     }
 }

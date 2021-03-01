@@ -4835,7 +4835,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -582068631
-  m_SortingLayer: 6
+  m_SortingLayer: 0
   m_SortingOrder: -1
   m_RenderMode: 0
   m_SortMode: 0
@@ -4873,7 +4873,6 @@ GameObject:
   - component: {fileID: 7690856000119618234}
   - component: {fileID: 7690856000119618235}
   - component: {fileID: 7690856000119618232}
-  - component: {fileID: 3487579704233383193}
   m_Layer: 6
   m_Name: RockThrow
   m_TagString: Untagged
@@ -4907,7 +4906,7 @@ ParticleSystem:
   serializedVersion: 7
   lengthInSec: 2
   simulationSpeed: 1
-  stopAction: 3
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -9705,7 +9704,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -582068631
-  m_SortingLayer: 6
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
@@ -9732,18 +9731,6 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &3487579704233383193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7690856000119618233}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f7065db39a3ce348b12a22a336147d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &2755909939943175208
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9753,7 +9740,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1463828847846039617, guid: 587e2492bbdb9a142ab57298bcada216, type: 3}
       propertyPath: m_SortingLayer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1463828847846039617, guid: 587e2492bbdb9a142ab57298bcada216, type: 3}
       propertyPath: m_SortingLayerID

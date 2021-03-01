@@ -47,10 +47,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   attacks:
   - {fileID: 11400000, guid: 9a902cd8780713044be4f3b7a6ed0ed6, type: 2}
-  _name: Swordsman
+  _castPoint: {fileID: 0}
+  _name: Strife
   _stats:
-    _currentHP: 30
-    _baseHP: 30
+    _currentHP: 25
+    _baseHP: 25
     _currentMP: 0
     _baseMP: 10
     _currentSpeed: 10

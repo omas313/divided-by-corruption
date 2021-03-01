@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _attackType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
   _damageType: {fileID: 11400000, guid: 54a8238354fbca34bada5c5795a1d5fc, type: 2}
-  _damage: 8
+  _damage: 5
   _name: Wind Slash
   _effectsPrefab: {fileID: 7807944414959136323, guid: dc8433c509f5d684a90f79de8ed2a1f6, type: 3}
   _isLunge: 0

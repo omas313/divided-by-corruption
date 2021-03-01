@@ -166,8 +166,8 @@ MonoBehaviour:
   _castPoint: {fileID: 5381741647439100249}
   _name: Zero
   _stats:
-    _currentHP: 30
-    _baseHP: 30
+    _currentHP: 20
+    _baseHP: 20
     _currentMP: 0
     _baseMP: 10
     _currentSpeed: 8

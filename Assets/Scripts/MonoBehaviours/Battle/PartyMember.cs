@@ -88,7 +88,7 @@ public class PartyMember : BattleParticipant
     {
         _animator.SetBool(CAST_ANIMATION_BOOL_KEY, true);
 
-        var angle = Vector2.SignedAngle(Vector2.left, (receiver.transform.position - _castPoint.position).normalized);
+        var angle = Vector2.SignedAngle(Vector2.left, (receiver.transform.position + new Vector3(0f, 1f, 0f) - _castPoint.position).normalized);
         var rotation = Quaternion.Euler(0f, 0f, angle);
         var particles = Instantiate(attackPrefab, _castPoint.position, rotation);
         var particleSystemMain = particles.GetComponent<ParticleSystem>().main;

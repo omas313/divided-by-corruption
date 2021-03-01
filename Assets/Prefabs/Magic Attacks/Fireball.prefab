@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 6632664160663687503}
   - component: {fileID: 6374873554982059047}
   - component: {fileID: 545970082542996977}
-  - component: {fileID: -4704130114898087026}
   m_Layer: 6
   m_Name: Fireball
   m_TagString: Untagged
@@ -45,7 +44,7 @@ ParticleSystem:
   serializedVersion: 7
   lengthInSec: 1.5
   simulationSpeed: 1
-  stopAction: 3
+  stopAction: 2
   cullingMode: 0
   ringBufferMode: 0
   ringBufferLoopRange: {x: 0, y: 1}
@@ -4844,7 +4843,7 @@ ParticleSystemRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -582068631
-  m_SortingLayer: 6
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
@@ -4871,18 +4870,6 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
---- !u!114 &-4704130114898087026
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6392100636865404471}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f7065db39a3ce348b12a22a336147d6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1935090820348488385
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5107,7 +5094,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4484609369284462882, guid: c775eba0b40fb5b4a95b45322896a27a, type: 3}
       propertyPath: m_SortingLayer
-      value: 6
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4484609369284462882, guid: c775eba0b40fb5b4a95b45322896a27a, type: 3}
       propertyPath: m_SortingLayerID

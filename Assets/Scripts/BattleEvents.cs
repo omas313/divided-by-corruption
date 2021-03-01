@@ -28,6 +28,7 @@ public class BattleEvents
     public static event Action<BattleParticipant, BattleParticipant, BattleAttack> ArmourDamageReceived;
     public static event Action<BattleParticipant> ArmourBreak;
 
+    public static event Action<bool> BattleEnded;
 
     public static void InvokeBattleStarted(List<PartyMember> partyMembers, List<Enemy> enemies) => BattleStarted?.Invoke(partyMembers, enemies);
 
@@ -53,4 +54,6 @@ public class BattleEvents
     public static void InvokeArmourDamageReceived(BattleParticipant attacker, BattleParticipant defender, BattleAttack attack) 
         => ArmourDamageReceived?.Invoke(attacker, defender, attack);
     public static void InvokeArmourBreak(BattleParticipant battleParticipant) => ArmourBreak?.Invoke(battleParticipant);
+
+    public static void InvokeBattleEnded(bool hasWon) => BattleEnded?.Invoke(hasWon);
 }
