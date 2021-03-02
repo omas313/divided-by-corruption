@@ -96,7 +96,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 54984d4bed8458c46a267993e65d3557, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _moveSpeed: 4
+  _moveSpeed: 3.5
   _stoppingDistance: 1
   _battleDefinition: {fileID: 0}
 --- !u!61 &5854892934251549909

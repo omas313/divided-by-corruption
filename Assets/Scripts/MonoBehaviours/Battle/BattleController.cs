@@ -8,6 +8,8 @@ using System.Collections;
 
 public class BattleController : MonoBehaviour
 {
+    [SerializeField] Transform _battleParticipantsParent;
+
     List<Enemy> _enemies = new List<Enemy>();
     List<PartyMember> _partyMembers = new List<PartyMember>();
     List<BattleParticipant> _battleParticipants;
@@ -18,10 +20,10 @@ public class BattleController : MonoBehaviour
     public void InitBattleAndStart(List<PartyMember> partyMembersPrefabs, List<Enemy> enemiesPrefabs)
     {
         foreach (var partyMemberPrefab in partyMembersPrefabs)
-            _partyMembers.Add(Instantiate(partyMemberPrefab));
+            _partyMembers.Add(Instantiate(partyMemberPrefab, transform.position, Quaternion.identity, _battleParticipantsParent));
             
         foreach (var enemyPrefab in enemiesPrefabs)
-            _enemies.Add(Instantiate(enemyPrefab));
+            _enemies.Add(Instantiate(enemyPrefab, transform.position, Quaternion.identity, _battleParticipantsParent));
 
         StartBattle();
     }
@@ -63,7 +65,7 @@ public class BattleController : MonoBehaviour
             }
         }
 
-        Debug.Log("battle ended");
+        // Debug.Log("battle ended");
     }
 
     void InitBattleParticipants(List<PartyMember> partyMembers, List<Enemy> enemies)
@@ -143,7 +145,7 @@ public class BattleController : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
         BattleEvents.InvokeBattleEnded(hasWon: true);
-        Debug.Log("Battle ended in victory");
+        // Debug.Log("Battle ended in victory");
 
     }
 

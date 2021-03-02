@@ -11,7 +11,7 @@ public class ShieldBreak : MonoBehaviour
     {
         transform.position = position + _offset;
         _animation.Play();
-        Debug.Log("playing shield break");
+        // Debug.Log("playing shield break");
     }
 
     void OnArmourBreak(BattleParticipant battleParticipant)

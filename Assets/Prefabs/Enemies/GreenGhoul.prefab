@@ -21,23 +21,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _stats._baseHP
-      value: 15
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+      propertyPath: _stats._baseSpeed
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _stats._currentHP
-      value: 15
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _stats._baseArmour
-      value: 15
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: attacks.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+      propertyPath: _stats._currentSpeed
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _stats._currentArmour
-      value: 15
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: attacks.Array.data[1]

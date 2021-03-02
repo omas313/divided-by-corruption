@@ -5,6 +5,7 @@ using TMPro;
 
 public class UIChronologicalLinesPlayer : MonoBehaviour
 {
+    [SerializeField] bool _useDelayBetweenLines = false;
     [SerializeField] float _delayBetweenLines = 2f;
     [SerializeField] float _canvasFadeSpeed = 2f;
     [SerializeField] float _delayToAutoConfirm = 4f;
@@ -81,8 +82,14 @@ public class UIChronologicalLinesPlayer : MonoBehaviour
         for (int i = 0; i < _lines.Length; i++)
         {
             _text.SetText(_lines[i].Trim());
-            yield return new WaitForSeconds(0.5f);
-            yield return new WaitUntil(() => Input.GetButtonDown("Confirm"));
+
+            if (_useDelayBetweenLines)
+                yield return new WaitForSeconds(_delayBetweenLines);
+            else
+            {
+                yield return new WaitUntil(() => Input.GetButtonDown("Confirm"));
+                yield return new WaitForSeconds(0.15f);
+            }
         }
     }
 

@@ -45,6 +45,8 @@ public class BattleInitiatorEnemy : MonoBehaviour
             transform.Translate((_target.transform.position - transform.position) * Time.deltaTime * _moveSpeed);
             yield return null;
         }
+
+        yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
     }
 

@@ -55,7 +55,6 @@ public class Enemy : BattleParticipant
     {
         _animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
-        Debug.Log("reeive att");
         var damageToInflict = attack.Damage;
 
         if (ShouldReduceAttackDamage(attack.DamageType))
@@ -97,7 +96,7 @@ public class Enemy : BattleParticipant
 
     public override IEnumerator Die()
     {
-        Debug.Log($"{Name} died");
+        // Debug.Log($"{Name} died");
         BattleEvents.InvokeEnemyDied(this);
         _animator.SetBool(DEATH_ANIMATION_BOOL_KEY, true);
         yield return new WaitForSeconds(0.25f); 

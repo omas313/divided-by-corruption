@@ -7,6 +7,9 @@ public class RoomsSceneManager : MonoBehaviour
 {
     public static RoomsSceneManager Instance { get; private set; }
 
+    [SerializeField] GameObject _eventsystem;
+    [SerializeField] AudioSource _music;
+
     RoomAttendant[] _roomAttendants;
     UIRoomsCanvas _uiRoomsCanvas;
     GameObject _roomsCameras; 
@@ -17,6 +20,7 @@ public class RoomsSceneManager : MonoBehaviour
         SetPlayerExplorerActive(false);
         SetRoomsCamerasActive(false);
         SetRoomsCanvasActive(false);
+        _music.Pause();
     }
 
     public void ActivateScene()
@@ -24,6 +28,7 @@ public class RoomsSceneManager : MonoBehaviour
         SetRoomsCamerasActive(true);
         SetRoomsCanvasActive(true);
         SetPlayerExplorerActive(true);
+        _music.Play();
     }
 
     void SetRoomsCamerasActive(bool isActive)
@@ -40,6 +45,7 @@ public class RoomsSceneManager : MonoBehaviour
             _uiRoomsCanvas = FindObjectOfType<UIRoomsCanvas>();
 
         _uiRoomsCanvas.gameObject.SetActive(isActive);
+        _eventsystem.gameObject.SetActive(isActive);
     }
 
     void SetPlayerExplorerActive(bool isActive)

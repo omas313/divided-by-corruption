@@ -21,6 +21,7 @@ public class PartyMember : BattleParticipant
     [SerializeField] Transform _castPoint;
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
+    [SerializeField] ParticleSystem _castParticles;
 
     SpriteRenderer _spriteRenderer;
     Animator _animator;
@@ -64,7 +65,7 @@ public class PartyMember : BattleParticipant
 
         // can mvoe to SO
         if (attackDefinition.IsSpell)
-            yield return CastSpell(attackDefinition.EffectsPrefab, receiver);
+            yield return CastSpell(attackDefinition, receiver);
         else
         {
             _animator.SetTrigger(ATTACK_ANIMATION_TRIGGER_KEY);
@@ -79,23 +80,25 @@ public class PartyMember : BattleParticipant
             yield return MoveToPosition(_initialPosition);
             yield return FadeIn();
         }
-
-         if (attackDefinition.IsSpell)
-            _animator.SetBool(CAST_ANIMATION_BOOL_KEY, false);
     }
 
-    IEnumerator CastSpell(GameObject attackPrefab, BattleParticipant receiver)
+    IEnumerator CastSpell(AttackDefinition attackDefinition, BattleParticipant receiver)
     {
         _animator.SetBool(CAST_ANIMATION_BOOL_KEY, true);
+        var main = _castParticles.main;
+        main.startColor = attackDefinition.PowerColor;
+        _castParticles.Play();
+
 
         var angle = Vector2.SignedAngle(Vector2.left, (receiver.transform.position + new Vector3(0f, 1f, 0f) - _castPoint.position).normalized);
         var rotation = Quaternion.Euler(0f, 0f, angle);
-        var particles = Instantiate(attackPrefab, _castPoint.position, rotation);
+        var particles = Instantiate(attackDefinition.EffectsPrefab, _castPoint.position, rotation);
         var particleSystemMain = particles.GetComponent<ParticleSystem>().main;
         particleSystemMain.startRotation = new ParticleSystem.MinMaxCurve(Mathf.Deg2Rad * -angle);
 
         yield return new WaitForSeconds(2f);
 
+        _castParticles.Stop();
         _animator.SetBool(CAST_ANIMATION_BOOL_KEY, false);
     }
 
