@@ -6,6 +6,8 @@ TagManager:
   tags:
   - GroundLevelMarker
   - RoomsCameras
+  - NormalHitArea
+  - CriticalHitArea
   layers:
   - Default
   - TransparentFX

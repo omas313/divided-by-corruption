@@ -20,19 +20,19 @@ public class UIPartyMemberStatusBar : UIItem
         _nameText.SetText(name);
         _hpText.SetText(hp);
         _mpText.SetText(mp);
-        this.isActive = isActive;
 
+        SetActiveStatus(isActive);
+    }
+
+    public void SetActiveStatus(bool isActive)
+    {
+        this.isActive = isActive;
         SetState();
     }
     
-    public void SetCommandStatus(bool hasCommand)
-    {
-        _commandSetText.gameObject.SetActive(hasCommand);
-    }
-
     public void SetDeathStatus(bool isDead)
     {
-        SetCommandStatus(false);
+        SetActiveStatus(!isDead);
         _koText.SetActive(isDead);
         _stats.SetActive(!isDead);
     }
@@ -40,8 +40,7 @@ public class UIPartyMemberStatusBar : UIItem
     protected override void Awake()
     {
         base.Awake();
-        SetCommandStatus(false);
+        SetActiveStatus(false);
         SetDeathStatus(false);
     }
-
 }

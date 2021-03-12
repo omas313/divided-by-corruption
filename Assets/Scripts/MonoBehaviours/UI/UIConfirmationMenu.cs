@@ -72,10 +72,10 @@ public class UIConfirmationMenu : MonoBehaviour
     {
         _items[_currentIndex].RaiseEvent();
 
-        if (_items[_currentIndex] == _noItem)
-            BattleEvents.InvokeCommandsNotConfirmed();
-        else
-            BattleEvents.InvokeCommandsConfirmed();
+        // if (_items[_currentIndex] == _noItem)
+        //     BattleEvents.InvokeCommandsNotConfirmed();
+        // else
+        //     BattleEvents.InvokeCommandsConfirmed();
 
         _isActive = false;
         Hide();
@@ -85,13 +85,13 @@ public class UIConfirmationMenu : MonoBehaviour
     {
         _canvasGroup = GetComponent<CanvasGroup>();
         _items = new UIBattleMenuItem[] { _noItem, _yesItem };
-        BattleEvents.RequestedCommandsConfirmation += StartSelection;
+        // BattleEvents.RequestedCommandsConfirmation += StartSelection;
 
         Hide();
     }
 
     void OnDestroy()
     {
-        BattleEvents.RequestedCommandsConfirmation -= StartSelection;
+        // BattleEvents.RequestedCommandsConfirmation -= StartSelection;
     }
 }

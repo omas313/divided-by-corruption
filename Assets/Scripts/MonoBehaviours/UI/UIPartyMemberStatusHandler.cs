@@ -9,14 +9,27 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
     [SerializeField] RectTransform _barsParent;
     
     UIPartyMemberStatusBar[] _bars;
-    Dictionary<PartyMember, UIPartyMemberStatusBar> _partyBars;
-    
+    Dictionary<PartyMember, UIPartyMemberStatusBar> _partyBarsMap;
+
+    void Init(List<PartyMember> party)
+    {
+        _partyBarsMap = new Dictionary<PartyMember, UIPartyMemberStatusBar>();
+
+        _bars = new UIPartyMemberStatusBar[party.Count];
+        for (var i = 0; i < party.Count; i++)
+        {
+            var bar = Instantiate(_barPrefab, _barsParent.position, Quaternion.identity, _barsParent);
+            _bars[i] = bar;
+            _partyBarsMap[party[i]] = bar;
+        }
+    }
+
     void OnPartyUpdated(List<PartyMember> party, PartyMember currentActiveMember)
     {
-        if (_partyBars == null)
+        if (_partyBarsMap == null)
             Init(party);
 
-        foreach (var pair in _partyBars)
+        foreach (var pair in _partyBarsMap)
         {
             var partyMember = pair.Key;
             var bar = pair.Value;
@@ -29,55 +42,28 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         }
     }
 
-    void Init(List<PartyMember> party)
+    void OnCurrentPartyMemberChanged(PartyMember partyMember)
     {
-        _partyBars = new Dictionary<PartyMember, UIPartyMemberStatusBar>();
-
-        _bars = new UIPartyMemberStatusBar[party.Count];
-        for (var i = 0; i < party.Count; i++)
-        {
-            var bar = Instantiate(_barPrefab, _barsParent.position, Quaternion.identity, _barsParent);
-            _bars[i] = bar;
-            _partyBars[party[i]] = bar;
-        }
+        foreach (var pair in _partyBarsMap)
+            _partyBarsMap[pair.Key].SetActiveStatus(pair.Key == partyMember);
     }
     
-    void OnPartyMemberCommandUnset(PartyMember partyMember)
-    {
-        _partyBars[partyMember].SetCommandStatus(false);
-    }
-
-    void OnPartyMemberCommandSet(PartyMember partyMember)
-    {
-        _partyBars[partyMember].SetCommandStatus(true);
-    }
-
     void OnPartyMemberDied(PartyMember partyMember)
     {
-        _partyBars[partyMember].SetDeathStatus(true);
-    }
-
-    void OnCommandsConfirmed()
-    {
-        foreach (var bar in _bars)
-            bar.SetCommandStatus(false);
+        _partyBarsMap[partyMember].SetDeathStatus(true);
     }
 
     void Awake()
     {
-        BattleEvents.PartyMembersUpdated += OnPartyUpdated;       
-        BattleEvents.PartyMemberCommandSet += OnPartyMemberCommandSet;
-        BattleEvents.PartyMemberCommandUnset += OnPartyMemberCommandUnset;
+        BattleEvents.PartyUpdated += OnPartyUpdated;       
+        BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;       
         BattleEvents.PartyMemberDied += OnPartyMemberDied;
-        BattleEvents.CommandsConfirmed += OnCommandsConfirmed;
     }
 
     void OnDestroy()
     {
-        BattleEvents.PartyMembersUpdated -= OnPartyUpdated;        
-        BattleEvents.PartyMemberCommandSet -= OnPartyMemberCommandSet;
-        BattleEvents.PartyMemberCommandUnset -= OnPartyMemberCommandUnset;
+        BattleEvents.PartyUpdated -= OnPartyUpdated;        
+        BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;       
         BattleEvents.PartyMemberDied -= OnPartyMemberDied;
-        BattleEvents.CommandsConfirmed -= OnCommandsConfirmed;
     }
 }

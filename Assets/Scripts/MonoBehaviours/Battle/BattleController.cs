@@ -8,114 +8,90 @@ using System.Collections;
 
 public class BattleController : MonoBehaviour
 {
+    [Header("Manual Setup")] 
+    [SerializeField] bool _manualSetup;
+    [SerializeField] List<PartyMember> _usedParty;
+    [SerializeField] List<Enemy> _usedEnemies;
+
     [SerializeField] Transform _battleParticipantsParent;
 
+    BattleParticipant CurrentBattleParticipant => _battleParticipants[_currentIndex];
+    int _currentIndex;
+
     List<Enemy> _enemies = new List<Enemy>();
-    List<PartyMember> _partyMembers = new List<PartyMember>();
+    List<PartyMember> _party = new List<PartyMember>();
     List<BattleParticipant> _battleParticipants;
-    List<PartyMember> _activePartyMembers;
+    List<PartyMember> _activeParty;
     List<Enemy> _activeEnemies;
-    CommandManager _commandManager;
+    TurnManager _turnManager;
 
     public void InitBattleAndStart(List<PartyMember> partyMembersPrefabs, List<Enemy> enemiesPrefabs)
     {
         foreach (var partyMemberPrefab in partyMembersPrefabs)
-            _partyMembers.Add(Instantiate(partyMemberPrefab, transform.position, Quaternion.identity, _battleParticipantsParent));
+            _party.Add(Instantiate(partyMemberPrefab, transform.position, Quaternion.identity, _battleParticipantsParent));
             
         foreach (var enemyPrefab in enemiesPrefabs)
             _enemies.Add(Instantiate(enemyPrefab, transform.position, Quaternion.identity, _battleParticipantsParent));
 
-        StartBattle();
+        StartCoroutine(StartBattle(_party, _enemies));
     }
 
-    void StartBattle() => StartCoroutine(TurnBasedBattle());
+    IEnumerator StartBattle(List<PartyMember> partyMembers, List<Enemy> enemies)
+    {
+        InitBattleParticipants(partyMembers, enemies);
+        yield return new WaitForSeconds(0.15f); // for UI to sub to events
+        BattleEvents.InvokeBattleStarted(_party, _enemies);
+        BattleEvents.InvokePartyUpdated(_party, null);
+        StartCoroutine(TurnBasedBattle());
+    }
+
+    void InitBattleParticipants(List<PartyMember> party, List<Enemy> enemies)
+    {
+        _battleParticipants = new List<BattleParticipant>();
+        _party = new List<PartyMember>(party);
+        _enemies = new List<Enemy>(enemies);
+        
+        foreach (var partyMember in _party)
+            _battleParticipants.Add(partyMember); 
+        
+        foreach (var enemy in _enemies)
+            _battleParticipants.Add(enemy); 
+
+        _activeParty = new List<PartyMember>(_party);
+        _activeEnemies = new List<Enemy>(_enemies);
+
+        _battleParticipants = _battleParticipants.OrderByDescending(bp => bp.CharacterStats.CurrentSpeed).ToList();
+    }
 
     IEnumerator TurnBasedBattle()
     {
-        yield return new WaitForSeconds(0.25f); // for UI to sub to events
-
-        _activePartyMembers = new List<PartyMember>(_partyMembers);
-        _activeEnemies = new List<Enemy>(_enemies);
-
-        InitBattleParticipants(_partyMembers, _enemies);
-        BattleEvents.InvokeBattleStarted(_partyMembers, _enemies);
-
         int loopNumber = 0;
         while (true)
         {
             loopNumber++;
             // Debug.Log($"battle loop: {loopNumber}");
 
-            yield return _commandManager.Init(_activePartyMembers, _activeEnemies);
-            yield return _commandManager.PlayerSetup();     
-            yield return _commandManager.EnemySetup();
+            BattleEvents.InvokeCurrentPartyMemberChanged(CurrentBattleParticipant is PartyMember ? CurrentBattleParticipant as PartyMember : null);
 
-            yield return PlayCommands(_commandManager.GetOrderedCommands());
+            yield return _turnManager.Manage(CurrentBattleParticipant);     
+
+            _currentIndex = (_currentIndex + 1) % _battleParticipants.Count;
+            yield return CheckDeadParticipants();
 
             if (AllEnemiesAreDead())
             {
-                yield return BattleVictory();
+                StartCoroutine(BattleVictory());
                 break;
             }
 
             if (AllPartyMembersAreDead())
             {
-                yield return BattleLoss();
+                StartCoroutine(BattleLoss());
                 break;
             }
         }
 
-        // Debug.Log("battle ended");
-    }
-
-    void InitBattleParticipants(List<PartyMember> partyMembers, List<Enemy> enemies)
-    {
-        _battleParticipants = new List<BattleParticipant>();
-        
-        foreach (var partyMember in _partyMembers)
-            _battleParticipants.Add(partyMember); 
-        
-        foreach (var enemy in _enemies)
-            _battleParticipants.Add(enemy); 
-
-        _battleParticipants = _battleParticipants.OrderByDescending(bp => bp.CharacterStats.CurrentSpeed).ToList();
-        
-        BattleEvents.InvokePartyUpdated(_partyMembers, null);        
-    }
-
-    IEnumerator PlayCommands(List<BattleCommand> battleCommands)
-    {
-        foreach (var command in battleCommands)
-        {
-            if (command.Actor.IsDead)
-                continue;
-
-            if (command.Target.IsDead)
-                command.Target = GetAnother(command.Target);
-
-            if (command.Target == null)
-                continue;
-
-            yield return command.Execute();
-            yield return CheckDeadParticipants();
-        }
-    }
-
-    BattleParticipant GetAnother(BattleParticipant target)
-    {
-        if (target is Enemy && _activeEnemies.Count == 0)
-            return null;
-        
-        if (target is Enemy)
-            return _activeEnemies.FirstOrDefault(e => e != target);
-
-        if (target is PartyMember && _activePartyMembers.Count == 0)
-            return null;
-        
-        if (target is PartyMember)
-            return _activeEnemies.FirstOrDefault(pm => pm != target);
-
-        return null;
+        Debug.Log("battle ended");
     }
 
     IEnumerator CheckDeadParticipants()
@@ -128,41 +104,55 @@ public class BattleController : MonoBehaviour
         if (deadParticipants.Count == 0)
             yield break;
 
-        foreach (var participant in deadParticipants)
+        var nextParticipant = _battleParticipants[_currentIndex];
+        while (nextParticipant.IsDead)
         {
-            yield return participant.Die();
-            
-            _battleParticipants.Remove(participant);
-
-            if (participant is Enemy)
-                _activeEnemies.Remove(participant as Enemy);
-            else
-                _activePartyMembers.Remove(participant as PartyMember);
+            _currentIndex = (_currentIndex + 1) % _battleParticipants.Count;
+            nextParticipant = _battleParticipants[_currentIndex];
         }
+
+        yield return KillAndRemoveDeadParticipants(deadParticipants);
+
+        _currentIndex = _battleParticipants.IndexOf(nextParticipant);
     }
 
+    IEnumerator KillAndRemoveDeadParticipants(List<BattleParticipant> deadParticipants)
+    {
+        foreach (var deadParticipant in deadParticipants)
+        {
+            yield return deadParticipant.Die();
+            _battleParticipants.Remove(deadParticipant);
+
+            if (deadParticipant is Enemy)
+                _activeEnemies.Remove(deadParticipant as Enemy);
+            else
+                _activeParty.Remove(deadParticipant as PartyMember);
+        }
+    }
     IEnumerator BattleVictory()
     {
         yield return new WaitForSeconds(2f);
-        BattleEvents.InvokeBattleEnded(hasWon: true);
-        // Debug.Log("Battle ended in victory");
+        // BattleEvents.InvokeBattleEnded(hasWon: true);
+        Debug.Log("Battle ended in victory");
 
     }
 
     IEnumerator BattleLoss()
     {
         yield return new WaitForSeconds(2f);
-        BattleEvents.InvokeBattleEnded(hasWon: false);
-
+        // BattleEvents.InvokeBattleEnded(hasWon: false);
+        Debug.Log("Battle ended in loss");
     }
 
     bool AllEnemiesAreDead() => _activeEnemies.Count == 0;
 
-    bool AllPartyMembersAreDead() => _activePartyMembers.Count == 0;
+    bool AllPartyMembersAreDead() => _activeParty.Count == 0;
 
-    private void Awake()
+    void Awake()
     {
-        // StartBattle();
-        _commandManager = GetComponent<CommandManager>();
+        _turnManager = GetComponent<TurnManager>();
+
+        if (_manualSetup)
+            StartCoroutine(StartBattle(_usedParty, _usedEnemies));
     }
 }

@@ -40,6 +40,17 @@ public class UIBattleMenu : MonoBehaviour
         StartSelection();
     }
 
+    void OnCurrentPartyMemberChanged(PartyMember partyMember)
+    {
+        if (partyMember == null)
+        {
+            Hide();
+            return;
+        }
+
+        StartSelection();
+    }
+
     void UpdateActiveStates()
     {
         for (var i = 0; i < _items.Length; i++)
@@ -85,13 +96,16 @@ public class UIBattleMenu : MonoBehaviour
 
     void OnDestroy()
     {
-        BattleEvents.PartyMembersUpdated -= OnPartyMembersUpdated;
+        BattleEvents.PartyUpdated -= OnPartyMembersUpdated;
+        BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;
     }
     
     void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
         _items = GetComponentsInChildren<UIBattleMenuItem>();
-        BattleEvents.PartyMembersUpdated += OnPartyMembersUpdated;
+
+        BattleEvents.PartyUpdated += OnPartyMembersUpdated;
+        BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;
     }
 }

@@ -6,13 +6,10 @@ using UnityEngine;
 public class BattleEvents
 {
     public static event Action<List<PartyMember>, List<Enemy>> BattleStarted;
+    public static event Action<List<PartyMember>, List<Enemy>> BattleParticipantsUpdated;
     
-    public static event Action<List<PartyMember>, PartyMember> PartyMembersUpdated;
-    public static event Action<PartyMember> PartyMemberCommandSet;
-    public static event Action<PartyMember> PartyMemberCommandUnset;
-    public static event Action RequestedCommandsConfirmation;
-    public static event Action CommandsConfirmed;
-    public static event Action CommandsNotConfirmed;
+    public static event Action<List<PartyMember>, PartyMember> PartyUpdated;
+    public static event Action<PartyMember> CurrentPartyMemberChanged;
     public static event Action<PartyMember> PartyMemberDied;
 
     public static event Action<BattleParticipant> TargetSelected;
@@ -31,14 +28,11 @@ public class BattleEvents
     public static event Action<bool> BattleEnded;
 
     public static void InvokeBattleStarted(List<PartyMember> partyMembers, List<Enemy> enemies) => BattleStarted?.Invoke(partyMembers, enemies);
+    public static void InvokeBattleParticipantsUpdated(List<PartyMember> partyMembers, List<Enemy> enemies) => BattleParticipantsUpdated?.Invoke(partyMembers, enemies);
 
     public static void InvokePartyUpdated(List<PartyMember> partyMembers, PartyMember currentActivePartyMember) 
-        => PartyMembersUpdated?.Invoke(partyMembers, currentActivePartyMember);
-    public static void InvokePartyMemberCommandSet(PartyMember partyMember) => PartyMemberCommandSet?.Invoke(partyMember);
-    public static void InvokePartyMemberCommandUnset(PartyMember partyMember) => PartyMemberCommandUnset?.Invoke(partyMember);
-    public static void InvokeRequestedCommandsConfirmation() => RequestedCommandsConfirmation?.Invoke();
-    public static void InvokeCommandsConfirmed() => CommandsConfirmed?.Invoke();
-    public static void InvokeCommandsNotConfirmed() => CommandsNotConfirmed?.Invoke();
+        => PartyUpdated?.Invoke(partyMembers, currentActivePartyMember);
+    public static void InvokeCurrentPartyMemberChanged(PartyMember currentPartyMember) => CurrentPartyMemberChanged?.Invoke(currentPartyMember);
     public static void InvokePartyMemberDied(PartyMember partyMember) => PartyMemberDied?.Invoke(partyMember);
 
     public static void InvokeTargetSelected(BattleParticipant participant) => TargetSelected?.Invoke(participant);

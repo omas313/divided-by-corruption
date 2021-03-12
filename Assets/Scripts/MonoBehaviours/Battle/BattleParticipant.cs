@@ -23,4 +23,10 @@ public abstract class BattleParticipant : MonoBehaviour
         yield return new WaitForSeconds(0.15f);
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
     }
+
+    [ContextMenu("Kill")]
+    public void CM_Kill()
+    {
+        CharacterStats.SetCurrentHP(0);
+    }
 }
