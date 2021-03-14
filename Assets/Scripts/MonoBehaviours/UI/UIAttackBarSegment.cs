@@ -9,6 +9,7 @@ public class UIAttackBarSegment : MonoBehaviour
     public Area Area { get; private set; }
     public Area NormalArea { get; private set; }
     public Area CriticalArea { get; private set; }
+    public float AnchoredPosition => _rectTransform.anchoredPosition.x;
     public float NormalMultiplier => _normalMultiplier;
     public float CriticalMultiplier => _criticalMultiplier;
 
@@ -19,6 +20,23 @@ public class UIAttackBarSegment : MonoBehaviour
     [SerializeField] Image _overlayImage;
 
     RectTransform _rectTransform;
+
+    public void Init(float xPosition)
+    {
+        _rectTransform.anchoredPosition = new Vector2(xPosition, 0f);
+
+        Area = new Area(_rectTransform.anchoredPosition.x, _rectTransform.anchoredPosition.x + _rectTransform.sizeDelta.x);
+
+        NormalArea = new Area(
+            _rectTransform.anchoredPosition.x + _normalArea.anchoredPosition.x, 
+            _rectTransform.anchoredPosition.x + _normalArea.anchoredPosition.x + _normalArea.sizeDelta.x);
+
+        CriticalArea = new Area(
+            _rectTransform.anchoredPosition.x + _criticalArea.anchoredPosition.x, 
+            _rectTransform.anchoredPosition.x + _criticalArea.anchoredPosition.x + _criticalArea.sizeDelta.x);
+
+        SetActive(true);
+    }
 
     public bool IsInside(float position) => Area.IsInside(position);
 
@@ -41,17 +59,5 @@ public class UIAttackBarSegment : MonoBehaviour
     void Awake()
     {
         _rectTransform = GetComponent<RectTransform>();    
-
-        Area = new Area(_rectTransform.anchoredPosition.x, _rectTransform.anchoredPosition.x + _rectTransform.sizeDelta.x);
-
-        NormalArea = new Area(
-            _rectTransform.anchoredPosition.x + _normalArea.anchoredPosition.x, 
-            _rectTransform.anchoredPosition.x + _normalArea.anchoredPosition.x + _normalArea.sizeDelta.x);
-
-        CriticalArea = new Area(
-            _rectTransform.anchoredPosition.x + _criticalArea.anchoredPosition.x, 
-            _rectTransform.anchoredPosition.x + _criticalArea.anchoredPosition.x + _criticalArea.sizeDelta.x);
-
-        SetActive(true);
     }
 }

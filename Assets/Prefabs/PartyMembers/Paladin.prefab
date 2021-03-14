@@ -56,6 +56,9 @@ MonoBehaviour:
     _baseMP: 10
     _currentSpeed: 6
     _baseSpeed: 6
+    _motionSpeed: 3
+  _castParticles: {fileID: 0}
+  _normalAttackDefinition: {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
 --- !u!95 &202823269
 Animator:
   serializedVersion: 3
@@ -144,7 +147,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -12461507
-  m_SortingLayer: 1
+  m_SortingLayer: 2
   m_SortingOrder: 0
   m_Sprite: {fileID: 2930840999596915113, guid: 5d6e6767a19d0e246bf4b26810bccdf7, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

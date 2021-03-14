@@ -9,10 +9,10 @@ public class PartyMember : BattleParticipant
     const string CAST_ANIMATION_BOOL_KEY = "IsCastingSkill";
     const string HIT_ANIMATION_BOOL_KEY = "IsGettingHit";
     const string DEATH_ANIMATION_BOOL_KEY = "IsDead";
+    const string LUNGE_ANIMATION_BOOL_KEY = "IsLunging";
     const string IDLE_ANIMATION_TRIGGER_KEY = "Idle";
     const string ATTACK_ANIMATION_TRIGGER_KEY = "Attack";
-    const float LUNGE_SPEED = 4f;
-    readonly Vector3 _attackPositioningOffset = new Vector3(1f, 0f, 0f);
+    const float LUNGE_SPEED = 2f;
 
     
     public override string Name => _name;
@@ -23,9 +23,86 @@ public class PartyMember : BattleParticipant
     [SerializeField] CharacterStats _stats;
     [SerializeField] ParticleSystem _castParticles;
 
+    [SerializeField] AttackDefinition _normalAttackDefinition;
+
     SpriteRenderer _spriteRenderer;
     Animator _animator;
-    private Vector3 _initialPosition;
+
+
+    // todo: attack definition should have segments
+    public List<SegmentData> GetSegmentsFor(BattleActionType battleActionType)
+    {
+        // if (battleActionType == BattleActionType.Attack)
+            return _normalAttackDefinition.SegmentData;
+
+        // return 1;
+    }
+
+    public IEnumerator PerformAction(BattleActionType selectedActionType, AttackBarResult attackBarResult, BattleParticipant receiver)
+    {
+        if (selectedActionType == BattleActionType.Attack)
+            yield return PerformNormalAttack(attackBarResult, receiver);
+        // else if (selectedActionType == ActionType.Skill)
+        //     yield return PerformSkillAttack(attackMultipliers, receiver);
+
+    }
+
+    public IEnumerator PerformNormalAttack(AttackBarResult attackBarResult, BattleParticipant receiver)
+    {
+        var initialPosition = transform.position;
+
+        yield return _normalAttackDefinition.AttackMotionType.PreAttackMotion(this, receiver);
+
+        for (var i = 0; i < attackBarResult.SegmentsResults.Count ; i++)
+        {
+            var result = attackBarResult.SegmentsResults[i];
+            var attack = new BattleAttack(
+                _normalAttackDefinition.Name, 
+                Mathf.CeilToInt(_normalAttackDefinition.Damage * result.Multiplier),
+                result.IsCritical);
+
+            _animator.SetTrigger(ATTACK_ANIMATION_TRIGGER_KEY);
+            yield return CurrentAnimationFinished(_animator);
+
+            if (!result.IsMiss)
+                yield return receiver.ReceiveAttack(this, attack);
+
+            if (result.IsCritical)
+                BattleEvents.InvokeAttackCrit(receiver.transform.position);
+            else if (result.IsMiss)
+                BattleEvents.InvokeAttackMiss(receiver.transform.position);
+
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        yield return _normalAttackDefinition.AttackMotionType.PostAttackMotion(this, receiver);
+    }
+
+    IEnumerator PerformSkillAttack(AttackDefinition attackDefinition, BattleParticipant receiver)
+    {
+        _animator.SetBool(CAST_ANIMATION_BOOL_KEY, true);
+        var main = _castParticles.main;
+        // main.startColor = attackDefinition.PowerColor;
+        _castParticles.Play();
+
+
+        var angle = Vector2.SignedAngle(Vector2.left, (receiver.transform.position + new Vector3(0f, 1f, 0f) - _castPoint.position).normalized);
+        var rotation = Quaternion.Euler(0f, 0f, angle);
+        var particles = Instantiate(attackDefinition.OnHitEffectsPrefab, _castPoint.position, rotation);
+        var particleSystemMain = particles.GetComponent<ParticleSystem>().main;
+        particleSystemMain.startRotation = new ParticleSystem.MinMaxCurve(Mathf.Deg2Rad * -angle);
+
+        yield return new WaitForSeconds(2f);
+
+        _castParticles.Stop();
+        _animator.SetBool(CAST_ANIMATION_BOOL_KEY, false);
+    }
+
+    public override void Init(Vector3 position)
+    {
+        InitialPosition = position;
+        transform.position = position;
+    }
 
     public override IEnumerator Die()
     {
@@ -46,111 +123,40 @@ public class PartyMember : BattleParticipant
         _animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
     }
 
-    public override IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver)
-    {
-        // do animations and other stuff
-        yield return new WaitForSeconds(0.5f);
-        
-        var attack = new BattleAttack(attackDefinition);
-        // add bonus from stats.damage later
-
-        // can mvoe to SO
-        if (attackDefinition.IsLunge)
-        {
-            _initialPosition = transform.position;
-            yield return FadeOut();
-            yield return MoveToPosition(receiver.transform.position - _attackPositioningOffset);
-            yield return FadeIn();
-        }
-
-        // can mvoe to SO
-        if (attackDefinition.IsSpell)
-            yield return CastSpell(attackDefinition, receiver);
-        else
-        {
-            _animator.SetTrigger(ATTACK_ANIMATION_TRIGGER_KEY);
-            yield return CurrentAnimationFinished(_animator);
-        }
-
-        yield return receiver.ReceiveAttack(this, attack);
-
-        if (attackDefinition.IsLunge)
-        {
-            yield return FadeOut();
-            yield return MoveToPosition(_initialPosition);
-            yield return FadeIn();
-        }
-    }
-
-    IEnumerator CastSpell(AttackDefinition attackDefinition, BattleParticipant receiver)
-    {
-        _animator.SetBool(CAST_ANIMATION_BOOL_KEY, true);
-        var main = _castParticles.main;
-        main.startColor = attackDefinition.PowerColor;
-        _castParticles.Play();
-
-
-        var angle = Vector2.SignedAngle(Vector2.left, (receiver.transform.position + new Vector3(0f, 1f, 0f) - _castPoint.position).normalized);
-        var rotation = Quaternion.Euler(0f, 0f, angle);
-        var particles = Instantiate(attackDefinition.EffectsPrefab, _castPoint.position, rotation);
-        var particleSystemMain = particles.GetComponent<ParticleSystem>().main;
-        particleSystemMain.startRotation = new ParticleSystem.MinMaxCurve(Mathf.Deg2Rad * -angle);
-
-        yield return new WaitForSeconds(2f);
-
-        _castParticles.Stop();
-        _animator.SetBool(CAST_ANIMATION_BOOL_KEY, false);
-    }
-
     public override void SetRendererSortingOrder(int order)
     {
         _spriteRenderer.sortingOrder = order;
     }
 
-    IEnumerator FadeOut(float speed = 1f)
-    {
-        var startTime = Time.time;
-        var currentColor = _spriteRenderer.color;
+    // IEnumerator FadeOut(float speed = 1f)
+    // {
+    //     var startTime = Time.time;
+    //     var currentColor = _spriteRenderer.color;
 
-        while (currentColor.a > 0f)
-        {
-            float alphaAmount = (Time.time - startTime) * speed;
-            currentColor.a = Mathf.Lerp(currentColor.a, 0f, alphaAmount);
-            _spriteRenderer.color = currentColor;
-            yield return null;
-        }
-    }
+    //     while (currentColor.a > 0f)
+    //     {
+    //         float alphaAmount = (Time.time - startTime) * speed;
+    //         currentColor.a = Mathf.Lerp(currentColor.a, 0f, alphaAmount);
+    //         _spriteRenderer.color = currentColor;
+    //         yield return null;
+    //     }
+    // }
 
-    IEnumerator FadeIn(float speed = 1f)
-    {
-        var startTime = Time.time;
-        var currentColor = _spriteRenderer.color;
+    // IEnumerator FadeIn(float speed = 1f)
+    // {
+    //     var startTime = Time.time;
+    //     var currentColor = _spriteRenderer.color;
 
-        while (currentColor.a < 1f)
-        {
-            float alphaAmount = (Time.time - startTime) * speed;
-            currentColor.a = Mathf.Lerp(currentColor.a, 1f, alphaAmount);
-            _spriteRenderer.color = currentColor;
-            yield return null;
-        }
-    }
+    //     while (currentColor.a < 1f)
+    //     {
+    //         float alphaAmount = (Time.time - startTime) * speed;
+    //         currentColor.a = Mathf.Lerp(currentColor.a, 1f, alphaAmount);
+    //         _spriteRenderer.color = currentColor;
+    //         yield return null;
+    //     }
+    // }
 
-    IEnumerator MoveToPosition(Vector3 destination)
-    {
-        var startTime = Time.time;
-        var totalDistance = Vector2.Distance(transform.position, destination);
-
-        while (Vector2.Distance(destination, transform.position) > 0.1f)
-        {
-            float distanceToCover = (Time.time - startTime) * LUNGE_SPEED;
-            float distancePercentage = distanceToCover / totalDistance;
-            transform.position = Vector3.Lerp(transform.position, destination, distancePercentage);
-            yield return null;
-        }
-
-    }
-
-    void SetVisibility(bool isVisible) => _spriteRenderer.color = isVisible ? Color.white : Color.clear;
+    // void SetVisibility(bool isVisible) => _spriteRenderer.color = isVisible ? Color.white : Color.clear;
 
     void Awake()
     {

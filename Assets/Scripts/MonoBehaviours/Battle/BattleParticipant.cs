@@ -6,15 +6,14 @@ public abstract class BattleParticipant : MonoBehaviour
 {
     public abstract string Name { get; }
     public abstract CharacterStats CharacterStats { get; }
-    
-    public AttackDefinition[] Attacks => attacks;
-    public AttackDefinition RandomAttack => attacks[UnityEngine.Random.Range(0, attacks.Length)];
     public bool IsDead => CharacterStats.CurrentHP <= 0;
+    public Vector3 InitialPosition { get; protected set; }
+    
 
     [SerializeField] protected AttackDefinition[] attacks;
 
+    public abstract void Init(Vector3 position);
     public abstract IEnumerator Die();
-    public abstract IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver);
     public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
     public abstract void SetRendererSortingOrder(int order);
 

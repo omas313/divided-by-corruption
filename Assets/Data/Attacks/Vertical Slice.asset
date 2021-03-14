@@ -12,9 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
   m_Name: Vertical Slice
   m_EditorClassIdentifier: 
-  _attackType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
-  _damageType: {fileID: 11400000, guid: 76418a7d8182db347ada2337d1d606c0, type: 2}
-  _damage: 5
   _name: Vertical Slice
-  _startEffectsPrefab: {fileID: 0}
-  _isLunge: 1
+  _damage: 5
+  _segmentData:
+  - _normalMultiplier: 0.8
+    _criticalMultiplier: 1.2
+  - _normalMultiplier: 1
+    _criticalMultiplier: 1.5
+  _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
+  _attackMotionType: {fileID: 0}
+  _onHitEffectsPrefab: {fileID: 0}
+  _castEffectsPrefab: {fileID: 0}

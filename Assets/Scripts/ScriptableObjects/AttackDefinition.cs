@@ -1,23 +1,23 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "AttackDefinition.asset", menuName = "Attack Definition")]
 public class AttackDefinition : ScriptableObject
 {
-    public AttackType AttackType => _attackType;
-    public DamageType DamageType => _damageType;
-    public int Damage => _damage;
     public string Name => _name;
-    public GameObject EffectsPrefab => _effectsPrefab;
-    public bool IsLunge => _isLunge;
-    public bool IsSpell => _isSpell;
-    public Color PowerColor => _powerColor;
+    public int Damage => _damage;
+    public int SegmentsCount => _segmentData.Count;
+    public List<SegmentData> SegmentData => _segmentData;
+    public AttackTargetType AttackTargetType => _attackTargetType;
+    public AttackMotionType AttackMotionType => _attackMotionType;
+    public GameObject OnHitEffectsPrefab => _onHitEffectsPrefab;
+    public GameObject CastEffectsPrefab => _castEffectsPrefab;
 
-    [SerializeField] AttackType _attackType;
-    [SerializeField] DamageType _damageType;
-    [SerializeField] int _damage;
     [SerializeField] string _name;
-    [SerializeField] GameObject _effectsPrefab;
-    [SerializeField] bool _isLunge;
-    [SerializeField] bool _isSpell;
-    [SerializeField] Color _powerColor;
+    [SerializeField] int _damage;
+    [SerializeField] List<SegmentData> _segmentData;
+    [SerializeField] AttackTargetType _attackTargetType;
+    [SerializeField] AttackMotionType _attackMotionType;
+    [SerializeField] GameObject _onHitEffectsPrefab;
+    [SerializeField] GameObject _castEffectsPrefab;
 }

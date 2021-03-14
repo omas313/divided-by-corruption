@@ -13,6 +13,8 @@ public class CharacterStats
     public int BaseSpeed => _baseSpeed;
     public int CurrentSpeed => _currentSpeed;
 
+    public float MotionSpeed => _motionSpeed;
+
 
     [SerializeField] int _currentHP = 10;
     [SerializeField] int _baseHP = 10;
@@ -22,6 +24,8 @@ public class CharacterStats
     
     [SerializeField] int _currentSpeed = 10;
     [SerializeField] int _baseSpeed = 10;
+
+    [SerializeField] float _motionSpeed = 3f;
 
 
     public void SetCurrentHP(int amount) => _currentHP = amount;

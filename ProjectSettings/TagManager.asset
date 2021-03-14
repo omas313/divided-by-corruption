@@ -51,11 +51,11 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
-  - name: PartyMembers
-    uniqueID: 4282505789
-    locked: 0
   - name: Enemies
     uniqueID: 659017929
+    locked: 0
+  - name: PartyMembers
+    uniqueID: 4282505789
     locked: 0
   - name: FGProps
     uniqueID: 1588230301

@@ -14,6 +14,7 @@ public class Enemy : BattleParticipant
 
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
+    public EnemyStats EnemyStats => _stats;
     public bool HasArmour => _stats.CurrentArmour > 0;
 
     [SerializeField] string _name;
@@ -39,7 +40,7 @@ public class Enemy : BattleParticipant
     //     attacks = _definition.Attacks;
     // }
 
-    public override IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver)
+    public IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver)
     {
         var attack = new BattleAttack(attackDefinition);
         // add bonus from stats.damage later
@@ -55,43 +56,31 @@ public class Enemy : BattleParticipant
     {
         _animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
-        var damageToInflict = attack.Damage;
-
-        if (ShouldReduceAttackDamage(attack.DamageType))
-        {
-            damageToInflict = (int)(attack.Damage * DAMAGE_REDUCTION_FACTOR);
-            attack.WasReduced = true;
-        }
-
         if (HasArmour)
         {
-            _lastDamageTypeReceived = attack.DamageType;
-
-            var previousArmourValue = _stats.CurrentArmour;
-            damageToInflict -= _stats.CurrentArmour;
-            _stats.SetCurrentArmour(damageToInflict >= 0 ? 0 : -damageToInflict);
+            _stats.ReduceCurrentArmour(attack.IsCritical ? 2 : 1);
 
             BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
-
-            attack.Damage = previousArmourValue - _stats.CurrentArmour;
             BattleEvents.InvokeArmourDamageReceived(attacker, this, attack);
             
             if (!HasArmour)
                 BattleEvents.InvokeArmourBreak(this);
         }
-
-        
-        if (damageToInflict > 0)
+        else
         {
-            _stats.ReduceCurrentHP(damageToInflict);
+            _stats.ReduceCurrentHP(attack.Damage);
             BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
-
-            attack.Damage = damageToInflict;
             BattleEvents.InvokeHealthDamageReceived(attacker, this, attack);
         }
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(0.25f);
         _animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
+    }
+
+    public override void Init(Vector3 position)
+    {
+        InitialPosition = position;
+        transform.position = position;
     }
 
     public override IEnumerator Die()

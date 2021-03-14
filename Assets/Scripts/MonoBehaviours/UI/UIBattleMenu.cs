@@ -22,52 +22,34 @@ public class UIBattleMenu : MonoBehaviour
     IEnumerator StartSelectionAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
+
+        BattleEvents.InvokeActionTypeSelected(BattleActionType.None);
         _currentIndex = 0;
         _isActive = true;
         UpdateActiveStates();
         Show();
     }
     
-    void OnPartyMembersUpdated(List<PartyMember> party, PartyMember currentPartyMember)
+    void StopSelection()
     {
-        if (currentPartyMember == null)
-        {
-            Hide();
-            _isActive = false;
-            return;
-        }
+        Hide();
+        _isActive = false;
+    }
 
+    void OnPartyMemberTurnStarted(PartyMember partyMember)
+    {
         StartSelection();
     }
 
-    void OnCurrentPartyMemberChanged(PartyMember partyMember)
+    void OnPartyMemberTurnEnded(PartyMember partyMember)
     {
-        if (partyMember == null)
-        {
-            Hide();
-            return;
-        }
-
-        StartSelection();
+        StopSelection();
     }
 
     void UpdateActiveStates()
     {
         for (var i = 0; i < _items.Length; i++)
             _items[i].SetActiveState(i == _currentIndex);
-    }
-
-    void Update()
-    {
-        if (!_isActive)    
-            return;
-
-        if (Input.GetButtonDown("Down"))
-            GoToNextItem();
-        else if (Input.GetButtonDown("Up"))
-            GoToPreviousItem();
-        else if (Input.GetButtonDown("Confirm"))
-            ConfirmSelection();
     }
 
     void GoToNextItem()
@@ -94,10 +76,23 @@ public class UIBattleMenu : MonoBehaviour
         _isActive = false;
     }
 
+    void Update()
+    {
+        if (!_isActive)    
+            return;
+
+        if (Input.GetButtonDown("Down"))
+            GoToNextItem();
+        else if (Input.GetButtonDown("Up"))
+            GoToPreviousItem();
+        else if (Input.GetButtonDown("Confirm"))
+            ConfirmSelection();
+    }
+
     void OnDestroy()
     {
-        BattleEvents.PartyUpdated -= OnPartyMembersUpdated;
-        BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;
+        BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
     }
     
     void Awake()
@@ -105,7 +100,7 @@ public class UIBattleMenu : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
         _items = GetComponentsInChildren<UIBattleMenuItem>();
 
-        BattleEvents.PartyUpdated += OnPartyMembersUpdated;
-        BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;
+        BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
     }
 }

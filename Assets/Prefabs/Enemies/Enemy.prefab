@@ -169,8 +169,8 @@ MonoBehaviour:
     _baseMP: 10
     _currentSpeed: 7
     _baseSpeed: 7
-    _currentArmour: 10
-    _baseArmour: 10
+    _currentArmour: 3
+    _baseArmour: 3
 --- !u!95 &-8896364280989633645
 Animator:
   serializedVersion: 3
@@ -310,6 +310,30 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 7787476356412695076}
     m_Modifications:
+    - target: {fileID: 1361846065199323401, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361846065199323401, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361846065199323401, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361846065199323401, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361846065199323401, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1361846065199323401, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3332970286019197562, guid: d0405236311b33840bde286395bc29aa, type: 3}
       propertyPath: m_Name
       value: HealthBar
@@ -402,6 +426,30 @@ PrefabInstance:
       propertyPath: _source
       value: 
       objectReference: {fileID: 5696124140707043624}
+    - target: {fileID: 8218385321744108980, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8218385321744108980, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8218385321744108980, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8218385321744108980, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8218385321744108980, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8218385321744108980, guid: d0405236311b33840bde286395bc29aa, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d0405236311b33840bde286395bc29aa, type: 3}
 --- !u!224 &1025965796136606759 stripped

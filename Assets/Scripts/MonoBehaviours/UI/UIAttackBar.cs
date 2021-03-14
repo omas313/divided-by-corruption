@@ -1,104 +1,198 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using TMPro;
 
 public class UIAttackBar : MonoBehaviour
 {
-    [SerializeField] UIAttackBarSegment[] _segments;
+    const int MAX_SEGMENT_COUNT = 4;
     [SerializeField] RectTransform _pin;
     [SerializeField] float _pinSpeed = 20f;
+
     [SerializeField] GameObject _confirmPointPrefab;
     [SerializeField] Transform _confirmPointsParent;
 
+    [SerializeField] RectTransform _segmentsParent;
+    [SerializeField] UIAttackBarSegment _segmentPrefab;
+    [SerializeField] float _segmentSpacing = 150f;
+    [SerializeField] float _firstSegmentPosition = 200f;
+
+    [SerializeField] Transform _textsParent;
+    [SerializeField] GameObject _textPrefab;
+
+    List<UIAttackBarSegment> _uiSegments;
+    Dictionary<UIAttackBarSegment, SegmentData> _uiSegmentsDataMap;
+    CanvasGroup _canvasGroup;
     RectTransform _rectTransform;
     bool _isMoving;
     float _totalWidth;
-    List<float> _currentResult;
+    List<SegmentResult> _currentSegmentResults;
 
-    public void StartMovingPin(float pinSpeed)
+    public void Hide() => _canvasGroup.alpha = 0f;
+
+    public void Show() => _canvasGroup.alpha = 1f;
+
+    public void StartWithSegments(List<SegmentData> segments, float pinSpeed)
     {
-        StartCoroutine(MovePin(pinSpeed));
+        if (segments.Count > MAX_SEGMENT_COUNT)
+            Debug.Log($"Error: received {segments.Count} segment count, where max is {MAX_SEGMENT_COUNT}");
+
+        CreateSegments(segments);
+        Show();
+        StartCoroutine(StartOperation(pinSpeed));
     }
 
-    IEnumerator MovePin(float pinSpeed)
+    void CreateSegments(List<SegmentData> segments)
+    {
+        _uiSegments = new List<UIAttackBarSegment>();
+
+        for (int i = 0; i < segments.Count; i++)
+        {
+            var xPosition = (_firstSegmentPosition + _segmentSpacing * i) % _totalWidth;
+            var segment = Instantiate(_segmentPrefab, Vector3.zero, Quaternion.identity, _segmentsParent);
+            segment.Init(xPosition);
+            _uiSegments.Add(segment);
+        }
+
+        _uiSegments = _uiSegments.OrderBy(s => s.AnchoredPosition).ToList();
+
+        _uiSegmentsDataMap = new Dictionary<UIAttackBarSegment, SegmentData>();
+        for (int i = 0; i < segments.Count; i++)
+            _uiSegmentsDataMap[_uiSegments[i]] = segments[i];
+
+        _currentSegmentResults = new List<SegmentResult>();
+    }
+
+    IEnumerator StartOperation(float pinSpeed)
     {
         _isMoving = true;
 
-        foreach (var segment in _segments)
-            segment.SetActive(true);
-        foreach (var confirmPoint in _confirmPointsParent.GetComponentsInChildren<UIConfirmPoint>())
-            Destroy(confirmPoint.gameObject);
         _pin.anchoredPosition = Vector3.zero;
-        _currentResult = new List<float>();
-
-        while (_pin.anchoredPosition.x < _totalWidth + 5f)
+        
+        while (_pin.anchoredPosition.x < _totalWidth)
         {
             _pin.anchoredPosition = new Vector3(_pin.anchoredPosition.x + Time.deltaTime * pinSpeed, 0f, 0f);    
 
-            foreach (var segment in _segments)
-                if (_pin.anchoredPosition.x > segment.Area.End && segment.IsActive)
-                {
-                    segment.SetActive(false);
-                    _currentResult.Add(0f);
-                }
-
-            if (_currentResult.Count == _segments.Length)
+            DeactivatePassedSegments();
+            
+            if (HasEnoughResults())
                 break;
 
             yield return null;
         }
 
-        foreach (var result in _currentResult)
-            Debug.Log(result);
+        yield return new WaitForSeconds(2f);
+
+        Hide();
+        BattleEvents.InvokeActionBarCompleted(new AttackBarResult(_currentSegmentResults));
             
+        CleanUp();
         _isMoving = false;
+    }
+
+    bool HasEnoughResults() => _currentSegmentResults.Count == _uiSegments.Count;
+
+    void DeactivatePassedSegments()
+    {
+        foreach (var uiSegment in _uiSegments)
+            if (_pin.anchoredPosition.x > uiSegment.Area.End && uiSegment.IsActive)
+            {
+                uiSegment.SetActive(false);
+                InstantiateMissTextAt(_pin.position); 
+                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], 0f, false, true));
+            }
+    }
+
+    void InstantiateMissTextAt(Vector3 position)
+    {
+        Instantiate(_textPrefab, position, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>().SetText("miss");
+    }
+
+    void CleanUp()
+    {
+        foreach (var confirmPoint in _confirmPointsParent.GetComponentsInChildren<UIConfirmPoint>())
+            Destroy(confirmPoint.gameObject);
+        foreach (var text in _textsParent.GetComponentsInChildren<Animation>())
+            Destroy(text.gameObject);
+        foreach (var segment in _uiSegments)
+            Destroy(segment.gameObject);
     }
 
     void Confirm()
     {
         var pinPositionX = _pin.anchoredPosition.x;
 
-        foreach (var segment in _segments)
+        foreach (var uiSegment in _uiSegments)
         {
-            if (!segment.IsActive)
+            if (!uiSegment.IsActive)
                 continue;
 
-            if (!segment.IsInside(pinPositionX))
+            if (!uiSegment.IsInside(pinPositionX))
                 continue;
 
-            segment.SetActive(false);
+            uiSegment.SetActive(false);
             Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
-            _currentResult.Add(segment.GetMultiplier(pinPositionX));
-            return;
+
+            if (uiSegment.NormalArea.IsInside(pinPositionX))
+            {
+                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].NormalMultiplier));
+                CreateText("good", Color.white);
+                return;
+            }
+            else if (uiSegment.CriticalArea.IsInside(pinPositionX))
+            {
+                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].CriticalMultiplier, isCritical: true));
+                CreateText("critical", Color.red, scale: 1.1f);
+                return;
+            }
         }
         
-        if (_currentResult.Count < _segments.Length)
-        {
-            Debug.Log("miss");
-            _currentResult.Add(0f);
-            Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
-            foreach (var segment in _segments)
-                if (segment.IsActive)
-                {
-                    segment.SetActive(false);
-                    break;
-                }
-        }
+        Instantiate(_textPrefab, _pin.position, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>().SetText("miss");
+        Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
+
+        foreach (var uiSegment in _uiSegments)
+            if (uiSegment.IsActive)
+            {
+                uiSegment.SetActive(false);
+                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], 0f, false, true));
+                break;
+            }
+    }
+
+    void CreateText(string text, Color color, float scale = 1f)
+    {
+        var textMesh = Instantiate(_textPrefab, _pin.position, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>();
+        textMesh.SetText(text);
+        textMesh.color = color;
+        textMesh.transform.localScale = new Vector3(scale, scale, scale);
+    }
+
+    void OnRequestedActionBar(List<SegmentData> segments)
+    {
+        Show();
+        StartWithSegments(segments, _pinSpeed);
     }
 
     void Update()
     {
-        Debug.Log(_isMoving);
-        if (Input.GetKeyDown(KeyCode.H) && !_isMoving)
-            StartMovingPin(_pinSpeed);
-
-        if (Input.GetKeyDown(KeyCode.G) && _isMoving)
+        if (Input.GetButtonDown("Confirm") && _isMoving)
             Confirm();
+    }
+
+    void OnDestroy()
+    {
+        BattleEvents.RequestedActionBar -= OnRequestedActionBar;
     }
 
     void Awake()
     {
+        _canvasGroup = GetComponent<CanvasGroup>();
         _rectTransform = GetComponent<RectTransform>();
         _totalWidth = _rectTransform.sizeDelta.x;    
+
+        Hide();
+
+        BattleEvents.RequestedActionBar += OnRequestedActionBar;
     }
 }

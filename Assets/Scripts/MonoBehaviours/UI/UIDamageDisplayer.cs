@@ -17,17 +17,23 @@ public class UIDamageDisplayer : MonoBehaviour
         var text = GetInactiveText();
         _offset.x = UnityEngine.Random.Range(-1f, 1f);
 
-        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, attack.DamageType.Color);
+        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, attack.IsCritical ? Color.red : Color.white);
     }
 
-    void OnArmourDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
+    void OnAttackMissed(Vector3 position)
     {
         var text = GetInactiveText();
-        var colour = attack.WasReduced ? Color.grey : attack.DamageType.Color;
-        var blockedText = attack.WasReduced ? " (blocked)" : "";
-        _offset.x = UnityEngine.Random.Range(-0.5f, 0.5f);
+        _offset.x = UnityEngine.Random.Range(-1f, 1f);
 
-        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, colour, blockedText);
+        text.Play("miss", position + _offset, Color.grey);
+    }
+
+    void OnAttackCrit(Vector3 position)
+    {
+        var text = GetInactiveText();
+        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+
+        text.Play("critical", position + _offset, Color.red);
     }
 
     UIFloatingText GetInactiveText()
@@ -46,7 +52,8 @@ public class UIDamageDisplayer : MonoBehaviour
     void OnDestroy()
     {
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;        
-        BattleEvents.ArmourDamageReceived -= OnArmourDamageReceived;
+        BattleEvents.AttackMissed -= OnAttackMissed;      
+        BattleEvents.AttackCrit -= OnAttackCrit;      
     }
 
     void Awake()
@@ -54,7 +61,8 @@ public class UIDamageDisplayer : MonoBehaviour
         _offset.y = _yOffset;
         _texts = GetComponentsInChildren<UIFloatingText>();
 
-        BattleEvents.HealthDamageReceived += OnHealthDamageReceived;        
-        BattleEvents.ArmourDamageReceived += OnArmourDamageReceived;
+        BattleEvents.HealthDamageReceived += OnHealthDamageReceived;      
+        BattleEvents.AttackMissed += OnAttackMissed;      
+        BattleEvents.AttackCrit += OnAttackCrit;      
     }
 }
