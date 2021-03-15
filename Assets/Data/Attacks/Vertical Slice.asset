@@ -20,6 +20,6 @@ MonoBehaviour:
   - _normalMultiplier: 1
     _criticalMultiplier: 1.5
   _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
-  _attackMotionType: {fileID: 0}
+  _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 0}

@@ -12,11 +12,11 @@ public class PartyMember : BattleParticipant
     const string LUNGE_ANIMATION_BOOL_KEY = "IsLunging";
     const string IDLE_ANIMATION_TRIGGER_KEY = "Idle";
     const string ATTACK_ANIMATION_TRIGGER_KEY = "Attack";
-    const float LUNGE_SPEED = 2f;
-
     
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
+    public AttackDefinition NormalAttackDefinition => _normalAttackDefinition;
+    public List<AttackDefinition> SpecialAttacksDefinitions => _specialAttackDefinitions;
 
     [SerializeField] Transform _castPoint;
     [SerializeField] string _name;
@@ -24,27 +24,18 @@ public class PartyMember : BattleParticipant
     [SerializeField] ParticleSystem _castParticles;
 
     [SerializeField] AttackDefinition _normalAttackDefinition;
+    [SerializeField] List<AttackDefinition> _specialAttackDefinitions;
 
     SpriteRenderer _spriteRenderer;
     Animator _animator;
 
 
-    // todo: attack definition should have segments
-    public List<SegmentData> GetSegmentsFor(BattleActionType battleActionType)
+    public IEnumerator PerformAction(BattleAction battleAction)
     {
-        // if (battleActionType == BattleActionType.Attack)
-            return _normalAttackDefinition.SegmentData;
-
-        // return 1;
-    }
-
-    public IEnumerator PerformAction(BattleActionType selectedActionType, AttackBarResult attackBarResult, BattleParticipant receiver)
-    {
-        if (selectedActionType == BattleActionType.Attack)
-            yield return PerformNormalAttack(attackBarResult, receiver);
+        if (battleAction.BattleActionType == BattleActionType.Attack)
+            yield return PerformNormalAttack(battleAction.AttackBarResult, battleAction.Target);
         // else if (selectedActionType == ActionType.Skill)
         //     yield return PerformSkillAttack(attackMultipliers, receiver);
-
     }
 
     public IEnumerator PerformNormalAttack(AttackBarResult attackBarResult, BattleParticipant receiver)
@@ -127,36 +118,6 @@ public class PartyMember : BattleParticipant
     {
         _spriteRenderer.sortingOrder = order;
     }
-
-    // IEnumerator FadeOut(float speed = 1f)
-    // {
-    //     var startTime = Time.time;
-    //     var currentColor = _spriteRenderer.color;
-
-    //     while (currentColor.a > 0f)
-    //     {
-    //         float alphaAmount = (Time.time - startTime) * speed;
-    //         currentColor.a = Mathf.Lerp(currentColor.a, 0f, alphaAmount);
-    //         _spriteRenderer.color = currentColor;
-    //         yield return null;
-    //     }
-    // }
-
-    // IEnumerator FadeIn(float speed = 1f)
-    // {
-    //     var startTime = Time.time;
-    //     var currentColor = _spriteRenderer.color;
-
-    //     while (currentColor.a < 1f)
-    //     {
-    //         float alphaAmount = (Time.time - startTime) * speed;
-    //         currentColor.a = Mathf.Lerp(currentColor.a, 1f, alphaAmount);
-    //         _spriteRenderer.color = currentColor;
-    //         yield return null;
-    //     }
-    // }
-
-    // void SetVisibility(bool isVisible) => _spriteRenderer.color = isVisible ? Color.white : Color.clear;
 
     void Awake()
     {

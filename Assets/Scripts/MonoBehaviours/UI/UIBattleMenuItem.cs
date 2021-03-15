@@ -3,6 +3,8 @@ using TMPro;
 
 public class UIBattleMenuItem : UIItem
 {
+    public BattleActionType BattleActionType => _battleActionType;
+
     [SerializeField] BattleActionType _battleActionType;
     [SerializeField] GameEvent _event;
 
@@ -10,13 +12,5 @@ public class UIBattleMenuItem : UIItem
     {
         this.isActive = isActive;
         SetState();
-    }
-
-    public void RaiseEvent()
-    {
-        if (_event != null)
-            _event.Raise();
-
-        BattleEvents.InvokeActionTypeSelected(_battleActionType);
     }
 }

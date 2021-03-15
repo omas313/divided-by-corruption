@@ -28,12 +28,13 @@ public class UIAttackBar : MonoBehaviour
     bool _isMoving;
     float _totalWidth;
     List<SegmentResult> _currentSegmentResults;
+    BattleAction _currentBattleAction;
 
-    public void Hide() => _canvasGroup.alpha = 0f;
+    void Hide() => _canvasGroup.alpha = 0f;
 
-    public void Show() => _canvasGroup.alpha = 1f;
+    void Show() => _canvasGroup.alpha = 1f;
 
-    public void StartWithSegments(List<SegmentData> segments, float pinSpeed)
+    void StartWithSegments(List<SegmentData> segments, float pinSpeed)
     {
         if (segments.Count > MAX_SEGMENT_COUNT)
             Debug.Log($"Error: received {segments.Count} segment count, where max is {MAX_SEGMENT_COUNT}");
@@ -85,7 +86,7 @@ public class UIAttackBar : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         Hide();
-        BattleEvents.InvokeActionBarCompleted(new AttackBarResult(_currentSegmentResults));
+        _currentBattleAction.AttackBarResult = new AttackBarResult(_currentSegmentResults);
             
         CleanUp();
         _isMoving = false;
@@ -168,10 +169,20 @@ public class UIAttackBar : MonoBehaviour
         textMesh.transform.localScale = new Vector3(scale, scale, scale);
     }
 
-    void OnRequestedActionBar(List<SegmentData> segments)
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
+    {
+        _currentBattleAction = battleAction;
+    }
+    
+    void OnPartyMemberTurnEnded(PartyMember partyMember)
+    {
+        _currentBattleAction = null;
+    }
+
+    void OnRequestedActionBar()
     {
         Show();
-        StartWithSegments(segments, _pinSpeed);
+        StartWithSegments(_currentBattleAction.AttackDefinition.SegmentData, _pinSpeed);
     }
 
     void Update()
@@ -182,7 +193,9 @@ public class UIAttackBar : MonoBehaviour
 
     void OnDestroy()
     {
-        BattleEvents.RequestedActionBar -= OnRequestedActionBar;
+        BattleUIEvents.RequestedActionBar -= OnRequestedActionBar;
+        BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
     }
 
     void Awake()
@@ -193,6 +206,8 @@ public class UIAttackBar : MonoBehaviour
 
         Hide();
 
-        BattleEvents.RequestedActionBar += OnRequestedActionBar;
+        BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
+        BattleUIEvents.RequestedActionBar += OnRequestedActionBar;
     }
 }

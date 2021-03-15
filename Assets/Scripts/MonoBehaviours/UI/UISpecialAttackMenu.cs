@@ -1,15 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIBattleMenu : MonoBehaviour
+public class UISpecialAttackMenu : MonoBehaviour
 {
-    UIBattleMenuItem[] _items;
+    [SerializeField] UISpecialAttackMenuItem _itemsPrefab;
+    [SerializeField] RectTransform _itemsParent;
+
+    UISpecialAttackMenuItem[] _items;
     CanvasGroup _canvasGroup;
     int _currentIndex;
     bool _isActive;
-    private PartyMember _partyMember;
     private BattleAction _currentBattleAction;
 
     public void Hide() => _canvasGroup.alpha = 0f;
@@ -37,21 +38,45 @@ public class UIBattleMenu : MonoBehaviour
         _isActive = false;
     }
 
+    void CreateAttacks(List<AttackDefinition> attackDefinitions)
+    {
+        DestroyOldItems();
+        _items = new UISpecialAttackMenuItem[attackDefinitions.Count];
+
+        for (int i = 0; i < attackDefinitions.Count; i++)
+        {
+            _items[i] = Instantiate(_itemsPrefab, _itemsParent.transform.position, Quaternion.identity, _itemsParent);
+            _items[i].Init(attackDefinitions[i]);
+        }
+
+        UpdateActiveStates();
+    }
+
+    void DestroyOldItems()
+    {
+        if (_items == null)
+            return;
+
+        foreach (var item in _items)
+            Destroy(item.gameObject);
+    }
+
     void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
     {
-        // todo: create party member actions in the future (when they have different actions)
-        _partyMember = partyMember;
         _currentBattleAction = battleAction;
+        CreateAttacks(partyMember.SpecialAttacksDefinitions);
     }
 
     void OnPartyMemberTurnEnded(PartyMember partyMember)
     {
-        _partyMember = null;
         _currentBattleAction = null;
         StopSelection();
     }
 
-    void OnBattleActionSelectionRequested() => StartSelection();
+    void OnSpecialAttackSelectionRequested()
+    {
+        StartSelection();
+    }
 
     void UpdateActiveStates()
     {
@@ -77,18 +102,17 @@ public class UIBattleMenu : MonoBehaviour
         UpdateActiveStates();
     }
 
+    void GoBack()
+    {
+        _currentBattleAction.AttackDefinition = null;
+        BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
+        StopSelection();
+    }
+
     void ConfirmSelection()
     {
-        _currentBattleAction.BattleActionType = _items[_currentIndex].BattleActionType;
-
-        // todo: enums SO's?
-        if (_currentBattleAction.BattleActionType == BattleActionType.Attack)
-        {
-            _currentBattleAction.AttackDefinition = _partyMember.NormalAttackDefinition;
-            BattleUIEvents.InvokeEnemyTargetSelectionRequested();
-        }
-        else if (_currentBattleAction.BattleActionType == BattleActionType.Special)
-            BattleUIEvents.InvokeSpecialAttackSelectionRequested();
+        _currentBattleAction.AttackDefinition = _items[_currentIndex].AttackDefinition;
+        BattleUIEvents.InvokeEnemyTargetSelectionRequested();
 
         _isActive = false;
     }
@@ -104,22 +128,23 @@ public class UIBattleMenu : MonoBehaviour
             GoToPreviousItem();
         else if (Input.GetButtonDown("Confirm"))
             ConfirmSelection();
+        else if (Input.GetButtonDown("Back"))
+            GoBack();
     }
 
     void OnDestroy()
     {
         BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
-        BattleUIEvents.BattleActionTypeSelectionRequested -= OnBattleActionSelectionRequested;
+        BattleUIEvents.SpecialAttackSelectionRequested -= OnSpecialAttackSelectionRequested;
     }
     
     void Awake()
     {
         _canvasGroup = GetComponent<CanvasGroup>();
-        _items = GetComponentsInChildren<UIBattleMenuItem>();
 
         BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
-        BattleUIEvents.BattleActionTypeSelectionRequested += OnBattleActionSelectionRequested;
+        BattleUIEvents.SpecialAttackSelectionRequested += OnSpecialAttackSelectionRequested;
     }
 }

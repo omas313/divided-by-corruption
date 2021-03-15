@@ -5,9 +5,7 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-    BattleActionType _selectedActionType = BattleActionType.None;
-    BattleParticipant _selectedTarget;
-    AttackBarResult _attackBarResult;
+    BattleAction _currentBattleAction;
 
     public IEnumerator Manage(BattleParticipant currentBattleParticipant)
     {
@@ -36,44 +34,15 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator ManagePartyMemberTurn(PartyMember partyMember)
     {
-        _attackBarResult = null;
-        _selectedTarget = null;
-        _selectedActionType = BattleActionType.None;
+        _currentBattleAction = new BattleAction() { Attacker = partyMember };
 
-        BattleEvents.InvokePartyMemberTurnStarted(partyMember);
-        yield return new WaitUntil(() => HasValidAction() && HasTarget());
+        BattleEvents.InvokePartyMemberTurnStarted(partyMember, _currentBattleAction);
+        BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
-        var segments = partyMember.GetSegmentsFor(_selectedActionType /*,_selectedSkill*/);
-        BattleEvents.InvokeRequestedActionBar(segments);
-        yield return new WaitUntil(() => _attackBarResult != null);
-
-        // todo: create BattleAction.cs class
-        yield return partyMember.PerformAction(_selectedActionType, _attackBarResult, _selectedTarget); 
+        yield return new WaitUntil(() => _currentBattleAction.IsValid);
+        yield return partyMember.PerformAction(_currentBattleAction); 
 
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
-    }
-
-    bool HasValidAction() => 
-        _selectedActionType == BattleActionType.Attack;
-        // || (_selectedActionType == ActionType.Skill && _selectedSkill != null);
-    
-    bool HasTarget() => _selectedTarget != null;
-
-    void OnActionTypeSelected(BattleActionType actionType) => _selectedActionType = actionType;
-    void OnTargetSelected(BattleParticipant target) => _selectedTarget = target;
-    void OnActionBarCompleted(AttackBarResult attackBarResult) => _attackBarResult = attackBarResult;
-    
-    void OnDestroy()
-    {
-        BattleEvents.BattleActionTypeSelected -= OnActionTypeSelected;
-        BattleEvents.TargetSelected -= OnTargetSelected;
-        BattleEvents.ActionBarCompleted -= OnActionBarCompleted;
-    }
-
-    void Awake()
-    {
-        BattleEvents.BattleActionTypeSelected += OnActionTypeSelected;
-        BattleEvents.TargetSelected += OnTargetSelected;
-        BattleEvents.ActionBarCompleted += OnActionBarCompleted;
+        _currentBattleAction = null;
     }
 }

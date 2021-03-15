@@ -70,8 +70,6 @@ public class UIConfirmationMenu : MonoBehaviour
 
     void ConfirmSelection()
     {
-        _items[_currentIndex].RaiseEvent();
-
         // if (_items[_currentIndex] == _noItem)
         //     BattleEvents.InvokeCommandsNotConfirmed();
         // else

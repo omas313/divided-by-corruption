@@ -10,5 +10,5 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b8c8381fe79f6674893f0930d2d7c701, type: 3}
-  m_Name: BattleMenuSkill
+  m_Name: BattleMenuSpecial
   m_EditorClassIdentifier: 

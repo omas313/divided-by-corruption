@@ -9,20 +9,27 @@ public class EnemyPositionManager : PositionSelectionManager<Enemy>
         InitPositions(enemies);
     }
 
+    void OnEnemyTargetSelectionRequested()
+    {
+        StartSelection();
+    }
+
+    void OnEnemyDied(Enemy enemy)
+    {
+        RemovePositionOf(enemy);
+    }
+
     protected override void Awake()
     {
         base.Awake();
         BattleEvents.EnemyDied += OnEnemyDied;
+        BattleUIEvents.EnemyTargetSelectionRequested += OnEnemyTargetSelectionRequested;
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
         BattleEvents.EnemyDied -= OnEnemyDied;
-    }
-
-    void OnEnemyDied(Enemy enemy)
-    {
-        RemovePositionOf(enemy);
+        BattleUIEvents.EnemyTargetSelectionRequested -= OnEnemyTargetSelectionRequested;
     }
 }

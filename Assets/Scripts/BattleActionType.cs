@@ -2,5 +2,5 @@ public enum BattleActionType
 {
     None,
     Attack, 
-    Skill
+    Special
 }

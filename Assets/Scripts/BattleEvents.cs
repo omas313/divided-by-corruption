@@ -10,18 +10,9 @@ public class BattleEvents
     
     public static event Action<List<PartyMember>, PartyMember> PartyUpdated;
     public static event Action<PartyMember> CurrentPartyMemberChanged;
-    public static event Action<PartyMember> PartyMemberTurnStarted;
+    public static event Action<PartyMember, BattleAction> PartyMemberTurnStarted;
     public static event Action<PartyMember> PartyMemberTurnEnded;
     public static event Action<PartyMember> PartyMemberDied;
-    public static event Action<List<SegmentData>> RequestedActionBar;
-    public static event Action<AttackBarResult> ActionBarCompleted;
-
-    public static event Action<BattleActionType> BattleActionTypeSelected;
-    public static event Action BattleActionTypeDeselected;
-    public static event Action<BattleParticipant> TargetSelected;
-    public static event Action AttackSelected;
-
-    // public static event Action<SkillDefition> SkillSelected;
 
     public static event Action<Vector3> AttackCrit;
     public static event Action<Vector3> AttackMissed;
@@ -41,18 +32,9 @@ public class BattleEvents
 
     public static void InvokePartyUpdated(List<PartyMember> partyMembers, PartyMember currentActivePartyMember) => PartyUpdated?.Invoke(partyMembers, currentActivePartyMember);
     public static void InvokeCurrentPartyMemberChanged(PartyMember currentPartyMember) => CurrentPartyMemberChanged?.Invoke(currentPartyMember);
-    public static void InvokePartyMemberTurnStarted(PartyMember partyMember) => PartyMemberTurnStarted?.Invoke(partyMember);
+    public static void InvokePartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction) => PartyMemberTurnStarted?.Invoke(partyMember, battleAction);
     public static void InvokePartyMemberTurnEnded(PartyMember partyMember) => PartyMemberTurnEnded?.Invoke(partyMember);
     public static void InvokePartyMemberDied(PartyMember partyMember) => PartyMemberDied?.Invoke(partyMember);
-    public static void InvokeRequestedActionBar(List<SegmentData> segments) => RequestedActionBar?.Invoke(segments);
-    public static void InvokeActionBarCompleted(AttackBarResult attackBarResult) => ActionBarCompleted?.Invoke(attackBarResult);
-
-
-    public static void InvokeActionTypeSelected(BattleActionType actionType) => BattleActionTypeSelected?.Invoke(actionType);
-    public static void InvokeActionTypeDeselected() => BattleActionTypeDeselected?.Invoke();
-    public static void InvokeTargetSelected(BattleParticipant participant) => TargetSelected?.Invoke(participant);
-    public static void InvokeAttackSelected() => AttackSelected?.Invoke();
-    // public static void InvokeSkillSelected(SkillDefinition skillDefinition) => SkillSelected?.Invoke(skillDefinition);
 
     public static void InvokeAttackCrit(Vector3 position) => AttackCrit?.Invoke(position);
     public static void InvokeAttackMiss(Vector3 position) => AttackMissed?.Invoke(position);

@@ -6,10 +6,8 @@ using UnityEngine;
 public abstract class PositionSelectionManager<T> : MonoBehaviour where T : BattleParticipant
 {
     [SerializeField] Transform[] _positions;
-    [SerializeField] GameEvent _backPressedPressedEvent;
     [SerializeField] GameEvent _rightPressedEvent;
     [SerializeField] GameEvent _leftPressedEvent;
-    [SerializeField] GameEvent _confirmedPressedEvent;
     [SerializeField] BattleParticipantMarker _targetMarker;
     [SerializeField] Color _selectionMarkerColor;
 
@@ -17,23 +15,14 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     Dictionary<Transform, T> _positionsMap;
     bool _isActive;
     int _currentIndex;
+    private BattleAction _currentBattleAction;
 
-    public void StartChoosingTarget()
+    protected void StartSelection()
     {
         StartCoroutine(StartSelectionInSeconds(0.1f));
     }
 
     protected abstract void OnBattleStarted(List<PartyMember> playerParty, List<Enemy> enemies);
-
-    protected virtual void Awake()
-    {
-        BattleEvents.BattleStarted += OnBattleStarted;
-    }
-
-    protected virtual void OnDestroy()
-    {
-        BattleEvents.BattleStarted -= OnBattleStarted;
-    }
 
     protected void RemovePositionOf(T participant)
     {
@@ -89,9 +78,11 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     
     void GoBack()
     {
-        if (_backPressedPressedEvent != null)
-            _backPressedPressedEvent.Raise();
-            
+        if (_currentBattleAction.BattleActionType == BattleActionType.Attack)
+            BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
+        else if (_currentBattleAction.BattleActionType == BattleActionType.Special)
+            BattleUIEvents.InvokeSpecialAttackSelectionRequested();
+
         _targetMarker.Hide();
         _isActive = false;
     }
@@ -113,11 +104,8 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _targetMarker.Hide();
         _isActive = false;
 
-        var selectedTarget = _positionsMap[_activePositions[_currentIndex]];
-        BattleEvents.InvokeTargetSelected(selectedTarget);
-        
-        if (_confirmedPressedEvent != null)
-            _confirmedPressedEvent.Raise();
+        _currentBattleAction.Target = _positionsMap[_activePositions[_currentIndex]];
+        BattleUIEvents.InvokeRequestedActionBar();
     }
 
     void RaiseRightPressedEvent()
@@ -138,6 +126,16 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _isActive = false;
     }
 
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
+    {
+        _currentBattleAction = battleAction;
+    }
+
+    void OnPartyMemberTurnEnded(PartyMember partyMember)
+    {
+        _currentBattleAction = null;
+    }
+
     void Update()
     {
         if (!_isActive)    
@@ -155,5 +153,19 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
             ConfirmCurrentSelection();    
         else if (Input.GetButtonDown("Back"))
             GoBack();
+    }
+
+    protected virtual void OnDestroy()
+    {
+        BattleEvents.BattleStarted -= OnBattleStarted;
+        BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
+    }
+
+    protected virtual void Awake()
+    {
+        BattleEvents.BattleStarted += OnBattleStarted;
+        BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
     }
 }
