@@ -41,7 +41,7 @@ public class BattleController : MonoBehaviour
         InitBattleParticipants(partyMembers, enemies);
         yield return new WaitForSeconds(0.15f); // for UI to sub to events
         BattleEvents.InvokeBattleStarted(_party, _enemies);
-        BattleEvents.InvokePartyUpdated(_party, null);
+        BattleEvents.InvokePartyUpdated(_party);
         StartCoroutine(TurnBasedBattle());
     }
 
@@ -71,9 +71,10 @@ public class BattleController : MonoBehaviour
             loopNumber++;
             // Debug.Log($"battle loop: {loopNumber}");
 
+            BattleEvents.InvokePartyUpdated(_activeParty);
             BattleEvents.InvokeCurrentPartyMemberChanged(CurrentBattleParticipant is PartyMember ? CurrentBattleParticipant as PartyMember : null);
 
-            yield return _turnManager.Manage(CurrentBattleParticipant);     
+            yield return _turnManager.Manage(CurrentBattleParticipant, _activeParty, _activeEnemies);
 
             _currentIndex = (_currentIndex + 1) % _battleParticipants.Count;
             yield return CheckDeadParticipants();
@@ -89,6 +90,8 @@ public class BattleController : MonoBehaviour
                 StartCoroutine(BattleLoss());
                 break;
             }
+
+
         }
 
         Debug.Log("battle ended");

@@ -7,20 +7,92 @@ public abstract class BattleParticipant : MonoBehaviour
     public abstract string Name { get; }
     public abstract CharacterStats CharacterStats { get; }
     public bool IsDead => CharacterStats.CurrentHP <= 0;
+
     public Vector3 InitialPosition { get; protected set; }
-    
+    public Vector3 CurrentPosition => transform.position;
+    public Vector3 BodyMidPointPosition => _bodyMidPoint.position;
+    public Vector3 ProjectileCastPointPosition => _projectileCastPoint.position;
+    public Vector3 AttackReceiptPointPosition => _attackReceiptPoint.position;
 
-    [SerializeField] protected AttackDefinition[] attacks;
+    [SerializeField] protected Transform _bodyMidPoint;
+    [SerializeField] protected Transform _projectileCastPoint;
+    [SerializeField] protected Transform _attackReceiptPoint;
+    protected Animator animator;
+    protected SpriteRenderer spriteRenderer;
 
-    public abstract void Init(Vector3 position);
+    public void InitPosition(Vector3 position)
+    {
+        InitialPosition = position;
+        transform.position = position;
+    }
+
+    public virtual void SetRendererSortingOrder(int order)
+    {
+        if (spriteRenderer == null)
+            spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+
+        spriteRenderer.sortingOrder = order;
+    }
+
     public abstract IEnumerator Die();
     public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
-    public abstract void SetRendererSortingOrder(int order);
-
-    protected IEnumerator CurrentAnimationFinished(Animator animator)
+    public virtual IEnumerator PerformAction(BattleAction battleAction)
     {
+        yield return Perform(battleAction);
+    }
+    
+
+    protected IEnumerator Perform(BattleAction battleAction)
+    {
+        var initialPosition = transform.position;
+        var target = battleAction.Target;
+        var attackDefinition = battleAction.AttackDefinition;
+        var attackMotionType = attackDefinition.AttackMotionType;
+        var segmentResults = battleAction.AttackBarResult.SegmentsResults;
+
+        yield return attackDefinition.SpawnCastParticles(transform.position);
+        yield return attackMotionType.PreAttackMotion(this, target);
+
+        for (var i = 0; i < segmentResults.Count ; i++)
+        {
+            var result = segmentResults[i];
+            var attack = new BattleAttack(
+                attackDefinition.Name, 
+                Mathf.CeilToInt(attackDefinition.Damage * result.Multiplier),
+                result.IsCritical);
+
+            yield return PlayAnimation(attackDefinition.AnimationTriggerName);
+            yield return attackDefinition.SpawnProjectile(ProjectileCastPointPosition, target, result.IsHit);
+
+            if (result.IsHit)
+            {
+                StartCoroutine(attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition));
+                yield return target.ReceiveAttack(this, attack);
+            }
+
+            SpawnResultHighlight(result, target);
+            yield return new WaitForSeconds(0.25f);
+        }
+
+        yield return attackMotionType.PostAttackMotion(this, target);
+    }
+
+    IEnumerator PlayAnimation(string name)
+    {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
+        animator.SetTrigger(name);
         yield return new WaitForSeconds(0.15f);
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f);
+    }
+
+    void SpawnResultHighlight(SegmentResult result, BattleParticipant target)
+    {
+        if (result.IsCritical)
+            BattleEvents.InvokeAttackCritAt(target.CurrentPosition);
+        else if (result.IsMiss)
+            BattleEvents.InvokeAttackMissAt(target.CurrentPosition);
     }
 
     [ContextMenu("Kill")]

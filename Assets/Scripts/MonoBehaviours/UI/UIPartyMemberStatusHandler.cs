@@ -24,7 +24,7 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         }
     }
 
-    void OnPartyUpdated(List<PartyMember> party, PartyMember currentActiveMember)
+    void OnPartyUpdated(List<PartyMember> party)
     {
         if (_partyBarsMap == null)
             Init(party);
@@ -38,7 +38,7 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
             var hp = partyMember.CharacterStats.CurrentHP.ToString();
             var mp = partyMember.CharacterStats.CurrentMP.ToString();
             
-            bar.Init(name, hp, mp, isActive: currentActiveMember == partyMember);
+            bar.Init(name, hp, mp);
         }
     }
 
@@ -53,17 +53,17 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         _partyBarsMap[partyMember].SetDeathStatus(true);
     }
 
-    void Awake()
-    {
-        BattleEvents.PartyUpdated += OnPartyUpdated;       
-        BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;       
-        BattleEvents.PartyMemberDied += OnPartyMemberDied;
-    }
-
     void OnDestroy()
     {
-        BattleEvents.PartyUpdated -= OnPartyUpdated;        
-        BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;       
+        BattleEvents.PartyUpdated -= OnPartyUpdated;
+        BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;
         BattleEvents.PartyMemberDied -= OnPartyMemberDied;
+    }
+
+    void Awake()
+    {
+        BattleEvents.PartyUpdated += OnPartyUpdated;  
+        BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;
+        BattleEvents.PartyMemberDied += OnPartyMemberDied;
     }
 }

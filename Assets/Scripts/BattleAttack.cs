@@ -6,12 +6,6 @@ public class BattleAttack
     public int Damage { get; set; }
     public bool IsCritical { get; set; }
 
-    public BattleAttack(AttackDefinition attackDefinition)
-    {
-        Name = attackDefinition.Name;
-        Damage = attackDefinition.Damage;
-    }
-
     public BattleAttack(string name, int damage, bool isCritical)
     {
         Name = name;

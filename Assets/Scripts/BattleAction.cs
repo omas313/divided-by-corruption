@@ -1,7 +1,7 @@
 public class BattleAction
 {
     public BattleActionType BattleActionType { get; set; }
-    public PartyMember Attacker { get; set; }
+    public BattleParticipant Attacker { get; set; }
     public BattleParticipant Target { get; set; }
     public AttackBarResult AttackBarResult { get; set; }
     public AttackDefinition AttackDefinition { get; set; }

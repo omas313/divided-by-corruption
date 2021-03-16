@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Smash
   m_EditorClassIdentifier: 
   _name: Smash
+  _animationTriggerName: Attack
   _damage: 8
   _segmentData:
   - _normalMultiplier: 0.7
@@ -21,3 +22,4 @@ MonoBehaviour:
   _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 0}
+  _projectilePrefab: {fileID: 0}

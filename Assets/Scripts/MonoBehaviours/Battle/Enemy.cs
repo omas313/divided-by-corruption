@@ -19,10 +19,12 @@ public class Enemy : BattleParticipant
 
     [SerializeField] string _name;
     [SerializeField] EnemyStats _stats;
+    [SerializeField] float _criticalChance = 0.2f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
+    [SerializeField] float _additionalCriticalMultiplier = 1f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
+    [SerializeField] float _missChance = 0.2f; // put in enemy stats or attack definitnion
 
-    SpriteRenderer _spriteRenderer;
-    DamageType _lastDamageTypeReceived;
-    Animator _animator;
+    [SerializeField] AttackDefinition[] _attackDefinitions;
+
 
     // [SerializeField] EnemyDefinition _definition;
 
@@ -40,21 +42,30 @@ public class Enemy : BattleParticipant
     //     attacks = _definition.Attacks;
     // }
 
-    public IEnumerator PerformAttack(AttackDefinition attackDefinition, BattleParticipant receiver)
+    public override IEnumerator PerformAction(BattleAction battleAction)
     {
-        var attack = new BattleAttack(attackDefinition);
-        // add bonus from stats.damage later
+        battleAction.Attacker = this;
+        battleAction.BattleActionType = BattleActionType.Attack;
+        battleAction.AttackDefinition = _attackDefinitions[UnityEngine.Random.Range(0, _attackDefinitions.Length)];
 
-        _animator.SetTrigger(ATTACK_ANIMATION_TRIGGER_KEY);
-        yield return CurrentAnimationFinished(_animator);
+        var segmentResults = new List<SegmentResult>();
+        foreach (var segment in battleAction.AttackDefinition.SegmentData)
+        {
+            var isMiss = UnityEngine.Random.value < _missChance;
+            var isCritical = isMiss ? false : UnityEngine.Random.value < _criticalChance;
+            var multiplier = isMiss ? 0f : (isCritical ? segment.CriticalMultiplier : segment.NormalMultiplier);
+            var result = new SegmentResult(segment, multiplier, isCritical, isMiss);
+            segmentResults.Add(result);
+        }
 
-        yield return receiver.ReceiveAttack(this, attack);
+        battleAction.AttackBarResult = new AttackBarResult(segmentResults);
+
+        yield return base.PerformAction(battleAction);
     }
-    
 
     public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)
     {
-        _animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
+        animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
         if (HasArmour)
         {
@@ -74,36 +85,22 @@ public class Enemy : BattleParticipant
         }
 
         yield return new WaitForSeconds(0.25f);
-        _animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
-    }
-
-    public override void Init(Vector3 position)
-    {
-        InitialPosition = position;
-        transform.position = position;
+        animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
     }
 
     public override IEnumerator Die()
     {
         // Debug.Log($"{Name} died");
         BattleEvents.InvokeEnemyDied(this);
-        _animator.SetBool(DEATH_ANIMATION_BOOL_KEY, true);
+        animator.SetBool(DEATH_ANIMATION_BOOL_KEY, true);
         yield return new WaitForSeconds(0.25f); 
     }
 
-    public override void SetRendererSortingOrder(int order)
-    {
-        _spriteRenderer.sortingOrder = order;
-    }
-
-    bool ShouldReduceAttackDamage(DamageType damageType) => HasArmour && damageType == _lastDamageTypeReceived;
-
     void Awake()
     {
-        _spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        _animator = GetComponent<Animator>();
+        animator = GetComponent<Animator>();
 
-        _animator.SetTrigger(IDLE_ANIMATION_TRIGGER_KEY);
+        animator.SetTrigger(IDLE_ANIMATION_TRIGGER_KEY);
         // Initialize(_definition);
     }
 }

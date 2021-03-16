@@ -4,6 +4,7 @@ public class SegmentResult
     public bool IsMiss { get; private set; }
     public bool IsCritical { get; private set; }
     public float Multiplier { get; private set; }
+    public bool IsHit => !IsMiss;
 
     public SegmentResult(SegmentData segmentData, float multiplier, bool isCritical = false, bool isMiss = false)
     {

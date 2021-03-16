@@ -52,8 +52,8 @@ public class UIDamageDisplayer : MonoBehaviour
     void OnDestroy()
     {
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;        
-        BattleEvents.AttackMissed -= OnAttackMissed;      
-        BattleEvents.AttackCrit -= OnAttackCrit;      
+        BattleEvents.AttackMissedAt -= OnAttackMissed;      
+        BattleEvents.AttackCritAt -= OnAttackCrit;      
     }
 
     void Awake()
@@ -62,7 +62,7 @@ public class UIDamageDisplayer : MonoBehaviour
         _texts = GetComponentsInChildren<UIFloatingText>();
 
         BattleEvents.HealthDamageReceived += OnHealthDamageReceived;      
-        BattleEvents.AttackMissed += OnAttackMissed;      
-        BattleEvents.AttackCrit += OnAttackCrit;      
+        BattleEvents.AttackMissedAt += OnAttackMissed;      
+        BattleEvents.AttackCritAt += OnAttackCrit;      
     }
 }

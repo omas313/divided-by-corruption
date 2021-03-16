@@ -5,44 +5,36 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
-    BattleAction _currentBattleAction;
-
-    public IEnumerator Manage(BattleParticipant currentBattleParticipant)
+    public IEnumerator Manage(BattleParticipant currentBattleParticipant, List<PartyMember> party, List<Enemy> enemies)
     {
         if (currentBattleParticipant is Enemy)
-            yield return ManageEnemyTurn(currentBattleParticipant as Enemy);
+            yield return ManageEnemyTurn(currentBattleParticipant as Enemy, party, enemies);
         else
             yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember);
     }
 
-    IEnumerator ManageEnemyTurn(Enemy enemy)
+    IEnumerator ManageEnemyTurn(Enemy enemy, List<PartyMember> party, List<Enemy> enemies)
     {
-        // BattleEvents.InvokeEnemyTurnStarted(enemy);
+        BattleEvents.InvokeEnemyTurnStarted(enemy);
 
-        while (true)
-        {
-            Debug.Log($"{enemy.Name} turn");
+        var battleAction = new BattleAction();
+        battleAction.Target = party[UnityEngine.Random.Range(0, party.Count)];
 
-            if (Input.GetKeyDown(KeyCode.End))
-                break;
+        yield return enemy.PerformAction(battleAction); 
 
-            yield return null;
-        }
-
-        // BattleEvents.InvokeEnemyTurnEnded(enemy);
+        BattleEvents.InvokeEnemyTurnEnded(enemy);
     }
 
     IEnumerator ManagePartyMemberTurn(PartyMember partyMember)
     {
-        _currentBattleAction = new BattleAction() { Attacker = partyMember };
+        var currentBattleAction = new BattleAction() { Attacker = partyMember };
 
-        BattleEvents.InvokePartyMemberTurnStarted(partyMember, _currentBattleAction);
+        BattleEvents.InvokePartyMemberTurnStarted(partyMember, currentBattleAction);
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
-        yield return new WaitUntil(() => _currentBattleAction.IsValid);
-        yield return partyMember.PerformAction(_currentBattleAction); 
+        yield return new WaitUntil(() => currentBattleAction.IsValid);
+        yield return partyMember.PerformAction(currentBattleAction); 
 
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
-        _currentBattleAction = null;
     }
 }

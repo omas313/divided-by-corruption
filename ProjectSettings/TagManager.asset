@@ -8,6 +8,7 @@ TagManager:
   - RoomsCameras
   - NormalHitArea
   - CriticalHitArea
+  - Junk
   layers:
   - Default
   - TransparentFX

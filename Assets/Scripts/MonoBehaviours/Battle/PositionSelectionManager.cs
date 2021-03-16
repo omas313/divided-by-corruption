@@ -46,7 +46,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
             var position = _positions[i];
             _positionsMap[position] = participants[i];
             _activePositions.Add(position);
-            participants[i].Init(_activePositions[i].position);
+            participants[i].InitPosition(_activePositions[i].position);
         }
 
         _activePositions = _activePositions.OrderBy(p => p.name).ToList();

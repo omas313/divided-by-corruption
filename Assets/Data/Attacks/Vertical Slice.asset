@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Vertical Slice
   m_EditorClassIdentifier: 
   _name: Vertical Slice
+  _animationTriggerName: Attack
   _damage: 5
   _segmentData:
   - _normalMultiplier: 0.8
@@ -23,3 +24,4 @@ MonoBehaviour:
   _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 0}
+  _projectilePrefab: {fileID: 0}

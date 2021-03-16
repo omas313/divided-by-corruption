@@ -12,7 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
   m_Name: Scratch
   m_EditorClassIdentifier: 
-  _attackType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
-  _damageType: {fileID: 11400000, guid: 76418a7d8182db347ada2337d1d606c0, type: 2}
-  _damage: 3
   _name: Scratch
+  _animationTriggerName: Attack
+  _damage: 5
+  _segmentData:
+  - _normalMultiplier: 0.9
+    _criticalMultiplier: 1.25
+  _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
+  _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
+  _onHitEffectsPrefab: {fileID: 0}
+  _castEffectsPrefab: {fileID: 0}
+  _projectilePrefab: {fileID: 0}
