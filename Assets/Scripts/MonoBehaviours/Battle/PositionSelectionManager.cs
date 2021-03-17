@@ -17,7 +17,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     int _currentIndex;
     private BattleAction _currentBattleAction;
 
-    protected void StartSelection()
+    public void StartSelection()
     {
         StartCoroutine(StartSelectionInSeconds(0.1f));
     }
@@ -67,6 +67,8 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         var position = _activePositions[_currentIndex].position;
         _targetMarker.SetColor(_selectionMarkerColor);
         _targetMarker.PlaceAt(position);
+
+        BattleUIEvents.InvokeBattleParticipantHighlighted(_positionsMap[_activePositions[_currentIndex]] as BattleParticipant);
     }
 
     void SetSortingOrders()

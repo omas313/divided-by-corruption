@@ -11,6 +11,8 @@ public class BattleUIEvents
 
     public static event Action RequestedActionBar;
 
+    public static event Action<BattleParticipant> BattleParticipantHighlighted;
+
 
     public static void InvokeBattleActionTypeSelectionRequested() => BattleActionTypeSelectionRequested?.Invoke();
     public static void InvokeSpecialAttackSelectionRequested() => SpecialAttackSelectionRequested?.Invoke();
@@ -19,4 +21,6 @@ public class BattleUIEvents
     public static void InvokeEnemyTargetSelectionRequested() => EnemyTargetSelectionRequested?.Invoke();
     
     public static void InvokeRequestedActionBar() => RequestedActionBar?.Invoke();
+
+    internal static void InvokeBattleParticipantHighlighted(BattleParticipant battleParticipant) => BattleParticipantHighlighted?.Invoke(battleParticipant);
 }

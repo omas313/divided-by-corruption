@@ -61,6 +61,7 @@ public class BattleController : MonoBehaviour
         _activeEnemies = new List<Enemy>(_enemies);
 
         _battleParticipants = _battleParticipants.OrderByDescending(bp => bp.CharacterStats.CurrentSpeed).ToList();
+        BattleEvents.InvokeBattleParticipantsUpdated(_battleParticipants);
     }
 
     IEnumerator TurnBasedBattle()
@@ -90,8 +91,6 @@ public class BattleController : MonoBehaviour
                 StartCoroutine(BattleLoss());
                 break;
             }
-
-
         }
 
         Debug.Log("battle ended");
@@ -114,7 +113,8 @@ public class BattleController : MonoBehaviour
             nextParticipant = _battleParticipants[_currentIndex];
         }
 
-        yield return KillAndRemoveDeadParticipants(deadParticipants);
+        if (deadParticipants.Count > 0)
+            yield return KillAndRemoveDeadParticipants(deadParticipants);
 
         _currentIndex = _battleParticipants.IndexOf(nextParticipant);
     }
@@ -131,7 +131,10 @@ public class BattleController : MonoBehaviour
             else
                 _activeParty.Remove(deadParticipant as PartyMember);
         }
+
+        BattleEvents.InvokeBattleParticipantsUpdated(_battleParticipants);
     }
+
     IEnumerator BattleVictory()
     {
         yield return new WaitForSeconds(2f);

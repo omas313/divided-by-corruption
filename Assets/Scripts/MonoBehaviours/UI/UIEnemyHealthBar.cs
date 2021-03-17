@@ -13,8 +13,11 @@ public class UIEnemyHealthBar : MonoBehaviour
     [SerializeField] GameObject _armourPrefab;
 
     List<GameObject> _armourPieces = new List<GameObject>();
-
+    CanvasGroup _canvasGroup;
     float _totalWidth;
+
+    void Show() => _canvasGroup.alpha = 1f;
+    void Hide() => _canvasGroup.alpha = 0f;
 
     void SetArmour()
     {
@@ -53,20 +56,48 @@ public class UIEnemyHealthBar : MonoBehaviour
         _healthRect.sizeDelta = size;
     }
 
-    void Awake()
+    void OnBattleParticipantHighlighted(BattleParticipant battleParticipant)
     {
-        _totalWidth = _healthRect.sizeDelta.x;
-
-        SetArmour();
-
-        BattleEvents.EnemyArmourChanged += OnArmourChanged;
-        BattleEvents.EnemyHealthChanged += OnHealthChanged;
+        if (battleParticipant is Enemy && battleParticipant == _source)
+            Show();
+        else 
+            Hide();
     }
 
+    void OnRequestedActionBar()
+    {
+        Hide();
+    }
+
+    void OnEnemyTargetted(Enemy enemy)
+    {
+        if (enemy == _source)
+            Show();
+        else 
+            Hide();
+    }
 
     void OnDestroy()
     {
         BattleEvents.EnemyArmourChanged -= OnArmourChanged;
         BattleEvents.EnemyHealthChanged -= OnHealthChanged;
+        BattleEvents.EnemyTargetted -= OnEnemyTargetted;
+        BattleUIEvents.BattleParticipantHighlighted -= OnBattleParticipantHighlighted;
+        BattleUIEvents.RequestedActionBar -= OnRequestedActionBar;
+    }
+
+    void Awake()
+    {
+        _totalWidth = _healthRect.sizeDelta.x;
+        _canvasGroup = GetComponent<CanvasGroup>();
+
+        SetArmour();
+        Hide();
+
+        BattleEvents.EnemyArmourChanged += OnArmourChanged;
+        BattleEvents.EnemyHealthChanged += OnHealthChanged;
+        BattleEvents.EnemyTargetted += OnEnemyTargetted;
+        BattleUIEvents.BattleParticipantHighlighted += OnBattleParticipantHighlighted;
+        BattleUIEvents.RequestedActionBar += OnRequestedActionBar;
     }
 }

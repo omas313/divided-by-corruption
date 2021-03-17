@@ -7,10 +7,14 @@ public class TurnManager : MonoBehaviour
 {
     public IEnumerator Manage(BattleParticipant currentBattleParticipant, List<PartyMember> party, List<Enemy> enemies)
     {
+        BattleEvents.InvokeBattleParticipantTurnStarted(currentBattleParticipant);
+
         if (currentBattleParticipant is Enemy)
             yield return ManageEnemyTurn(currentBattleParticipant as Enemy, party, enemies);
         else
             yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember);
+
+        BattleEvents.InvokeBattleParticipantTurnEnded(currentBattleParticipant);
     }
 
     IEnumerator ManageEnemyTurn(Enemy enemy, List<PartyMember> party, List<Enemy> enemies)
@@ -33,6 +37,10 @@ public class TurnManager : MonoBehaviour
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
         yield return new WaitUntil(() => currentBattleAction.IsValid);
+        
+        if (currentBattleAction.Target is Enemy)
+            BattleEvents.InvokeEnemyTargetted(currentBattleAction.Target as Enemy);
+            
         yield return partyMember.PerformAction(currentBattleAction); 
 
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
