@@ -36,13 +36,13 @@ public abstract class BattleParticipant : MonoBehaviour
         spriteRenderer.sortingOrder = order;
     }
 
-    public abstract IEnumerator Die();
-    public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
     public virtual IEnumerator PerformAction(BattleAction battleAction)
     {
         yield return Perform(battleAction);
     }
-    
+
+    public abstract IEnumerator Die();
+    public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
 
     protected IEnumerator Perform(BattleAction battleAction)
     {
@@ -54,6 +54,8 @@ public abstract class BattleParticipant : MonoBehaviour
 
         yield return attackDefinition.SpawnCastParticles(transform.position);
         yield return attackMotionType.PreAttackMotion(this, target);
+
+        CharacterStats.ReduceCurrentMP(attackDefinition.MPCost);
 
         for (var i = 0; i < segmentResults.Count ; i++)
         {

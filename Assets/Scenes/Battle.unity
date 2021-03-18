@@ -2333,6 +2333,22 @@ PrefabInstance:
       propertyPath: _portraitSprite
       value: 
       objectReference: {fileID: 2930840999596915113, guid: 5d6e6767a19d0e246bf4b26810bccdf7, type: 3}
+    - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
+      propertyPath: _stats._currentMP
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
+      propertyPath: _specialAttackDefinitions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
+      propertyPath: _specialAttackDefinitions.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: f11beb75a0e8504428b9edb5efe71681, type: 2}
+    - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
+      propertyPath: _specialAttackDefinitions.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: d8bf8230e767320498aa48cdcd83f19c, type: 2}
     - target: {fileID: 5137837007951962430, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: m_Name
       value: Paladin
@@ -2953,6 +2969,22 @@ PrefabInstance:
       propertyPath: _portraitSprite
       value: 
       objectReference: {fileID: -6920628443857365153, guid: 12d66abc7d127534aaf63825d9e48d37, type: 3}
+    - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
+      propertyPath: _stats._currentMP
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
+      propertyPath: _specialAttackDefinitions.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
+      propertyPath: _specialAttackDefinitions.Array.data[0]
+      value: 
+      objectReference: {fileID: 11400000, guid: f11beb75a0e8504428b9edb5efe71681, type: 2}
+    - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
+      propertyPath: _specialAttackDefinitions.Array.data[1]
+      value: 
+      objectReference: {fileID: 11400000, guid: d8bf8230e767320498aa48cdcd83f19c, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
 --- !u!1 &1194739276

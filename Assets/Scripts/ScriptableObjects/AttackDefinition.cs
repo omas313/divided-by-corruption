@@ -8,6 +8,7 @@ public class AttackDefinition : ScriptableObject
     public string Name => _name;
     public string AnimationTriggerName => _animationTriggerName;
     public int Damage => _damage;
+    public int MPCost => _mpCost;
     public int SegmentsCount => _segmentData.Count;
     public List<SegmentData> SegmentData => _segmentData;
     public AttackTargetType AttackTargetType => _attackTargetType;
@@ -19,6 +20,7 @@ public class AttackDefinition : ScriptableObject
     [SerializeField] string _name;
     [SerializeField] string _animationTriggerName;
     [SerializeField] int _damage;
+    [SerializeField] int _mpCost;
     [SerializeField] List<SegmentData> _segmentData;
     [SerializeField] AttackTargetType _attackTargetType;
     [SerializeField] AttackMotionType _attackMotionType;

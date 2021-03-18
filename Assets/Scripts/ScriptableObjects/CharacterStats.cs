@@ -35,6 +35,8 @@ public class CharacterStats
     public void SetCurrentMP(int amount) => _currentMP = amount;
     public void IncreaseCurrentMP(int amount) => _currentMP = Math.Min(_baseMP, CurrentMP + amount);
     public void ReduceCurrentMP(int amount) => _currentMP = Math.Max(0, CurrentMP - amount);
+    
+    public bool HasEnoughMP(int amount) => _currentMP >= amount;
 
     public void SetCurrentSpeed(int amount) => _currentSpeed = amount;
     public void IncreaseCurrentSpeed(int amount) => _currentSpeed += amount;

@@ -38,15 +38,17 @@ public class UISpecialAttackMenu : MonoBehaviour
         _isActive = false;
     }
 
-    void CreateAttacks(List<AttackDefinition> attackDefinitions)
+    void CreateAttacks(PartyMember partyMember)
     {
         DestroyOldItems();
+
+        var attackDefinitions = partyMember.SpecialAttacksDefinitions;
         _items = new UISpecialAttackMenuItem[attackDefinitions.Count];
 
         for (int i = 0; i < attackDefinitions.Count; i++)
         {
             _items[i] = Instantiate(_itemsPrefab, _itemsParent.transform.position, Quaternion.identity, _itemsParent);
-            _items[i].Init(attackDefinitions[i]);
+            _items[i].Init(attackDefinitions[i], isSelectable: partyMember.CharacterStats.HasEnoughMP(attackDefinitions[i].MPCost));
         }
 
         UpdateActiveStates();
@@ -64,7 +66,7 @@ public class UISpecialAttackMenu : MonoBehaviour
     void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
     {
         _currentBattleAction = battleAction;
-        CreateAttacks(partyMember.SpecialAttacksDefinitions);
+        CreateAttacks(partyMember);
     }
 
     void OnPartyMemberTurnEnded(PartyMember partyMember)
@@ -111,6 +113,9 @@ public class UISpecialAttackMenu : MonoBehaviour
 
     void ConfirmSelection()
     {
+        if (!_items[_currentIndex].IsSelectable)
+            return;
+
         _currentBattleAction.AttackDefinition = _items[_currentIndex].AttackDefinition;
         BattleUIEvents.InvokeEnemyTargetSelectionRequested();
 

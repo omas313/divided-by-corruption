@@ -85,6 +85,8 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         else if (_currentBattleAction.BattleActionType == BattleActionType.Special)
             BattleUIEvents.InvokeSpecialAttackSelectionRequested();
 
+        BattleUIEvents.InvokeTargetSelectionCancelled();
+
         _targetMarker.Hide();
         _isActive = false;
     }

@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
+  m_Name: SpecialSmash
+  m_EditorClassIdentifier: 
+  _name: Special Smash
+  _animationTriggerName: Attack
+  _damage: 8
+  _mpCost: 2
+  _segmentData:
+  - _normalMultiplier: 0.5
+    _criticalMultiplier: 1.5
+  - _normalMultiplier: 0.5
+    _criticalMultiplier: 1.5
+  _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
+  _attackMotionType: {fileID: 11400000, guid: 09cafe5c12d8ee64798a29753ddb3947, type: 2}
+  _onHitEffectsPrefab: {fileID: 0}
+  _castEffectsPrefab: {fileID: 0}
+  _projectilePrefab: {fileID: 0}

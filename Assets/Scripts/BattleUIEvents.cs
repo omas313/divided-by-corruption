@@ -8,6 +8,7 @@ public class BattleUIEvents
     
     public static event Action PartyMemberTargetSelectionRequested;
     public static event Action EnemyTargetSelectionRequested;
+    public static event Action TargetSelectionCancelled;
 
     public static event Action RequestedActionBar;
 
@@ -19,6 +20,7 @@ public class BattleUIEvents
     
     public static void InvokePartyMemberTargetSelectionRequested() => PartyMemberTargetSelectionRequested?.Invoke();
     public static void InvokeEnemyTargetSelectionRequested() => EnemyTargetSelectionRequested?.Invoke();
+    public static void InvokeTargetSelectionCancelled() => TargetSelectionCancelled?.Invoke();
     
     public static void InvokeRequestedActionBar() => RequestedActionBar?.Invoke();
 

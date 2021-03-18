@@ -61,11 +61,14 @@ public class BattleController : MonoBehaviour
         _activeEnemies = new List<Enemy>(_enemies);
 
         _battleParticipants = _battleParticipants.OrderByDescending(bp => bp.CharacterStats.CurrentSpeed).ToList();
-        BattleEvents.InvokeBattleParticipantsUpdated(_battleParticipants);
     }
 
     IEnumerator TurnBasedBattle()
     {
+        yield return new WaitForSeconds(0.25f); // for others to sub to battle events
+        
+        BattleEvents.InvokeBattleParticipantsUpdated(_battleParticipants);
+
         int loopNumber = 0;
         while (true)
         {

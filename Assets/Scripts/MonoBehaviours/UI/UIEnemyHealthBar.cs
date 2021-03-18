@@ -64,10 +64,9 @@ public class UIEnemyHealthBar : MonoBehaviour
             Hide();
     }
 
-    void OnRequestedActionBar()
-    {
-        Hide();
-    }
+    void OnRequestedActionBar() => Hide();
+
+    void OnTargetSelectionCancelled() => Hide();
 
     void OnEnemyTargetted(Enemy enemy)
     {
@@ -77,6 +76,7 @@ public class UIEnemyHealthBar : MonoBehaviour
             Hide();
     }
 
+
     void OnDestroy()
     {
         BattleEvents.EnemyArmourChanged -= OnArmourChanged;
@@ -84,6 +84,7 @@ public class UIEnemyHealthBar : MonoBehaviour
         BattleEvents.EnemyTargetted -= OnEnemyTargetted;
         BattleUIEvents.BattleParticipantHighlighted -= OnBattleParticipantHighlighted;
         BattleUIEvents.RequestedActionBar -= OnRequestedActionBar;
+        BattleUIEvents.TargetSelectionCancelled -= OnTargetSelectionCancelled;
     }
 
     void Awake()
@@ -99,5 +100,6 @@ public class UIEnemyHealthBar : MonoBehaviour
         BattleEvents.EnemyTargetted += OnEnemyTargetted;
         BattleUIEvents.BattleParticipantHighlighted += OnBattleParticipantHighlighted;
         BattleUIEvents.RequestedActionBar += OnRequestedActionBar;
+        BattleUIEvents.TargetSelectionCancelled += OnTargetSelectionCancelled;
     }
 }
