@@ -4834,8 +4834,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -582068631
-  m_SortingLayer: 0
+  m_SortingLayerID: 571383441
+  m_SortingLayer: 4
   m_SortingOrder: -1
   m_RenderMode: 0
   m_SortMode: 0
@@ -4873,7 +4873,8 @@ GameObject:
   - component: {fileID: 7690856000119618234}
   - component: {fileID: 7690856000119618235}
   - component: {fileID: 7690856000119618232}
-  m_Layer: 6
+  - component: {fileID: 3829260313079804117}
+  m_Layer: 11
   m_Name: RockThrow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -7108,7 +7109,7 @@ ParticleSystem:
     x:
       serializedVersion: 2
       minMaxState: 0
-      scalar: -20
+      scalar: 20
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -8705,7 +8706,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 512
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -9703,8 +9704,8 @@ ParticleSystemRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: -582068631
-  m_SortingLayer: 0
+  m_SortingLayerID: 571383441
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_RenderMode: 0
   m_SortMode: 0
@@ -9731,6 +9732,18 @@ ParticleSystemRenderer:
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
   m_MaskInteraction: 0
+--- !u!114 &3829260313079804117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7690856000119618233}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2d8a6afaa1c25a41939e2978bb42f9a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2755909939943175208
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9740,11 +9753,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1463828847846039617, guid: 587e2492bbdb9a142ab57298bcada216, type: 3}
       propertyPath: m_SortingLayer
-      value: 0
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1463828847846039617, guid: 587e2492bbdb9a142ab57298bcada216, type: 3}
       propertyPath: m_SortingLayerID
-      value: -582068631
+      value: 571383441
       objectReference: {fileID: 0}
     - target: {fileID: 1713646462537280683, guid: 587e2492bbdb9a142ab57298bcada216, type: 3}
       propertyPath: m_RootOrder

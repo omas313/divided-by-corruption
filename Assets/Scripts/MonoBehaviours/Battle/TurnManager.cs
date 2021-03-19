@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
+    [SerializeField] float _delayBetweenTurns = 2f;
+
     public IEnumerator Manage(BattleParticipant currentBattleParticipant, List<PartyMember> party, List<Enemy> enemies)
     {
         BattleEvents.InvokeBattleParticipantTurnStarted(currentBattleParticipant);
@@ -15,6 +17,8 @@ public class TurnManager : MonoBehaviour
             yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember);
 
         BattleEvents.InvokeBattleParticipantTurnEnded(currentBattleParticipant);
+
+        yield return new WaitForSeconds(_delayBetweenTurns);
     }
 
     IEnumerator ManageEnemyTurn(Enemy enemy, List<PartyMember> party, List<Enemy> enemies)

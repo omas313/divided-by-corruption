@@ -41,6 +41,18 @@ public abstract class BattleParticipant : MonoBehaviour
         yield return Perform(battleAction);
     }
 
+    public virtual void SetColliderActive(bool isActive)
+    {
+        var collider = GetComponent<Collider2D>();
+        if (collider == null)
+        {
+            Debug.Log("BattleParticipant doesn't have a collider");
+            return;
+        }
+
+        collider.enabled = isActive;
+    }
+
     public abstract IEnumerator Die();
     public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
 
@@ -52,8 +64,7 @@ public abstract class BattleParticipant : MonoBehaviour
         var attackMotionType = attackDefinition.AttackMotionType;
         var segmentResults = battleAction.AttackBarResult.SegmentsResults;
 
-        yield return attackDefinition.SpawnCastParticles(transform.position);
-        yield return attackMotionType.PreAttackMotion(this, target);
+        yield return attackMotionType.PreAttackMotion(this, target, attackDefinition);
 
         CharacterStats.ReduceCurrentMP(attackDefinition.MPCost);
 
@@ -81,7 +92,7 @@ public abstract class BattleParticipant : MonoBehaviour
                 break;
         }
 
-        yield return attackMotionType.PostAttackMotion(this, target);
+        yield return attackMotionType.PostAttackMotion(this, target, attackDefinition);
     }
 
     IEnumerator PlayAnimation(string name)

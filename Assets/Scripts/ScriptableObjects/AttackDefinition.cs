@@ -16,6 +16,8 @@ public class AttackDefinition : ScriptableObject
     public GameObject OnHitEffectsPrefab => _onHitEffectsPrefab;
     public GameObject CastEffectsPrefab => _castEffectsPrefab;
     public GameObject ProjectilePrefab => _projectilePrefab;
+    public Color PowerColor => _powerColor;
+    public float CastTime => _castTime;
 
     [SerializeField] string _name;
     [SerializeField] string _animationTriggerName;
@@ -27,40 +29,93 @@ public class AttackDefinition : ScriptableObject
     [SerializeField] GameObject _onHitEffectsPrefab;
     [SerializeField] GameObject _castEffectsPrefab;
     [SerializeField] GameObject _projectilePrefab;
+    [SerializeField] Color _powerColor;
+    [SerializeField] float _castTime;
 
     public IEnumerator SpawnOnHitParticles(Vector3 position)
     {
-        if (_onHitEffectsPrefab != null)
-            yield return SpawnParticles(_onHitEffectsPrefab, position);
+        if (_onHitEffectsPrefab == null)
+            yield break;
+
+        var particles = Instantiate(_onHitEffectsPrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
+            .GetComponent<ParticleSystem>();
+        var main = particles.main;
+        main.startColor = _powerColor;
+        main.loop = false;
+        main.stopAction = ParticleSystemStopAction.Destroy;
+
+        yield return new WaitForSeconds(0.1f);
+        yield return new WaitUntil(() => !particles.isPlaying);
+        yield return new WaitForSeconds(0.25f);
     }
 
-    public IEnumerator SpawnCastParticles(Vector3 position)
+    public IEnumerator SpawnAndStopCastParticles(Vector3 position)
     {
-        if (_castEffectsPrefab != null)
-            yield return SpawnParticles(_castEffectsPrefab, position);
+        if (_castEffectsPrefab == null)
+            yield break;
+
+        var particles = Instantiate(_castEffectsPrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
+            .GetComponent<ParticleSystem>();
+        var main = particles.main;
+        main.startColor = _powerColor;
+        main.stopAction = ParticleSystemStopAction.Destroy;
+        particles.Play();
+
+        yield return new WaitForSeconds(_castTime);
+        particles.Stop();
     }
 
-    public IEnumerator SpawnProjectile(Vector3 position, BattleParticipant target, bool isHit)
+    public ParticleSystem SpawnCastParticles(Vector3 position)
+    {
+        if (_castEffectsPrefab == null)
+            return null;
+
+        var particles = Instantiate(_castEffectsPrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
+            .GetComponent<ParticleSystem>();
+        var main = particles.main;
+        main.startColor = _powerColor;
+        main.stopAction = ParticleSystemStopAction.Destroy;
+        particles.Play();
+
+        return particles;
+    }
+
+    public IEnumerator SpawnProjectile(Vector3 castPosition, BattleParticipant target, bool isHit)
     {
         if (_projectilePrefab == null)
             yield break;
             
-        var angle = Vector2.SignedAngle(Vector2.left, (target.BodyMidPointPosition - position).normalized);
+        var angle = Vector2.SignedAngle(Vector2.right, (target.BodyMidPointPosition - castPosition).normalized);
         var rotation = Quaternion.Euler(0f, 0f, angle);
-        var particles = Instantiate(_projectilePrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
+
+        var particles = Instantiate(_projectilePrefab, castPosition, rotation, GameObject.FindWithTag("Junk").transform)
             .GetComponent<ParticleSystem>();
         var particleSystemMain = particles.main;
         particleSystemMain.startRotation = new ParticleSystem.MinMaxCurve(Mathf.Deg2Rad * -angle);
 
-        yield return new WaitForSeconds(2f);
+
+        if (isHit)
+            yield return HandleParticleCollision(particles, target);
+        else
+            yield return new WaitForSeconds(particleSystemMain.startLifetime.constant);
     }
 
-    IEnumerator SpawnParticles(GameObject prefab, Vector3 position)
+    IEnumerator HandleParticleCollision(ParticleSystem particles, BattleParticipant target)
     {
-        var particles = Instantiate(prefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
-            .GetComponent<ParticleSystem>();
-        yield return new WaitForSeconds(0.1f);
-        yield return new WaitUntil(() => !particles.isPlaying);
-        yield return new WaitForSeconds(0.25f);
+        var collision = particles.collision;
+        collision.enabled = true;        
+
+        var collided = false;
+        var collisionHandler = particles.GetComponent<ParticleCollisionHandler>();
+        if (collisionHandler == null)
+        {
+            Debug.Log("No collision handler on particle");
+            yield break;
+        }
+        collisionHandler.Collided += () => collided = true;
+
+        target.SetColliderActive(true);
+        yield return new WaitUntil(() => collided);
+        target.SetColliderActive(false);
     }
 }

@@ -3,8 +3,8 @@ using UnityEngine;
 
 public abstract class AttackMotionType : ScriptableObject
 {
-    public abstract IEnumerator PreAttackMotion(BattleParticipant attacker, BattleParticipant defender);
-    public abstract IEnumerator PostAttackMotion(BattleParticipant attacker, BattleParticipant defender);
+    public abstract IEnumerator PreAttackMotion(BattleParticipant attacker, BattleParticipant defender, AttackDefinition attackDefinition);
+    public abstract IEnumerator PostAttackMotion(BattleParticipant attacker, BattleParticipant defender, AttackDefinition attackDefinition);
 
     protected IEnumerator MoveToPosition(BattleParticipant attacker, Vector3 destination, float speed, string animationKey)
     {

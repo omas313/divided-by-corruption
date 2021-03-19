@@ -18,7 +18,15 @@ public class UISpecialAttackMenuItem : UIItem
         _attackDefinition = attackDefinition;
 
         _text.SetText(attackDefinition.Name);
-        _mpCost.SetText(attackDefinition.MPCost.ToString());
+
+        if (attackDefinition.MPCost == 0)
+            _mpCost.gameObject.SetActive(false);
+        else
+        {
+            _mpCost.gameObject.SetActive(true);
+            _mpCost.SetText(attackDefinition.MPCost.ToString());
+        }
+
         IsSelectable = isSelectable;
 
         if (!IsSelectable)

@@ -10,11 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
-  m_Name: Vertical Slice
+  m_Name: VerticalSlice
   m_EditorClassIdentifier: 
   _name: Vertical Slice
   _animationTriggerName: Attack
   _damage: 5
+  _mpCost: 0
   _segmentData:
   - _normalMultiplier: 0.8
     _criticalMultiplier: 1.2
@@ -25,3 +26,5 @@ MonoBehaviour:
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 0}
   _projectilePrefab: {fileID: 0}
+  _powerColor: {r: 0, g: 0, b: 0, a: 0}
+  _castTime: 0

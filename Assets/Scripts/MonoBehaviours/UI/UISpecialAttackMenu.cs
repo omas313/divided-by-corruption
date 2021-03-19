@@ -66,7 +66,9 @@ public class UISpecialAttackMenu : MonoBehaviour
     void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
     {
         _currentBattleAction = battleAction;
-        CreateAttacks(partyMember);
+
+        if (partyMember.SpecialAttacksDefinitions.Count > 0)
+            CreateAttacks(partyMember);
     }
 
     void OnPartyMemberTurnEnded(PartyMember partyMember)

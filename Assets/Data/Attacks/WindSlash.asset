@@ -10,23 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
-  m_Name: SpecialSlice
+  m_Name: WindSlash
   m_EditorClassIdentifier: 
-  _name: Vertical Slice
-  _animationTriggerName: Attack
-  _damage: 6
-  _mpCost: 5
+  _name: Wind Slash
+  _animationTriggerName: 
+  _damage: 7
+  _mpCost: 3
   _segmentData:
-  - _normalMultiplier: 0.5
-    _criticalMultiplier: 1.1
   - _normalMultiplier: 0.8
-    _criticalMultiplier: 1.2
-  - _normalMultiplier: 0.9
-    _criticalMultiplier: 1.5
+    _criticalMultiplier: 1.25
   _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
-  _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
+  _attackMotionType: {fileID: 11400000, guid: c3b64d66e2df7e8458cbf01fb35eead7, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
-  _projectilePrefab: {fileID: 0}
-  _powerColor: {r: 0, g: 0.9150943, b: 0.7611523, a: 1}
+  _projectilePrefab: {fileID: 7807944414959136323, guid: dc8433c509f5d684a90f79de8ed2a1f6, type: 3}
+  _powerColor: {r: 0, g: 0.7735849, b: 0.21738964, a: 1}
   _castTime: 2

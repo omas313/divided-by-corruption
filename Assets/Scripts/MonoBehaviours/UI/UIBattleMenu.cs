@@ -16,7 +16,7 @@ public class UIBattleMenu : MonoBehaviour
 
     public void Show() => _canvasGroup.alpha = 1f;
 
-    public void StartSelection()
+    void StartSelection()
     {
         StartCoroutine(StartSelectionAfterDelay(0.15f));
     }

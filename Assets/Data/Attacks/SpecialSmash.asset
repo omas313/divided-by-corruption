@@ -22,7 +22,9 @@ MonoBehaviour:
   - _normalMultiplier: 0.5
     _criticalMultiplier: 1.5
   _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
-  _attackMotionType: {fileID: 11400000, guid: 09cafe5c12d8ee64798a29753ddb3947, type: 2}
+  _attackMotionType: {fileID: 11400000, guid: c2dc4d8a9ec76f3488df6ab17165e9bc, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
-  _castEffectsPrefab: {fileID: 0}
+  _castEffectsPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
   _projectilePrefab: {fileID: 0}
+  _powerColor: {r: 0.8396226, g: 0.670728, b: 0, a: 1}
+  _castTime: 2

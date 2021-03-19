@@ -9,7 +9,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38a5672829b9f854ba03b196a22cd172, type: 3}
-  m_Name: InPlaceAttackMotion
+  m_Script: {fileID: 11500000, guid: 9f3e479cb41034b4da7a75db13ea7259, type: 3}
+  m_Name: InPlaceCastAttackMotion
   m_EditorClassIdentifier: 
-  attackPositioningOffset: {x: 1, y: 0, z: 0}
