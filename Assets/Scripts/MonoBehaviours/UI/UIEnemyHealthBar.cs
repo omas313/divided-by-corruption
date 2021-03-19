@@ -85,7 +85,7 @@ public class UIEnemyHealthBar : MonoBehaviour
         BattleEvents.EnemyTargetted -= OnEnemyTargetted;
         BattleEvents.BattleParticipantTurnStarted -= OnBattleParticipantTurnStarted;
         BattleUIEvents.BattleParticipantHighlighted -= OnBattleParticipantHighlighted;
-        BattleUIEvents.RequestedActionBar -= OnRequestedActionBar;
+        BattleUIEvents.ActionBarRequested -= OnRequestedActionBar;
         BattleUIEvents.TargetSelectionCancelled -= OnTargetSelectionCancelled;
     }
 
@@ -102,7 +102,7 @@ public class UIEnemyHealthBar : MonoBehaviour
         BattleEvents.EnemyTargetted += OnEnemyTargetted;
         BattleEvents.BattleParticipantTurnStarted += OnBattleParticipantTurnStarted;
         BattleUIEvents.BattleParticipantHighlighted += OnBattleParticipantHighlighted;
-        BattleUIEvents.RequestedActionBar += OnRequestedActionBar;
+        BattleUIEvents.ActionBarRequested += OnRequestedActionBar;
         BattleUIEvents.TargetSelectionCancelled += OnTargetSelectionCancelled;
     }
 }

@@ -109,7 +109,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _isActive = false;
 
         _currentBattleAction.Target = _positionsMap[_activePositions[_currentIndex]];
-        BattleUIEvents.InvokeRequestedActionBar();
+        BattleUIEvents.InvokeActionBarRequested();
     }
 
     void RaiseRightPressedEvent()

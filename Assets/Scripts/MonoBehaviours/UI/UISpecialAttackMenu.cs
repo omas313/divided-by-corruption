@@ -8,10 +8,11 @@ public class UISpecialAttackMenu : MonoBehaviour
     [SerializeField] RectTransform _itemsParent;
 
     UISpecialAttackMenuItem[] _items;
+    
     CanvasGroup _canvasGroup;
     int _currentIndex;
     bool _isActive;
-    private BattleAction _currentBattleAction;
+    BattleAction _currentBattleAction;
 
     public void Hide() => _canvasGroup.alpha = 0f;
 
@@ -28,6 +29,8 @@ public class UISpecialAttackMenu : MonoBehaviour
 
         _currentIndex = 0;
         _isActive = true;
+        foreach (var item in _items)
+            item.gameObject.SetActive(true);
         UpdateActiveStates();
         Show();
     }
@@ -82,6 +85,8 @@ public class UISpecialAttackMenu : MonoBehaviour
         StartSelection();
     }
 
+    void OnActionBarCompleted() => Hide();
+
     void UpdateActiveStates()
     {
         for (var i = 0; i < _items.Length; i++)
@@ -122,6 +127,16 @@ public class UISpecialAttackMenu : MonoBehaviour
         BattleUIEvents.InvokeEnemyTargetSelectionRequested();
 
         _isActive = false;
+        SelectAndHideOthers();
+    }
+
+    void SelectAndHideOthers()
+    {
+        for (int i = 0; i < _items.Length; i++)
+            if (i == _currentIndex)
+                _items[i].SetSelected();
+            else 
+                _items[i].gameObject.SetActive(false);
     }
 
     void Update()
@@ -143,6 +158,7 @@ public class UISpecialAttackMenu : MonoBehaviour
     {
         BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
+        BattleUIEvents.ActionBarCompleted -= OnActionBarCompleted;
         BattleUIEvents.SpecialAttackSelectionRequested -= OnSpecialAttackSelectionRequested;
     }
     
@@ -152,6 +168,7 @@ public class UISpecialAttackMenu : MonoBehaviour
 
         BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
+        BattleUIEvents.ActionBarCompleted += OnActionBarCompleted;
         BattleUIEvents.SpecialAttackSelectionRequested += OnSpecialAttackSelectionRequested;
     }
 }

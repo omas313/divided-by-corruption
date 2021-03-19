@@ -28,6 +28,8 @@ public class TurnManager : MonoBehaviour
         var battleAction = new BattleAction();
         battleAction.Target = party[UnityEngine.Random.Range(0, party.Count)];
 
+        BattleEvents.InvokeEnemySelectedTarget(battleAction.Target);
+
         yield return enemy.PerformAction(battleAction); 
 
         BattleEvents.InvokeEnemyTurnEnded(enemy);

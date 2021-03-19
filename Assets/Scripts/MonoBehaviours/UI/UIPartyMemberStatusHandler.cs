@@ -10,6 +10,12 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
     
     UIPartyMemberStatusBar[] _bars;
     Dictionary<PartyMember, UIPartyMemberStatusBar> _partyBarsMap;
+    CanvasGroup _canvasGroup;
+    
+    public void Hide() => _canvasGroup.alpha = 0f;
+
+    public void Show() => _canvasGroup.alpha = 1f;
+
 
     void Init(List<PartyMember> party)
     {
@@ -53,17 +59,26 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         _partyBarsMap[partyMember].SetDeathStatus(true);
     }
 
+    void OnActionBarRequested() => Hide();
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction) => Show();
+
     void OnDestroy()
     {
         BattleEvents.PartyUpdated -= OnPartyUpdated;
         BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;
         BattleEvents.PartyMemberDied -= OnPartyMemberDied;
+        BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
+        BattleUIEvents.ActionBarRequested -= OnActionBarRequested;
     }
 
     void Awake()
     {
+        _canvasGroup = GetComponent<CanvasGroup>();
+        
         BattleEvents.PartyUpdated += OnPartyUpdated;  
         BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;
         BattleEvents.PartyMemberDied += OnPartyMemberDied;
+        BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
+        BattleUIEvents.ActionBarRequested += OnActionBarRequested;
     }
 }

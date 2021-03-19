@@ -13,6 +13,11 @@ public abstract class UIItem : MonoBehaviour
     Color _overlayImageActiveColor;
     Color _overlayImageInactiveColor;
 
+    public void SetSelected()
+    {
+        _animation.Stop();
+    }
+
     protected void SetState()
     {
         _overlayImage.color = isActive ? _overlayImageActiveColor : _overlayImageInactiveColor;

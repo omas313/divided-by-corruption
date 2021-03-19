@@ -87,6 +87,7 @@ public class UIAttackBar : MonoBehaviour
 
         Hide();
         _currentBattleAction.AttackBarResult = new AttackBarResult(_currentSegmentResults);
+        BattleUIEvents.InvokeActionBarCompleted();
             
         CleanUp();
         _isMoving = false;
@@ -193,7 +194,7 @@ public class UIAttackBar : MonoBehaviour
 
     void OnDestroy()
     {
-        BattleUIEvents.RequestedActionBar -= OnRequestedActionBar;
+        BattleUIEvents.ActionBarRequested -= OnRequestedActionBar;
         BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
     }
@@ -208,6 +209,6 @@ public class UIAttackBar : MonoBehaviour
 
         BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
-        BattleUIEvents.RequestedActionBar += OnRequestedActionBar;
+        BattleUIEvents.ActionBarRequested += OnRequestedActionBar;
     }
 }

@@ -28,6 +28,16 @@ public class UITurnDisplay : MonoBehaviour
         Show();
     }
 
+    void HighlightBattleParticipant(BattleParticipant battleParticipant)
+    {
+        foreach (var portrait in _portraits)
+            if (portrait.IsPortraitFor(battleParticipant))
+                portrait.SetHighlightedState(true);
+            else
+                portrait.SetHighlightedState(false);
+    }
+    
+
     void UnhighlightAllPortraits()
     {
         foreach (var portrait in _portraits)
@@ -41,18 +51,14 @@ public class UITurnDisplay : MonoBehaviour
         SetPortraits();
     }
 
-    void OnBattleParticipantHighlighted(BattleParticipant battleParticipant)
-    {
-        foreach (var portrait in _portraits)
-            if (portrait.IsPortraitFor(battleParticipant))
-                portrait.SetHighlightedState(true);
-            else
-                portrait.SetHighlightedState(false);
-    }
+    void OnBattleParticipantHighlighted(BattleParticipant battleParticipant) => HighlightBattleParticipant(battleParticipant);
+
+    void OnEnemySelectedTarget(BattleParticipant battleParticipant) => HighlightBattleParticipant(battleParticipant);
 
     void OnBattleParticipantTurnStarted(BattleParticipant battleParticipant)
     {
         SetPortraits(battleParticipant);
+        Show();
     }
 
     void OnBattleParticipantTurnEnded(BattleParticipant battleParticipant) => UnhighlightAllPortraits();
@@ -60,15 +66,19 @@ public class UITurnDisplay : MonoBehaviour
     void OnSpecialAttackSelectionRequested() => UnhighlightAllPortraits();
 
     void OnBattleActionTypeSelectionRequested() => UnhighlightAllPortraits();
+    
+    void OnActionBarRequested() => Hide();
 
     void OnDestroy()
     {
         BattleEvents.BattleParticipantsUpdated -= OnBattleParticipantsUpdated;
         BattleEvents.BattleParticipantTurnStarted -= OnBattleParticipantTurnStarted;
         BattleEvents.BattleParticipantTurnEnded -= OnBattleParticipantTurnEnded;
+        BattleEvents.EnemySelectedTarget -= OnEnemySelectedTarget;
         BattleUIEvents.BattleParticipantHighlighted -= OnBattleParticipantHighlighted;
         BattleUIEvents.SpecialAttackSelectionRequested -= OnSpecialAttackSelectionRequested;
         BattleUIEvents.BattleActionTypeSelectionRequested -= OnBattleActionTypeSelectionRequested;
+        BattleUIEvents.ActionBarRequested -= OnActionBarRequested;
     }
 
     void Awake()
@@ -81,8 +91,10 @@ public class UITurnDisplay : MonoBehaviour
         BattleEvents.BattleParticipantsUpdated += OnBattleParticipantsUpdated;
         BattleEvents.BattleParticipantTurnStarted += OnBattleParticipantTurnStarted;
         BattleEvents.BattleParticipantTurnEnded += OnBattleParticipantTurnEnded;
+        BattleEvents.EnemySelectedTarget += OnEnemySelectedTarget;
         BattleUIEvents.BattleParticipantHighlighted += OnBattleParticipantHighlighted;
         BattleUIEvents.SpecialAttackSelectionRequested += OnSpecialAttackSelectionRequested;
         BattleUIEvents.BattleActionTypeSelectionRequested += OnBattleActionTypeSelectionRequested;
+        BattleUIEvents.ActionBarRequested += OnActionBarRequested;
     }
 }

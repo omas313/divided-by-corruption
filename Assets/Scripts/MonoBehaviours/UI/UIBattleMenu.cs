@@ -27,6 +27,8 @@ public class UIBattleMenu : MonoBehaviour
 
         _currentIndex = 0;
         _isActive = true;
+        foreach (var item in _items)
+            item.gameObject.SetActive(true);
         UpdateActiveStates();
         Show();
     }
@@ -40,6 +42,7 @@ public class UIBattleMenu : MonoBehaviour
     void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
     {
         // todo: create party member actions in the future (when they have different actions)
+        Show();
         _partyMember = partyMember;
         _currentBattleAction = battleAction;
     }
@@ -52,6 +55,7 @@ public class UIBattleMenu : MonoBehaviour
     }
 
     void OnBattleActionSelectionRequested() => StartSelection();
+    void OnActionBarCompleted() => Hide();
 
     void UpdateActiveStates()
     {
@@ -91,6 +95,16 @@ public class UIBattleMenu : MonoBehaviour
             BattleUIEvents.InvokeSpecialAttackSelectionRequested();
 
         _isActive = false;
+        SelectAndHideOthers();
+    }
+
+    void SelectAndHideOthers()
+    {
+        for (int i = 0; i < _items.Length; i++)
+            if (i == _currentIndex)
+                _items[i].SetSelected();
+            else 
+                _items[i].gameObject.SetActive(false);
     }
 
     void Update()
@@ -110,6 +124,7 @@ public class UIBattleMenu : MonoBehaviour
     {
         BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
+        BattleUIEvents.ActionBarCompleted -= OnActionBarCompleted;
         BattleUIEvents.BattleActionTypeSelectionRequested -= OnBattleActionSelectionRequested;
     }
     
@@ -120,6 +135,7 @@ public class UIBattleMenu : MonoBehaviour
 
         BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
+        BattleUIEvents.ActionBarCompleted += OnActionBarCompleted;
         BattleUIEvents.BattleActionTypeSelectionRequested += OnBattleActionSelectionRequested;
     }
 }
