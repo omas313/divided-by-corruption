@@ -40,6 +40,9 @@ public class BattleInitiatorEnemy : MonoBehaviour
 
         EnvironmentEvents.InvokeBattleInitiated(_battleDefinition);
 
+        if (FindObjectOfType<PlayerController>().transform.position.x > transform.position.x)
+            GetComponentInChildren<SpriteRenderer>().flipX = true;
+
         while (Vector2.Distance(transform.position, _target.position) > _stoppingDistance)
         {
             transform.Translate((_target.transform.position - transform.position) * Time.deltaTime * _moveSpeed);

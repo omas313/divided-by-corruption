@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class Enemy : BattleParticipant
 {    
-    const string HIT_ANIMATION_BOOL_KEY = "IsGettingHit";
+    const string HIT_ANIMATION_TRIGGER_KEY = "IsGettingHit";
     const string DEATH_ANIMATION_BOOL_KEY = "IsDead";
     const string ATTACK_ANIMATION_TRIGGER_KEY = "Attack";
     const string IDLE_ANIMATION_TRIGGER_KEY = "Idle";
@@ -22,6 +22,10 @@ public class Enemy : BattleParticipant
     [SerializeField] float _criticalChance = 0.2f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
     [SerializeField] float _additionalCriticalMultiplier = 1f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
     [SerializeField] float _missChance = 0.2f; // put in enemy stats or attack definitnion
+    [SerializeField] ParticleSystem _armourParticles;
+    [SerializeField] SpriteRenderer _armouredSpriteRenderer;
+    [SerializeField] SpriteRenderer _armourlessSpriteRenderer;
+    [SerializeField] RuntimeAnimatorController _armourlessAnimatorController;
 
     [SerializeField] AttackDefinition[] _attackDefinitions;
 
@@ -42,7 +46,7 @@ public class Enemy : BattleParticipant
     //     attacks = _definition.Attacks;
     // }
 
-    public override IEnumerator PerformAction(BattleAction battleAction)
+    public override IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
     {
         battleAction.Attacker = this;
         battleAction.BattleActionType = BattleActionType.Attack;
@@ -60,12 +64,12 @@ public class Enemy : BattleParticipant
 
         battleAction.AttackBarResult = new AttackBarResult(segmentResults);
 
-        yield return base.PerformAction(battleAction);
+        yield return base.PerformAction(battleAction, party, enemies);
     }
 
     public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)
     {
-        animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
+        animator.SetTrigger(HIT_ANIMATION_TRIGGER_KEY);
 
         if (HasArmour)
         {
@@ -75,7 +79,7 @@ public class Enemy : BattleParticipant
             BattleEvents.InvokeArmourDamageReceived(attacker, this, attack);
             
             if (!HasArmour)
-                BattleEvents.InvokeArmourBreak(this);
+                RemoveArmour();
         }
         else
         {
@@ -85,7 +89,6 @@ public class Enemy : BattleParticipant
         }
 
         yield return new WaitForSeconds(0.25f);
-        animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
     }
 
     public override IEnumerator Die()
@@ -96,12 +99,36 @@ public class Enemy : BattleParticipant
         yield return new WaitForSeconds(0.25f); 
     }
 
+    public override void SetRendererSortingOrder(int order)
+    {
+        _armouredSpriteRenderer.sortingOrder = order;
+        _armourlessSpriteRenderer.sortingOrder = order;
+    }
+
+    void RemoveArmour()
+    {
+        BattleEvents.InvokeArmourBreak(this);
+
+        _armourParticles.Play();
+        _armouredSpriteRenderer.enabled = false;
+        _armourlessSpriteRenderer.enabled = true;
+        spriteRenderer = _armourlessSpriteRenderer;
+
+        animator.runtimeAnimatorController = _armourlessAnimatorController;
+    }
+
     void Awake()
     {
         animator = GetComponent<Animator>();
+        spriteRenderer = _armouredSpriteRenderer;
 
-        animator.SetTrigger(IDLE_ANIMATION_TRIGGER_KEY);
         // Initialize(_definition);
+    }
+
+    [ContextMenu("dlg sprite")]
+    public void DLG()
+    {
+        Debug.Log(spriteRenderer.sprite.name);
     }
 }
 

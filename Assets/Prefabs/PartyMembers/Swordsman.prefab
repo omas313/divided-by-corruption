@@ -139,12 +139,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a605e1a739bbb3443979eadeaeb8b634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attacks:
-  - {fileID: 11400000, guid: 9a902cd8780713044be4f3b7a6ed0ed6, type: 2}
   _bodyMidPoint: {fileID: 1849331284987755170}
   _projectileCastPoint: {fileID: 4023637721561339527}
   _attackReceiptPoint: {fileID: 3553849488746119397}
-  _projectileSpawnPoint: {fileID: 0}
+  _portraitSprite: {fileID: 21300000, guid: 91be320d99581b542aec3b39ef461ec2, type: 3}
   _name: Sten
   _stats:
     _currentHP: 18
@@ -154,11 +152,9 @@ MonoBehaviour:
     _currentSpeed: 10
     _baseSpeed: 10
     _motionSpeed: 3
-  _castParticles: {fileID: 0}
   _normalAttackDefinition: {fileID: 11400000, guid: 9a902cd8780713044be4f3b7a6ed0ed6, type: 2}
   _specialAttackDefinitions:
-  - {fileID: 11400000, guid: 9a902cd8780713044be4f3b7a6ed0ed6, type: 2}
-  - {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
+  - {fileID: 11400000, guid: d8bf8230e767320498aa48cdcd83f19c, type: 2}
 --- !u!95 &50926748
 Animator:
   serializedVersion: 3

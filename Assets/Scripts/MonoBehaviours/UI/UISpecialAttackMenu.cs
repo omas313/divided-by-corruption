@@ -100,6 +100,8 @@ public class UISpecialAttackMenu : MonoBehaviour
 
         _currentIndex++;
         UpdateActiveStates();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void GoToPreviousItem()
@@ -109,6 +111,8 @@ public class UISpecialAttackMenu : MonoBehaviour
 
         _currentIndex--;
         UpdateActiveStates();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void GoBack()
@@ -116,6 +120,8 @@ public class UISpecialAttackMenu : MonoBehaviour
         _currentBattleAction.AttackDefinition = null;
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
         StopSelection();
+        BattleAudioSource.Instance.PlayUnselectSound();
+
     }
 
     void ConfirmSelection()
@@ -128,6 +134,8 @@ public class UISpecialAttackMenu : MonoBehaviour
 
         _isActive = false;
         SelectAndHideOthers();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void SelectAndHideOthers()

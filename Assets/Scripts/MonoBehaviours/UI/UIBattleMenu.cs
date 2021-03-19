@@ -70,6 +70,8 @@ public class UIBattleMenu : MonoBehaviour
 
         _currentIndex++;
         UpdateActiveStates();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void GoToPreviousItem()
@@ -79,6 +81,8 @@ public class UIBattleMenu : MonoBehaviour
 
         _currentIndex--;
         UpdateActiveStates();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void ConfirmSelection()
@@ -96,6 +100,7 @@ public class UIBattleMenu : MonoBehaviour
 
         _isActive = false;
         SelectAndHideOthers();
+        BattleAudioSource.Instance.PlaySelectSound();
     }
 
     void SelectAndHideOthers()

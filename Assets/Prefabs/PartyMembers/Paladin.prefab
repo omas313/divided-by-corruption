@@ -139,25 +139,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a605e1a739bbb3443979eadeaeb8b634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attacks:
-  - {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
   _bodyMidPoint: {fileID: 9101234332017592516}
   _projectileCastPoint: {fileID: 6328314932954224948}
   _attackReceiptPoint: {fileID: 6078726124757541587}
+  _portraitSprite: {fileID: 21300000, guid: 390804772158b2246891f4240fbae945, type: 3}
   _name: August
   _stats:
     _currentHP: 24
     _baseHP: 24
     _currentMP: 0
     _baseMP: 10
-    _currentSpeed: 6
-    _baseSpeed: 6
+    _currentSpeed: 3
+    _baseSpeed: 3
     _motionSpeed: 0.5
-  _castParticles: {fileID: 0}
   _normalAttackDefinition: {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
   _specialAttackDefinitions:
-  - {fileID: 11400000, guid: 9a902cd8780713044be4f3b7a6ed0ed6, type: 2}
-  - {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
+  - {fileID: 11400000, guid: f11beb75a0e8504428b9edb5efe71681, type: 2}
 --- !u!95 &202823269
 Animator:
   serializedVersion: 3

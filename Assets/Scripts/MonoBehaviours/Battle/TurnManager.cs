@@ -14,7 +14,7 @@ public class TurnManager : MonoBehaviour
         if (currentBattleParticipant is Enemy)
             yield return ManageEnemyTurn(currentBattleParticipant as Enemy, party, enemies);
         else
-            yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember);
+            yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember, party, enemies);
 
         BattleEvents.InvokeBattleParticipantTurnEnded(currentBattleParticipant);
 
@@ -30,15 +30,16 @@ public class TurnManager : MonoBehaviour
 
         BattleEvents.InvokeEnemySelectedTarget(battleAction.Target);
 
-        yield return enemy.PerformAction(battleAction); 
+        yield return enemy.PerformAction(battleAction, party, enemies);
 
         BattleEvents.InvokeEnemyTurnEnded(enemy);
     }
 
-    IEnumerator ManagePartyMemberTurn(PartyMember partyMember)
+    IEnumerator ManagePartyMemberTurn(PartyMember partyMember, List<PartyMember> party, List<Enemy> enemies)
     {
         var currentBattleAction = new BattleAction() { Attacker = partyMember };
 
+        partyMember.CharacterStats.IncreaseCurrentMP(1);
         BattleEvents.InvokePartyMemberTurnStarted(partyMember, currentBattleAction);
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
@@ -46,8 +47,8 @@ public class TurnManager : MonoBehaviour
         
         if (currentBattleAction.Target is Enemy)
             BattleEvents.InvokeEnemyTargetted(currentBattleAction.Target as Enemy);
-            
-        yield return partyMember.PerformAction(currentBattleAction); 
+        
+        yield return partyMember.PerformAction(currentBattleAction, party, enemies);
 
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
     }

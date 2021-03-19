@@ -36,9 +36,9 @@ public abstract class BattleParticipant : MonoBehaviour
         spriteRenderer.sortingOrder = order;
     }
 
-    public virtual IEnumerator PerformAction(BattleAction battleAction)
+    public virtual IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
     {
-        yield return Perform(battleAction);
+        yield return Perform(battleAction, party, enemies);
     }
 
     public virtual void SetColliderActive(bool isActive)
@@ -56,7 +56,7 @@ public abstract class BattleParticipant : MonoBehaviour
     public abstract IEnumerator Die();
     public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
 
-    protected IEnumerator Perform(BattleAction battleAction)
+    protected IEnumerator Perform(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
     {
         var initialPosition = transform.position;
         var target = battleAction.Target;
@@ -68,34 +68,61 @@ public abstract class BattleParticipant : MonoBehaviour
 
         CharacterStats.ReduceCurrentMP(attackDefinition.MPCost);
 
-        for (var i = 0; i < segmentResults.Count ; i++)
+        if (attackDefinition.IsEnvironmentalSpell)
         {
-            var result = segmentResults[i];
+            var result = segmentResults[0];
             var attack = new BattleAttack(
                 attackDefinition.Name, 
                 Mathf.CeilToInt(attackDefinition.Damage * result.Multiplier),
                 result.IsCritical);
 
-            yield return PlayAnimation(attackDefinition.AnimationTriggerName);
-            yield return attackDefinition.SpawnProjectile(ProjectileCastPointPosition, target, result.IsHit);
+            yield return attackDefinition.SpawnEnvironmentalSpell(result.IsHit);
 
             if (result.IsHit)
             {
-                StartCoroutine(attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition));
-                yield return target.ReceiveAttack(this, attack);
+                foreach (var enemy in enemies)
+                {
+                    StartCoroutine(attackDefinition.SpawnOnHitParticles(enemy.BodyMidPointPosition));
+                    StartCoroutine(enemy.ReceiveAttack(this, attack));
+                }
+                yield return new WaitForSeconds(0.25f);
             }
 
             SpawnResultHighlight(result, target);
             yield return new WaitForSeconds(0.25f);
+        }
+        else
+        {
+            for (var i = 0; i < segmentResults.Count ; i++)
+            {
+                var result = segmentResults[i];
+                var attack = new BattleAttack(
+                    attackDefinition.Name, 
+                    Mathf.CeilToInt(attackDefinition.Damage * result.Multiplier),
+                    result.IsCritical);
 
-            if (target.IsDead)
-                break;
+                yield return PlayAnimation(attackDefinition.AnimationTriggerName);
+
+                yield return attackDefinition.SpawnSpecialEffects(ProjectileCastPointPosition, target, result.IsHit);
+
+                if (result.IsHit)
+                {
+                    StartCoroutine(attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition));
+                    yield return target.ReceiveAttack(this, attack);
+                }
+
+                SpawnResultHighlight(result, target);
+                yield return new WaitForSeconds(0.25f);
+
+                if (target.IsDead)
+                    break;
+            }
         }
 
         yield return attackMotionType.PostAttackMotion(this, target, attackDefinition);
     }
 
-    IEnumerator PlayAnimation(string name)
+    protected IEnumerator PlayAnimation(string name)
     {
         if (animator == null)
             animator = GetComponent<Animator>();

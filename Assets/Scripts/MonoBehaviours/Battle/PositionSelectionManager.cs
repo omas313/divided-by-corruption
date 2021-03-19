@@ -86,6 +86,8 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
             BattleUIEvents.InvokeSpecialAttackSelectionRequested();
 
         BattleUIEvents.InvokeTargetSelectionCancelled();
+        BattleAudioSource.Instance.PlayUnselectSound();
+
 
         _targetMarker.Hide();
         _isActive = false;
@@ -95,12 +97,16 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     {
         _currentIndex = Mathf.Max(_currentIndex - 1, 0);        
         SetCurrentPosition();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void GoToNextPosition()
     {
         _currentIndex = Mathf.Min(_currentIndex + 1, _activePositions.Count - 1);              
         SetCurrentPosition();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void ConfirmCurrentSelection()
@@ -110,6 +116,8 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
 
         _currentBattleAction.Target = _positionsMap[_activePositions[_currentIndex]];
         BattleUIEvents.InvokeActionBarRequested();
+        BattleAudioSource.Instance.PlaySelectSound();
+
     }
 
     void RaiseRightPressedEvent()

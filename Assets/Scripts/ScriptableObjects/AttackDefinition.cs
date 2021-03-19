@@ -18,6 +18,9 @@ public class AttackDefinition : ScriptableObject
     public GameObject ProjectilePrefab => _projectilePrefab;
     public Color PowerColor => _powerColor;
     public float CastTime => _castTime;
+    public bool IsEnvironmentalSpell => _isEnvironmentalSpell;
+
+    // todo need SpellAttackDefinition to hold spell-specific props
 
     [SerializeField] string _name;
     [SerializeField] string _animationTriggerName;
@@ -28,9 +31,15 @@ public class AttackDefinition : ScriptableObject
     [SerializeField] AttackMotionType _attackMotionType;
     [SerializeField] GameObject _onHitEffectsPrefab;
     [SerializeField] GameObject _castEffectsPrefab;
-    [SerializeField] GameObject _projectilePrefab;
+
+
+    // todo: need seprate spell definition 
+    [SerializeField] GameObject _projectilePrefab; // change to sfx prefab
     [SerializeField] Color _powerColor;
+    [SerializeField] Color _secondaryPowerColor;
     [SerializeField] float _castTime;
+    [SerializeField] bool _isEnvironmentalSpell;
+
 
     public IEnumerator SpawnOnHitParticles(Vector3 position)
     {
@@ -56,8 +65,18 @@ public class AttackDefinition : ScriptableObject
 
         var particles = Instantiate(_castEffectsPrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
             .GetComponent<ParticleSystem>();
-        var main = particles.main;
-        main.startColor = _powerColor;
+
+       var main = particles.main;
+        if (_secondaryPowerColor.a == 0)
+            main.startColor = _powerColor;
+        else
+        {
+            var gradient = CreateGradient(_powerColor, _secondaryPowerColor);
+            var minMaxGradient = new ParticleSystem.MinMaxGradient(gradient);
+            minMaxGradient.mode = ParticleSystemGradientMode.RandomColor;
+            main.startColor = minMaxGradient;
+        }
+        
         main.stopAction = ParticleSystemStopAction.Destroy;
         particles.Play();
 
@@ -72,19 +91,28 @@ public class AttackDefinition : ScriptableObject
 
         var particles = Instantiate(_castEffectsPrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
             .GetComponent<ParticleSystem>();
+        
         var main = particles.main;
-        main.startColor = _powerColor;
+        if (_secondaryPowerColor.a == 0)
+            main.startColor = _powerColor;
+        else
+        {
+            var gradient = CreateGradient(_powerColor, _secondaryPowerColor);
+            var minMaxGradient = new ParticleSystem.MinMaxGradient(gradient);
+            minMaxGradient.mode = ParticleSystemGradientMode.RandomColor;
+            main.startColor = minMaxGradient;
+        }
         main.stopAction = ParticleSystemStopAction.Destroy;
-        particles.Play();
 
+        particles.Play();
         return particles;
     }
 
-    public IEnumerator SpawnProjectile(Vector3 castPosition, BattleParticipant target, bool isHit)
+    public IEnumerator SpawnSpecialEffects(Vector3 castPosition, BattleParticipant target, bool isHit)
     {
         if (_projectilePrefab == null)
             yield break;
-            
+
         var angle = Vector2.SignedAngle(Vector2.right, (target.BodyMidPointPosition - castPosition).normalized);
         var rotation = Quaternion.Euler(0f, 0f, angle);
 
@@ -98,6 +126,17 @@ public class AttackDefinition : ScriptableObject
             yield return HandleParticleCollision(particles, target);
         else
             yield return new WaitForSeconds(particleSystemMain.startLifetime.constant);
+    }
+
+    public IEnumerator SpawnEnvironmentalSpell(bool isHit)
+    {
+        if (!isHit)
+            yield break;
+
+        var particles = Instantiate(_projectilePrefab).GetComponent<ParticleSystem>();
+        particles.transform.parent = GameObject.FindWithTag("Junk").transform;
+
+        yield return new WaitUntil(() => !particles.isPlaying && particles.particleCount == 0);
     }
 
     IEnumerator HandleParticleCollision(ParticleSystem particles, BattleParticipant target)
@@ -117,5 +156,26 @@ public class AttackDefinition : ScriptableObject
         target.SetColliderActive(true);
         yield return new WaitUntil(() => collided);
         target.SetColliderActive(false);
+    }
+
+    Gradient CreateGradient(Color color1, Color color2)
+    {
+        var gradient = new Gradient();
+
+        var colorkey = new GradientColorKey[2];
+        colorkey[0].color = color1;
+        colorkey[0].time = 0.45f;
+        colorkey[1].color = color2;
+        colorkey[1].time = 0.55f;
+
+        var alphaKey = new GradientAlphaKey[2];
+        alphaKey[0].alpha = 1f;
+        alphaKey[0].time = 0f;
+        alphaKey[1].alpha = 1f;
+        alphaKey[1].time = 1f;
+
+        gradient.SetKeys(colorkey, alphaKey);
+
+        return gradient;
     }
 }

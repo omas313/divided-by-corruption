@@ -141,7 +141,7 @@ public class BattleController : MonoBehaviour
     IEnumerator BattleVictory()
     {
         yield return new WaitForSeconds(2f);
-        // BattleEvents.InvokeBattleEnded(hasWon: true);
+        BattleEvents.InvokeBattleEnded(hasWon: true);
         Debug.Log("Battle ended in victory");
 
     }
@@ -149,7 +149,7 @@ public class BattleController : MonoBehaviour
     IEnumerator BattleLoss()
     {
         yield return new WaitForSeconds(2f);
-        // BattleEvents.InvokeBattleEnded(hasWon: false);
+        BattleEvents.InvokeBattleEnded(hasWon: false);
         Debug.Log("Battle ended in loss");
     }
 

@@ -15,4 +15,4 @@ MonoBehaviour:
   _playerParty:
   - {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
   _enemies:
-  - {fileID: 6447435800757866537, guid: ca7d90baac827b543bf800189f0f35f4, type: 3}
+  - {fileID: 2843647581125247489, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
