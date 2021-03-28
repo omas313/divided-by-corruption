@@ -12,7 +12,8 @@ public class UISpecialAttackMenu : MonoBehaviour
     CanvasGroup _canvasGroup;
     int _currentIndex;
     bool _isActive;
-    BattleAction _currentBattleAction;
+    BattleActionPacket _currentBattleActionPacket;
+    IAttackAction CurrentBattleAction => _currentBattleActionPacket.BattleAction as IAttackAction;
 
     public void Hide() => _canvasGroup.alpha = 0f;
 
@@ -66,9 +67,9 @@ public class UISpecialAttackMenu : MonoBehaviour
             Destroy(item.gameObject);
     }
 
-    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
     {
-        _currentBattleAction = battleAction;
+        _currentBattleActionPacket = battleActionPacket;
 
         if (partyMember.SpecialAttacksDefinitions.Count > 0)
             CreateAttacks(partyMember);
@@ -76,7 +77,7 @@ public class UISpecialAttackMenu : MonoBehaviour
 
     void OnPartyMemberTurnEnded(PartyMember partyMember)
     {
-        _currentBattleAction = null;
+        _currentBattleActionPacket = null;
         StopSelection();
     }
 
@@ -117,7 +118,7 @@ public class UISpecialAttackMenu : MonoBehaviour
 
     void GoBack()
     {
-        _currentBattleAction.AttackDefinition = null;
+        CurrentBattleAction.AttackDefinition = null;
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
         StopSelection();
         BattleAudioSource.Instance.PlayUnselectSound();
@@ -129,7 +130,7 @@ public class UISpecialAttackMenu : MonoBehaviour
         if (!_items[_currentIndex].IsSelectable)
             return;
 
-        _currentBattleAction.AttackDefinition = _items[_currentIndex].AttackDefinition;
+        CurrentBattleAction.AttackDefinition = _items[_currentIndex].AttackDefinition;
         BattleUIEvents.InvokeEnemyTargetSelectionRequested();
 
         _isActive = false;

@@ -28,7 +28,8 @@ public class UIAttackBar : MonoBehaviour
     bool _isMoving;
     float _totalWidth;
     List<SegmentResult> _currentSegmentResults;
-    BattleAction _currentBattleAction;
+    BattleActionPacket _currentBattleActionPacket;
+    IActionBarAction CurrentBattleAction => _currentBattleActionPacket.BattleAction as IActionBarAction;
 
     void Hide() => _canvasGroup.alpha = 0f;
 
@@ -86,7 +87,7 @@ public class UIAttackBar : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         Hide();
-        _currentBattleAction.AttackBarResult = new AttackBarResult(_currentSegmentResults);
+        CurrentBattleAction.ActionBarResult = new ActionBarResult(_currentSegmentResults);
         BattleUIEvents.InvokeActionBarCompleted();
             
         CleanUp();
@@ -170,20 +171,20 @@ public class UIAttackBar : MonoBehaviour
         textMesh.transform.localScale = new Vector3(scale, scale, scale);
     }
 
-    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
     {
-        _currentBattleAction = battleAction;
+        _currentBattleActionPacket = battleActionPacket;
     }
     
     void OnPartyMemberTurnEnded(PartyMember partyMember)
     {
-        _currentBattleAction = null;
+        _currentBattleActionPacket = null;
     }
 
     void OnRequestedActionBar()
     {
         Show();
-        StartWithSegments(_currentBattleAction.AttackDefinition.SegmentData, _pinSpeed);
+        StartWithSegments(CurrentBattleAction.SegmentData, _pinSpeed);
     }
 
     void Update()

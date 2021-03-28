@@ -8,4 +8,10 @@ public class SegmentData
 
     [SerializeField] float _normalMultiplier = 1f;
     [SerializeField] float _criticalMultiplier = 1.2f;
+
+    public SegmentData(float normalMultiplier, float criticalMultiplier)
+    {
+        _normalMultiplier = normalMultiplier;
+        _criticalMultiplier = criticalMultiplier;
+    }
 }

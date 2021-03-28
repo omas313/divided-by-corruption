@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 
-public class AttackBarResult
+public class ActionBarResult
 {
     public List<SegmentResult> SegmentsResults;
 
-    public AttackBarResult(List<SegmentResult> segmentsResults)
+    public ActionBarResult(List<SegmentResult> segmentsResults)
     {
         SegmentsResults = segmentsResults;
     }

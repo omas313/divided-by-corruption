@@ -60,7 +60,7 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
     }
 
     void OnActionBarRequested() => Hide();
-    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
     {
         var name = partyMember.Name;
         var hp = partyMember.CharacterStats.CurrentHP.ToString();

@@ -10,7 +10,7 @@ public class UIBattleMenu : MonoBehaviour
     int _currentIndex;
     bool _isActive;
     private PartyMember _partyMember;
-    private BattleAction _currentBattleAction;
+    private BattleActionPacket _currentBattleActionPacket;
 
     public void Hide() => _canvasGroup.alpha = 0f;
 
@@ -39,18 +39,18 @@ public class UIBattleMenu : MonoBehaviour
         _isActive = false;
     }
 
-    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
     {
         // todo: create party member actions in the future (when they have different actions)
         Show();
         _partyMember = partyMember;
-        _currentBattleAction = battleAction;
+        _currentBattleActionPacket = battleActionPacket;
     }
 
     void OnPartyMemberTurnEnded(PartyMember partyMember)
     {
         _partyMember = null;
-        _currentBattleAction = null;
+        _currentBattleActionPacket = null;
         StopSelection();
     }
 
@@ -87,16 +87,36 @@ public class UIBattleMenu : MonoBehaviour
 
     void ConfirmSelection()
     {
-        _currentBattleAction.BattleActionType = _items[_currentIndex].BattleActionType;
+        var actionType = _items[_currentIndex].BattleActionType;
 
-        // todo: enums SO's?
-        if (_currentBattleAction.BattleActionType == BattleActionType.Attack)
+        switch (actionType)
         {
-            _currentBattleAction.AttackDefinition = _partyMember.NormalAttackDefinition;
-            BattleUIEvents.InvokeEnemyTargetSelectionRequested();
+            case BattleActionType.Attack:
+                var attackAction = new AttackAction(_partyMember, BattleActionType.Attack);
+                attackAction.AttackDefinition = _partyMember.NormalAttackDefinition;
+                _currentBattleActionPacket.BattleAction = attackAction;
+                BattleUIEvents.InvokeEnemyTargetSelectionRequested();
+                break;
+
+            case BattleActionType.Special:
+                _currentBattleActionPacket.BattleAction = new AttackAction(_partyMember, BattleActionType.Special);
+                BattleUIEvents.InvokeSpecialAttackSelectionRequested();
+                break;
+
+            case BattleActionType.Defend:
+                _currentBattleActionPacket.BattleAction = new DefendAction(_partyMember);
+                break;
+
+            case BattleActionType.Absorb:
+                _currentBattleActionPacket.BattleAction = new AbsorbAction(_partyMember);
+                BattleUIEvents.InvokeEnemyTargetSelectionRequested();
+                break;
+            
+            case BattleActionType.None:
+            default:
+                Debug.Log($"Error: unexpected battle action: {actionType}");
+                break;
         }
-        else if (_currentBattleAction.BattleActionType == BattleActionType.Special)
-            BattleUIEvents.InvokeSpecialAttackSelectionRequested();
 
         _isActive = false;
         SelectAndHideOthers();

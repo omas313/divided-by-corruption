@@ -15,7 +15,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     Dictionary<Transform, T> _positionsMap;
     bool _isActive;
     int _currentIndex;
-    private BattleAction _currentBattleAction;
+    BattleActionPacket _currentBattleActionPacket;
 
     public void StartSelection()
     {
@@ -80,9 +80,9 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     
     void GoBack()
     {
-        if (_currentBattleAction.BattleActionType == BattleActionType.Attack)
+        if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack)
             BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
-        else if (_currentBattleAction.BattleActionType == BattleActionType.Special)
+        else if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Special)
             BattleUIEvents.InvokeSpecialAttackSelectionRequested();
 
         BattleUIEvents.InvokeTargetSelectionCancelled();
@@ -114,7 +114,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _targetMarker.Hide();
         _isActive = false;
 
-        _currentBattleAction.Target = _positionsMap[_activePositions[_currentIndex]];
+        _currentBattleActionPacket.BattleAction.Target = _positionsMap[_activePositions[_currentIndex]];
         BattleUIEvents.InvokeActionBarRequested();
         BattleAudioSource.Instance.PlaySelectSound();
 
@@ -138,14 +138,14 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _isActive = false;
     }
 
-    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction)
+    void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
     {
-        _currentBattleAction = battleAction;
+        _currentBattleActionPacket = battleActionPacket;
     }
 
     void OnPartyMemberTurnEnded(PartyMember partyMember)
     {
-        _currentBattleAction = null;
+        _currentBattleActionPacket = null;
     }
 
     void Update()

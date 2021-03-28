@@ -4,7 +4,7 @@ using UnityEngine;
 
 public abstract class ActionTargetterType : ScriptableObject
 {
-    public abstract IEnumerator Perform(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies);
+    public abstract IEnumerator Perform(AttackAction attackAction, List<PartyMember> party, List<Enemy> enemies);
 
     public abstract bool ShouldStop();
 

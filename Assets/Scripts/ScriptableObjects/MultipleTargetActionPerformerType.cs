@@ -7,16 +7,16 @@ public class MultipleTargetActionPerformerType : ActionTargetterType
 {
     List<Enemy> _enemies;
 
-    public override IEnumerator Perform(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
+    public override IEnumerator Perform(AttackAction attackAction, List<PartyMember> party, List<Enemy> enemies)
     {
         _enemies = enemies;
 
-        var attack = battleAction.GetNextBattleAttack();
+        var attack = attackAction.GetNextBattleAttack();
         if (!attack.IsHit)
             yield break;
 
-        var performer = battleAction.Performer;
-        var attackDefinition = battleAction.AttackDefinition;
+        var performer = attackAction.Performer;
+        var attackDefinition = attackAction.AttackDefinition;
 
         yield return attackDefinition.SpawnEnvironmentalEffect();
 

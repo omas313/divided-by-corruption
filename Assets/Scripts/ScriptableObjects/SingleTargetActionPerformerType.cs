@@ -7,13 +7,13 @@ public class SingleTargetActionPerformerType : ActionTargetterType
 {
     BattleParticipant _target;
 
-    public override IEnumerator Perform(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
+    public override IEnumerator Perform(AttackAction attackAction, List<PartyMember> party, List<Enemy> enemies)
     {
-        _target = battleAction.Target;
+        _target = attackAction.Target;
 
-        var performer = battleAction.Performer;
-        var attackDefinition = battleAction.AttackDefinition;
-        var attack = battleAction.GetNextBattleAttack();
+        var performer = attackAction.Performer;
+        var attackDefinition = attackAction.AttackDefinition;
+        var attack = attackAction.GetNextBattleAttack();
 
         yield return attackDefinition.SpawnProjectileEffect(performer.ProjectileCastPointPosition, _target, attack.IsHit);
 

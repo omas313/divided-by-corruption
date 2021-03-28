@@ -46,14 +46,20 @@ public class Enemy : BattleParticipant
     //     attacks = _definition.Attacks;
     // }
 
-    public override IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
+    public BattleAction GetNextAction(List<PartyMember> party, List<Enemy> enemies)
     {
-        battleAction.Performer = this;
-        battleAction.BattleActionType = BattleActionType.Attack;
-        battleAction.AttackDefinition = _attackDefinitions[UnityEngine.Random.Range(0, _attackDefinitions.Length)];
+        // todo: setup ActionDefinitions
+        // todo: decide next course of action based on rules (definitions???)
+
+        var attackAction = new AttackAction(this, BattleActionType.Attack);
+        attackAction.Target = party[UnityEngine.Random.Range(0, party.Count)];
+        attackAction.AttackDefinition = _attackDefinitions[UnityEngine.Random.Range(0, _attackDefinitions.Length)];
+
+        BattleEvents.InvokeEnemySelectedTarget(attackAction.Target);
+
 
         var segmentResults = new List<SegmentResult>();
-        foreach (var segment in battleAction.AttackDefinition.SegmentData)
+        foreach (var segment in attackAction.AttackDefinition.SegmentData)
         {
             var isMiss = UnityEngine.Random.value < _missChance;
             var isCritical = isMiss ? false : UnityEngine.Random.value < _criticalChance;
@@ -62,9 +68,9 @@ public class Enemy : BattleParticipant
             segmentResults.Add(result);
         }
 
-        battleAction.AttackBarResult = new AttackBarResult(segmentResults);
+        attackAction.ActionBarResult = new ActionBarResult(segmentResults);
 
-        yield return base.PerformAction(battleAction, party, enemies);
+        return attackAction;
     }
 
     public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)

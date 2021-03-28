@@ -2,5 +2,7 @@ public enum BattleActionType
 {
     None,
     Attack, 
-    Special
+    Special,
+    Defend, 
+    Absorb
 }

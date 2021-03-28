@@ -44,23 +44,33 @@ public class AttackDefinition : ScriptableObject
     [SerializeField] Color _secondaryPowerColor;
     [SerializeField] float _castTime;
 
-    public IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
+    public IEnumerator PerformAttack(AttackAction attackAction, List<PartyMember> party, List<Enemy> enemies)
     {
-        var performer = battleAction.Performer;
-        var attackDefinition = battleAction.AttackDefinition;
+        var performer = attackAction.Performer;
+        var attackDefinition = attackAction.AttackDefinition;
 
-        battleAction.CalculateDamage();
+        attackAction.InitBattleAttacks();
 
-        while (battleAction.HasAttacks)
+        while (attackAction.HasAttacks)
         {
             if (attackDefinition.HasTriggerAnimation)
                 yield return performer.TriggerAnimation(attackDefinition.AnimationTriggerName);
 
-            yield return _actionTargetterType.Perform(battleAction, party, enemies);
+            yield return _actionTargetterType.Perform(attackAction, party, enemies);
 
             if (_actionTargetterType.ShouldStop())
                 break;
         }
+    }
+
+    public IEnumerator PreAttackMotion(BattleParticipant attacker, BattleParticipant target)
+    {
+        yield return _attackMotionType.PreAttackMotion(attacker, target, this);
+    }
+
+    public IEnumerator PostAttackMotion(BattleParticipant attacker, BattleParticipant target)
+    {
+        yield return _attackMotionType.PostAttackMotion(attacker, target, this);
     }
 
     public void SpawnOnHitParticles(Vector3 position)

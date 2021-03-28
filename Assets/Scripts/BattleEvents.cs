@@ -14,7 +14,7 @@ public class BattleEvents
     
     public static event Action<List<PartyMember>> PartyUpdated;
     public static event Action<PartyMember> CurrentPartyMemberChanged;
-    public static event Action<PartyMember, BattleAction> PartyMemberTurnStarted;
+    public static event Action<PartyMember, BattleActionPacket> PartyMemberTurnStarted;
     public static event Action<PartyMember> PartyMemberTurnEnded;
     public static event Action<PartyMember> PartyMemberDied;
 
@@ -43,7 +43,7 @@ public class BattleEvents
 
     public static void InvokePartyUpdated(List<PartyMember> partyMembers) => PartyUpdated?.Invoke(partyMembers);
     public static void InvokeCurrentPartyMemberChanged(PartyMember currentPartyMember) => CurrentPartyMemberChanged?.Invoke(currentPartyMember);
-    public static void InvokePartyMemberTurnStarted(PartyMember partyMember, BattleAction battleAction) => PartyMemberTurnStarted?.Invoke(partyMember, battleAction);
+    public static void InvokePartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket) => PartyMemberTurnStarted?.Invoke(partyMember, battleActionPacket);
     public static void InvokePartyMemberTurnEnded(PartyMember partyMember) => PartyMemberTurnEnded?.Invoke(partyMember);
     public static void InvokePartyMemberDied(PartyMember partyMember) => PartyMemberDied?.Invoke(partyMember);
 

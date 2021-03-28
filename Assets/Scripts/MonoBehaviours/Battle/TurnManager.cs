@@ -25,33 +25,27 @@ public class TurnManager : MonoBehaviour
     {
         BattleEvents.InvokeEnemyTurnStarted(enemy);
 
-        var battleAction = new BattleAction();
-        battleAction.Target = party[UnityEngine.Random.Range(0, party.Count)];
-
-        BattleEvents.InvokeEnemySelectedTarget(battleAction.Target);
-
-        yield return enemy.PerformAction(battleAction, party, enemies);
+        yield return enemy.GetNextAction(party, enemies).Perform(party, enemies);
 
         BattleEvents.InvokeEnemyTurnEnded(enemy);
     }
 
     IEnumerator ManagePartyMemberTurn(PartyMember partyMember, List<PartyMember> party, List<Enemy> enemies)
     {
-        var currentBattleAction = new BattleAction() { Performer = partyMember };
+        var battleActionPacket = new BattleActionPacket();
 
-        partyMember.CharacterStats.IncreaseCurrentMP(1);
-        BattleEvents.InvokePartyMemberTurnStarted(partyMember, currentBattleAction);
+        BattleEvents.InvokePartyMemberTurnStarted(partyMember, battleActionPacket);
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
-        yield return new WaitUntil(() => currentBattleAction.IsValid || Input.GetKeyDown(KeyCode.End));
-        if (!currentBattleAction.IsValid)
+        yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End));
+        if (!battleActionPacket.HasValidAction)
             yield break;
-        
-        if (currentBattleAction.Target is Enemy)
-            BattleEvents.InvokeEnemyTargetted(currentBattleAction.Target as Enemy);
-        
-        yield return partyMember.PerformAction(currentBattleAction, party, enemies);
 
+        if (battleActionPacket.BattleAction.Target is Enemy)
+            BattleEvents.InvokeEnemyTargetted(battleActionPacket.BattleAction.Target as Enemy);
+
+        yield return battleActionPacket.BattleAction.Perform(party, enemies);
+        
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
     }
 }

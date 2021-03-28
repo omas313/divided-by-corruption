@@ -28,6 +28,8 @@ public abstract class BattleParticipant : MonoBehaviour
         transform.position = position;
     }
 
+    public void ConsumeMP(int amount) => CharacterStats.ReduceCurrentMP(amount);
+
     public IEnumerator TriggerAnimation(string name)
     {
         if (animator == null)
@@ -46,11 +48,6 @@ public abstract class BattleParticipant : MonoBehaviour
         spriteRenderer.sortingOrder = order;
     }
 
-    public virtual IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
-    {
-        yield return Perform(battleAction, party, enemies);
-    }
-
     public virtual void SetColliderActive(bool isActive)
     {
         var collider = GetComponent<Collider2D>();
@@ -65,21 +62,6 @@ public abstract class BattleParticipant : MonoBehaviour
 
     public abstract IEnumerator Die();
     public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
-
-    protected IEnumerator Perform(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
-    {
-        var initialPosition = transform.position;
-        var target = battleAction.Target;
-        var segmentResults = battleAction.AttackBarResult.SegmentsResults;
-        var attackDefinition = battleAction.AttackDefinition;
-
-        var attackMotionType = attackDefinition.AttackMotionType;
-        yield return attackMotionType.PreAttackMotion(this, target, attackDefinition); // attack def should do it
-
-        CharacterStats.ReduceCurrentMP(attackDefinition.MPCost);
-        yield return attackDefinition.PerformAction(battleAction, party, enemies);
-        yield return attackMotionType.PostAttackMotion(this, target, attackDefinition); // attack def should do it
-    }
 
     [ContextMenu("Kill")]
     public void CM_Kill()
