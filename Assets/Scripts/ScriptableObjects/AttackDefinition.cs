@@ -11,7 +11,7 @@ public class AttackDefinition : ScriptableObject
     public int MPCost => _mpCost;
     public int SegmentsCount => _segmentData.Count;
     public List<SegmentData> SegmentData => _segmentData;
-    public ActionTargetterType AttackTargetType => _actionPerformerType;
+    public ActionTargetterType AttackTargetType => _actionTargetterType;
     public AttackMotionType AttackMotionType => _attackMotionType;
     public GameObject OnHitEffectsPrefab => _onHitEffectsPrefab;
     public GameObject CastEffectsPrefab => _castEffectsPrefab;
@@ -21,7 +21,8 @@ public class AttackDefinition : ScriptableObject
     public float CastTime => _castTime;
     public bool HasTriggerAnimation => !string.IsNullOrWhiteSpace(_animationTriggerName);
     public bool HasProjectile => _projectilePrefab != null;
-    public bool HasEnvironmentalSpell => _environmentalEffectPrefab != null;
+    public bool HasEnvironmentalEffect => _environmentalEffectPrefab != null;
+    public bool HasOnHitParticles => _onHitEffectsPrefab != null;
 
     // todo need SpellAttackDefinition to hold spell-specific props
 
@@ -30,7 +31,7 @@ public class AttackDefinition : ScriptableObject
     [SerializeField] int _damage;
     [SerializeField] int _mpCost;
     [SerializeField] List<SegmentData> _segmentData;
-    [SerializeField] ActionTargetterType _actionPerformerType;
+    [SerializeField] ActionTargetterType _actionTargetterType;
     [SerializeField] AttackMotionType _attackMotionType;
     [SerializeField] GameObject _onHitEffectsPrefab;
     [SerializeField] GameObject _castEffectsPrefab;
@@ -45,7 +46,21 @@ public class AttackDefinition : ScriptableObject
 
     public IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
     {
-        yield return _actionPerformerType.Perform(battleAction, party, enemies);
+        var performer = battleAction.Performer;
+        var attackDefinition = battleAction.AttackDefinition;
+
+        battleAction.CalculateDamage();
+
+        while (battleAction.HasAttacks)
+        {
+            if (attackDefinition.HasTriggerAnimation)
+                yield return performer.TriggerAnimation(attackDefinition.AnimationTriggerName);
+
+            yield return _actionTargetterType.Perform(battleAction, party, enemies);
+
+            if (_actionTargetterType.ShouldStop())
+                break;
+        }
     }
 
     public IEnumerator SpawnOnHitParticles(Vector3 position)
@@ -117,7 +132,7 @@ public class AttackDefinition : ScriptableObject
 
     public IEnumerator SpawnProjectileEffect(Vector3 castPosition, BattleParticipant target, bool isHit)
     {
-        if (_projectilePrefab == null)
+        if (!HasProjectile)
             yield break;
 
         var angle = Vector2.SignedAngle(Vector2.right, (target.BodyMidPointPosition - castPosition).normalized);
@@ -137,6 +152,9 @@ public class AttackDefinition : ScriptableObject
 
     public IEnumerator SpawnEnvironmentalEffect()
     {
+        if (!HasEnvironmentalEffect)
+            yield break;
+
         var particles = Instantiate(_environmentalEffectPrefab).GetComponent<ParticleSystem>();
         particles.transform.parent = GameObject.FindWithTag("Junk").transform;
 

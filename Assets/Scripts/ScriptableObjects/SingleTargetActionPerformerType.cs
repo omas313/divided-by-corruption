@@ -3,40 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "SingleTargetActionPerformerType.asset", menuName = "ActionPerformerType/Single Target Action Performer Type")]
-public class SingleTargetActionPerformerType : ActionPerformerType
+public class SingleTargetActionPerformerType : ActionTargetterType
 {
+    BattleParticipant _target;
+
     public override IEnumerator Perform(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
     {
+        _target = battleAction.Target;
+
         var performer = battleAction.Performer;
-        var target = battleAction.Target;
-        var segmentResults = battleAction.AttackBarResult.SegmentsResults;
         var attackDefinition = battleAction.AttackDefinition;
+        var attack = battleAction.GetNextBattleAttack();
 
-        for (var i = 0; i < segmentResults.Count ; i++)
+        yield return attackDefinition.SpawnProjectileEffect(performer.ProjectileCastPointPosition, _target, attack.IsHit);
+
+        if (attack.IsHit)
         {
-            var result = segmentResults[i];
-            var attack = new BattleAttack(
-                attackDefinition.Name, 
-                Mathf.CeilToInt(attackDefinition.Damage * result.Multiplier),
-                result.IsCritical);
-
-            if (attackDefinition.HasTriggerAnimation)
-                yield return performer.TriggerAnimation(attackDefinition.AnimationTriggerName);
-
-            if (attackDefinition.HasProjectile)
-                yield return attackDefinition.SpawnProjectileEffect(performer.ProjectileCastPointPosition, target, result.IsHit);
-
-            if (result.IsHit)
-            {
-                SpawnOnHitParticles(performer, target, attackDefinition);
-                yield return target.ReceiveAttack(performer, attack);
-            }
-
-            InvokeResultEvents(result, target);
-            yield return new WaitForSeconds(0.25f);
-
-            if (target.IsDead)
-                break;
+            SpawnOnHitParticles(performer, _target, attackDefinition);
+            yield return _target.ReceiveAttack(performer, attack);
         }
+
+        InvokeResultEvents(attack, _target);
+        yield return new WaitForSeconds(0.25f);
+
     }
+
+    public override bool ShouldStop() => _target.IsDead;
 }

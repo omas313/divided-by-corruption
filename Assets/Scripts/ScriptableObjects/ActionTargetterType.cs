@@ -2,20 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class ActionPerformerType : ScriptableObject
+public abstract class ActionTargetterType : ScriptableObject
 {
     public abstract IEnumerator Perform(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies);
 
+    public abstract bool ShouldStop();
+
+
     protected void SpawnOnHitParticles(BattleParticipant performer, BattleParticipant target, AttackDefinition attackDefinition)
     {
-        performer.StartCoroutine(attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition));
+        if (attackDefinition.HasOnHitParticles)
+            performer.StartCoroutine(attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition));
     }
 
-    protected void InvokeResultEvents(SegmentResult result, BattleParticipant target)
+    protected void InvokeResultEvents(BattleAttack attack, BattleParticipant target)
     {
-        if (result.IsCritical)
+        if (attack.IsCritical)
             BattleEvents.InvokeAttackCritAt(target.CurrentPosition);
-        else if (result.IsMiss)
+        else if (!attack.IsHit)
             BattleEvents.InvokeAttackMissAt(target.CurrentPosition);
     }
 }
