@@ -37,13 +37,15 @@ public class TurnManager : MonoBehaviour
 
     IEnumerator ManagePartyMemberTurn(PartyMember partyMember, List<PartyMember> party, List<Enemy> enemies)
     {
-        var currentBattleAction = new BattleAction() { Attacker = partyMember };
+        var currentBattleAction = new BattleAction() { Performer = partyMember };
 
         partyMember.CharacterStats.IncreaseCurrentMP(1);
         BattleEvents.InvokePartyMemberTurnStarted(partyMember, currentBattleAction);
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
-        yield return new WaitUntil(() => currentBattleAction.IsValid);
+        yield return new WaitUntil(() => currentBattleAction.IsValid || Input.GetKeyDown(KeyCode.End));
+        if (!currentBattleAction.IsValid)
+            yield break;
         
         if (currentBattleAction.Target is Enemy)
             BattleEvents.InvokeEnemyTargetted(currentBattleAction.Target as Enemy);

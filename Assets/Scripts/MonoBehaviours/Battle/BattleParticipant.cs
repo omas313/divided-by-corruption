@@ -28,6 +28,16 @@ public abstract class BattleParticipant : MonoBehaviour
         transform.position = position;
     }
 
+    public IEnumerator TriggerAnimation(string name)
+    {
+        if (animator == null)
+            animator = GetComponent<Animator>();
+
+        animator.SetTrigger(name);
+        yield return new WaitForSeconds(0.15f);
+        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f);
+    }
+
     public virtual void SetRendererSortingOrder(int order)
     {
         if (spriteRenderer == null)
@@ -60,84 +70,15 @@ public abstract class BattleParticipant : MonoBehaviour
     {
         var initialPosition = transform.position;
         var target = battleAction.Target;
-        var attackDefinition = battleAction.AttackDefinition;
-        var attackMotionType = attackDefinition.AttackMotionType;
         var segmentResults = battleAction.AttackBarResult.SegmentsResults;
+        var attackDefinition = battleAction.AttackDefinition;
 
-        yield return attackMotionType.PreAttackMotion(this, target, attackDefinition);
+        var attackMotionType = attackDefinition.AttackMotionType;
+        yield return attackMotionType.PreAttackMotion(this, target, attackDefinition); // attack def should do it
 
         CharacterStats.ReduceCurrentMP(attackDefinition.MPCost);
-
-        if (attackDefinition.IsEnvironmentalSpell)
-        {
-            var result = segmentResults[0];
-            var attack = new BattleAttack(
-                attackDefinition.Name, 
-                Mathf.CeilToInt(attackDefinition.Damage * result.Multiplier),
-                result.IsCritical);
-
-            yield return attackDefinition.SpawnEnvironmentalSpell(result.IsHit);
-
-            if (result.IsHit)
-            {
-                foreach (var enemy in enemies)
-                {
-                    StartCoroutine(attackDefinition.SpawnOnHitParticles(enemy.BodyMidPointPosition));
-                    StartCoroutine(enemy.ReceiveAttack(this, attack));
-                }
-                yield return new WaitForSeconds(0.25f);
-            }
-
-            SpawnResultHighlight(result, target);
-            yield return new WaitForSeconds(0.25f);
-        }
-        else
-        {
-            for (var i = 0; i < segmentResults.Count ; i++)
-            {
-                var result = segmentResults[i];
-                var attack = new BattleAttack(
-                    attackDefinition.Name, 
-                    Mathf.CeilToInt(attackDefinition.Damage * result.Multiplier),
-                    result.IsCritical);
-
-                yield return PlayAnimation(attackDefinition.AnimationTriggerName);
-
-                yield return attackDefinition.SpawnSpecialEffects(ProjectileCastPointPosition, target, result.IsHit);
-
-                if (result.IsHit)
-                {
-                    StartCoroutine(attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition));
-                    yield return target.ReceiveAttack(this, attack);
-                }
-
-                SpawnResultHighlight(result, target);
-                yield return new WaitForSeconds(0.25f);
-
-                if (target.IsDead)
-                    break;
-            }
-        }
-
-        yield return attackMotionType.PostAttackMotion(this, target, attackDefinition);
-    }
-
-    protected IEnumerator PlayAnimation(string name)
-    {
-        if (animator == null)
-            animator = GetComponent<Animator>();
-
-        animator.SetTrigger(name);
-        yield return new WaitForSeconds(0.15f);
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f);
-    }
-
-    void SpawnResultHighlight(SegmentResult result, BattleParticipant target)
-    {
-        if (result.IsCritical)
-            BattleEvents.InvokeAttackCritAt(target.CurrentPosition);
-        else if (result.IsMiss)
-            BattleEvents.InvokeAttackMissAt(target.CurrentPosition);
+        yield return attackDefinition.PerformAction(battleAction, party, enemies);
+        yield return attackMotionType.PostAttackMotion(this, target, attackDefinition); // attack def should do it
     }
 
     [ContextMenu("Kill")]

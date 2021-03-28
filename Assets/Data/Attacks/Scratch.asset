@@ -15,11 +15,16 @@ MonoBehaviour:
   _name: Scratch
   _animationTriggerName: Attack
   _damage: 5
+  _mpCost: 0
   _segmentData:
   - _normalMultiplier: 0.9
     _criticalMultiplier: 1.25
-  _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
+  _actionPerformerType: {fileID: 11400000, guid: 252c5ca50f61e4e4a83e7c0189873046, type: 2}
   _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 0}
   _projectilePrefab: {fileID: 0}
+  _environmentalEffectPrefab: {fileID: 0}
+  _powerColor: {r: 0, g: 0, b: 0, a: 0}
+  _secondaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
+  _castTime: 0

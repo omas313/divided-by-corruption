@@ -11,14 +11,17 @@ public class AttackDefinition : ScriptableObject
     public int MPCost => _mpCost;
     public int SegmentsCount => _segmentData.Count;
     public List<SegmentData> SegmentData => _segmentData;
-    public AttackTargetType AttackTargetType => _attackTargetType;
+    public ActionTargetterType AttackTargetType => _actionPerformerType;
     public AttackMotionType AttackMotionType => _attackMotionType;
     public GameObject OnHitEffectsPrefab => _onHitEffectsPrefab;
     public GameObject CastEffectsPrefab => _castEffectsPrefab;
     public GameObject ProjectilePrefab => _projectilePrefab;
+    public GameObject EnvironmentalEffectPrefab => _environmentalEffectPrefab;
     public Color PowerColor => _powerColor;
     public float CastTime => _castTime;
-    public bool IsEnvironmentalSpell => _isEnvironmentalSpell;
+    public bool HasTriggerAnimation => !string.IsNullOrWhiteSpace(_animationTriggerName);
+    public bool HasProjectile => _projectilePrefab != null;
+    public bool HasEnvironmentalSpell => _environmentalEffectPrefab != null;
 
     // todo need SpellAttackDefinition to hold spell-specific props
 
@@ -27,19 +30,23 @@ public class AttackDefinition : ScriptableObject
     [SerializeField] int _damage;
     [SerializeField] int _mpCost;
     [SerializeField] List<SegmentData> _segmentData;
-    [SerializeField] AttackTargetType _attackTargetType;
+    [SerializeField] ActionTargetterType _actionPerformerType;
     [SerializeField] AttackMotionType _attackMotionType;
     [SerializeField] GameObject _onHitEffectsPrefab;
     [SerializeField] GameObject _castEffectsPrefab;
 
 
     // todo: need seprate spell definition 
-    [SerializeField] GameObject _projectilePrefab; // change to sfx prefab
+    [SerializeField] GameObject _projectilePrefab; 
+    [SerializeField] GameObject _environmentalEffectPrefab;
     [SerializeField] Color _powerColor;
     [SerializeField] Color _secondaryPowerColor;
     [SerializeField] float _castTime;
-    [SerializeField] bool _isEnvironmentalSpell;
 
+    public IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
+    {
+        yield return _actionPerformerType.Perform(battleAction, party, enemies);
+    }
 
     public IEnumerator SpawnOnHitParticles(Vector3 position)
     {
@@ -108,7 +115,7 @@ public class AttackDefinition : ScriptableObject
         return particles;
     }
 
-    public IEnumerator SpawnSpecialEffects(Vector3 castPosition, BattleParticipant target, bool isHit)
+    public IEnumerator SpawnProjectileEffect(Vector3 castPosition, BattleParticipant target, bool isHit)
     {
         if (_projectilePrefab == null)
             yield break;
@@ -128,12 +135,9 @@ public class AttackDefinition : ScriptableObject
             yield return new WaitForSeconds(particleSystemMain.startLifetime.constant);
     }
 
-    public IEnumerator SpawnEnvironmentalSpell(bool isHit)
+    public IEnumerator SpawnEnvironmentalEffect()
     {
-        if (!isHit)
-            yield break;
-
-        var particles = Instantiate(_projectilePrefab).GetComponent<ParticleSystem>();
+        var particles = Instantiate(_environmentalEffectPrefab).GetComponent<ParticleSystem>();
         particles.transform.parent = GameObject.FindWithTag("Junk").transform;
 
         yield return new WaitUntil(() => !particles.isPlaying && particles.particleCount == 0);

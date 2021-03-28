@@ -48,7 +48,7 @@ public class Enemy : BattleParticipant
 
     public override IEnumerator PerformAction(BattleAction battleAction, List<PartyMember> party, List<Enemy> enemies)
     {
-        battleAction.Attacker = this;
+        battleAction.Performer = this;
         battleAction.BattleActionType = BattleActionType.Attack;
         battleAction.AttackDefinition = _attackDefinitions[UnityEngine.Random.Range(0, _attackDefinitions.Length)];
 

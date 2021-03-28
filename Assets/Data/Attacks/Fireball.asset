@@ -19,10 +19,12 @@ MonoBehaviour:
   _segmentData:
   - _normalMultiplier: 0.8
     _criticalMultiplier: 1.25
-  _attackTargetType: {fileID: 11400000, guid: 742b0124656743e45bea4f72864fbc4d, type: 2}
+  _actionPerformerType: {fileID: 11400000, guid: 252c5ca50f61e4e4a83e7c0189873046, type: 2}
   _attackMotionType: {fileID: 11400000, guid: c3b64d66e2df7e8458cbf01fb35eead7, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
   _projectilePrefab: {fileID: 6392100636865404471, guid: 19f0fd8e2e431624bb86b0a05259eaeb, type: 3}
+  _environmentalEffectPrefab: {fileID: 0}
   _powerColor: {r: 0.8301887, g: 0, b: 0, a: 1}
+  _secondaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
   _castTime: 2
