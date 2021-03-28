@@ -23,7 +23,7 @@ MonoBehaviour:
     _criticalMultiplier: 1.2
   - _normalMultiplier: 0.9
     _criticalMultiplier: 1.5
-  _actionPerformerType: {fileID: 11400000, guid: 252c5ca50f61e4e4a83e7c0189873046, type: 2}
+  _actionTargetterType: {fileID: 11400000, guid: 252c5ca50f61e4e4a83e7c0189873046, type: 2}
   _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}

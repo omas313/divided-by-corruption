@@ -19,7 +19,7 @@ public class SingleTargetActionPerformerType : ActionTargetterType
 
         if (attack.IsHit)
         {
-            SpawnOnHitParticles(performer, _target, attackDefinition);
+            SpawnOnHitParticles(_target, attackDefinition);
             yield return _target.ReceiveAttack(performer, attack);
         }
 

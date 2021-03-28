@@ -22,7 +22,7 @@ public class MultipleTargetActionPerformerType : ActionTargetterType
 
         foreach (var enemy in enemies)
         {
-            SpawnOnHitParticles(performer, enemy, attackDefinition);
+            SpawnOnHitParticles(enemy, attackDefinition);
             performer.StartCoroutine(enemy.ReceiveAttack(performer, attack));
             InvokeResultEvents(attack, enemy);
         }

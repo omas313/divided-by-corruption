@@ -63,21 +63,12 @@ public class AttackDefinition : ScriptableObject
         }
     }
 
-    public IEnumerator SpawnOnHitParticles(Vector3 position)
+    public void SpawnOnHitParticles(Vector3 position)
     {
         if (_onHitEffectsPrefab == null)
-            yield break;
+            return;
 
-        var particles = Instantiate(_onHitEffectsPrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform)
-            .GetComponent<ParticleSystem>();
-        var main = particles.main;
-        main.startColor = _powerColor;
-        main.loop = false;
-        main.stopAction = ParticleSystemStopAction.Destroy;
-
-        yield return new WaitForSeconds(0.1f);
-        yield return new WaitUntil(() => !particles.isPlaying);
-        yield return new WaitForSeconds(0.25f);
+        Instantiate(_onHitEffectsPrefab, position, Quaternion.identity, GameObject.FindWithTag("Junk").transform);
     }
 
     public IEnumerator SpawnAndStopCastParticles(Vector3 position)

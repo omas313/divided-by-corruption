@@ -19,7 +19,7 @@ MonoBehaviour:
   _segmentData:
   - _normalMultiplier: 0.7
     _criticalMultiplier: 1.5
-  _actionPerformerType: {fileID: 11400000, guid: 252c5ca50f61e4e4a83e7c0189873046, type: 2}
+  _actionTargetterType: {fileID: 11400000, guid: 252c5ca50f61e4e4a83e7c0189873046, type: 2}
   _attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _castEffectsPrefab: {fileID: 0}

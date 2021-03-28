@@ -9,10 +9,10 @@ public abstract class ActionTargetterType : ScriptableObject
     public abstract bool ShouldStop();
 
 
-    protected void SpawnOnHitParticles(BattleParticipant performer, BattleParticipant target, AttackDefinition attackDefinition)
+    protected void SpawnOnHitParticles(BattleParticipant target, AttackDefinition attackDefinition)
     {
         if (attackDefinition.HasOnHitParticles)
-            performer.StartCoroutine(attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition));
+            attackDefinition.SpawnOnHitParticles(target.BodyMidPointPosition);
     }
 
     protected void InvokeResultEvents(BattleAttack attack, BattleParticipant target)
