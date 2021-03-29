@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
+  m_Name: Smash
+  m_EditorClassIdentifier: 
+  actionName: Smash
+  animationTriggerName: Attack
+  actionTargetterType: 0
+  attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
+  delayBeforeMotion: 1
+  energyParticlesPrefab: {fileID: 0}
+  primaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
+  secondaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
+  _damage: 8
+  _mpCost: 0
+  _segmentData:
+  - _normalMultiplier: 1
+    _criticalMultiplier: 1.5
+  _onHitEffectsPrefab: {fileID: 2053121904379684125, guid: d0eff700f2fdb6e4c8d294083dbd57c9, type: 3}
+  _projectilePrefab: {fileID: 0}
+  _environmentalEffectPrefab: {fileID: 0}

@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ead3351efd787d40adc6043e0ccdee7, type: 3}
+  m_Name: AbsorbDefinition
+  m_EditorClassIdentifier: 
+  actionName: Absorb
+  animationTriggerName: 
+  actionTargetterType: 0
+  attackMotionType: {fileID: 11400000, guid: 60f54f3dff79f494e8543efa6a2ba232, type: 2}
+  delayBeforeMotion: 1
+  energyParticlesPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
+  primaryPowerColor: {r: 0.98859465, g: 0.6179246, b: 1, a: 1}
+  secondaryPowerColor: {r: 0.85395235, g: 0.5613208, b: 1, a: 1}
+  _percentage: 30

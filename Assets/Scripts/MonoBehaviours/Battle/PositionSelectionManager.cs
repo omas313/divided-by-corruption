@@ -8,7 +8,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     [SerializeField] Transform[] _positions;
     [SerializeField] GameEvent _rightPressedEvent;
     [SerializeField] GameEvent _leftPressedEvent;
-    [SerializeField] BattleParticipantMarker _targetMarker;
+    [SerializeField] BattleParticipantMarker[] _targetMarkers;
     [SerializeField] Color _selectionMarkerColor;
 
     List<Transform> _activePositions;
@@ -64,11 +64,31 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
 
     void SetCurrentPosition()
     {
-        var position = _activePositions[_currentIndex].position;
-        _targetMarker.SetColor(_selectionMarkerColor);
-        _targetMarker.PlaceAt(position);
+        switch (_currentBattleActionPacket.BattleAction.ActionDefinition.ActionTargetterType)
+        {
+            case ActionTargetterType.Single:
+                _targetMarkers[0].SetColor(_selectionMarkerColor);
+                _targetMarkers[0].PlaceAt(_activePositions[_currentIndex].position);
 
-        BattleUIEvents.InvokeBattleParticipantHighlighted(_positionsMap[_activePositions[_currentIndex]] as BattleParticipant);
+                BattleUIEvents.InvokeBattleParticipantHighlighted(_positionsMap[_activePositions[_currentIndex]] as BattleParticipant);
+                break;
+
+            case ActionTargetterType.All:
+                _currentIndex = 0;
+                var markerIndex = 0;
+                foreach (var positionTransform in _activePositions)
+                {
+                    _targetMarkers[markerIndex].SetColor(_selectionMarkerColor);
+                    _targetMarkers[markerIndex].PlaceAt(positionTransform.position);
+                    markerIndex++;
+                    
+                    BattleUIEvents.InvokeBattleParticipantHighlighted(_positionsMap[_activePositions[_currentIndex]] as BattleParticipant);
+                }
+                break;
+
+            default: 
+                break;
+        }
     }
 
     void SetSortingOrders()
@@ -78,6 +98,12 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
             _positionsMap[position].SetRendererSortingOrder(i++);
     }
     
+    void HideMarkers()
+    {
+        foreach (var marker in _targetMarkers)
+            marker.Hide();
+    }
+
     void GoBack()
     {
         if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack)
@@ -88,8 +114,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         BattleUIEvents.InvokeTargetSelectionCancelled();
         BattleAudioSource.Instance.PlayUnselectSound();
 
-
-        _targetMarker.Hide();
+        HideMarkers();
         _isActive = false;
     }
 
@@ -106,18 +131,30 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _currentIndex = Mathf.Min(_currentIndex + 1, _activePositions.Count - 1);              
         SetCurrentPosition();
         BattleAudioSource.Instance.PlaySelectSound();
-
     }
 
     void ConfirmCurrentSelection()
     {
-        _targetMarker.Hide();
+        HideMarkers();
         _isActive = false;
 
-        _currentBattleActionPacket.BattleAction.Target = _positionsMap[_activePositions[_currentIndex]];
+        switch (_currentBattleActionPacket.BattleAction.ActionDefinition.ActionTargetterType)
+        {
+            case ActionTargetterType.Single:
+                _currentBattleActionPacket.BattleAction.Targets.Add(_positionsMap[_activePositions[_currentIndex]]);
+                break;
+
+            case ActionTargetterType.All:
+                foreach (var positionTransform in _activePositions)
+                    _currentBattleActionPacket.BattleAction.Targets.Add(_positionsMap[positionTransform]);
+                break;
+
+            default: 
+                break;
+        }
+        
         BattleUIEvents.InvokeActionBarRequested();
         BattleAudioSource.Instance.PlaySelectSound();
-
     }
 
     void RaiseRightPressedEvent()

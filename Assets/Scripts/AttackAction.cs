@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackAction : BattleAction, IActionBarAction, IAttackAction
+public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 {
-    public ActionBarResult ActionBarResult { get; set; }
-    public AttackDefinition AttackDefinition { get; set; }
-    public List<SegmentData> SegmentData => AttackDefinition.SegmentData;
-    public bool HasAttacks => _battleAttacks.Count > 0;
-
+    public override ActionDefinition ActionDefinition => AttackDefinition;
     public override bool IsValid => Performer != null
-        && Target != null
+        && Targets != null
         && ActionBarResult != null
         && AttackDefinition != null;
 
+    public AttackDefinition AttackDefinition { get; set; }
+    public bool HasAttacks => _battleAttacks.Count > 0;
+    public ActionBarResult ActionBarResult { get; set; }
+    public List<SegmentData> SegmentData => AttackDefinition.SegmentData;
+
+
     Queue<BattleAttack> _battleAttacks;
+
 
     public AttackAction(BattleParticipant performer, BattleActionType battleActionType)
     {
@@ -22,7 +25,45 @@ public class AttackAction : BattleAction, IActionBarAction, IAttackAction
         Performer = performer;
     }
 
-    public void InitBattleAttacks()
+    protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
+    {
+        InitBattleAttacks();
+        
+        Performer.ConsumeMP(AttackDefinition.MPCost);
+
+        var targets = new List<BattleParticipant>();
+
+        while (HasAttacks)
+        {
+            if (AttackDefinition.HasTriggerAnimation)
+                yield return Performer.TriggerAnimation(AttackDefinition.AnimationTriggerName);
+
+            var attack = GetNextBattleAttack();
+
+            if (attack.IsHit && AttackDefinition.HasEnvironmentalEffect)
+                yield return AttackDefinition.SpawnEnvironmentalEffect();
+
+            foreach (var target in Targets)
+            {
+                if (AttackDefinition.HasProjectile)
+                    yield return AttackDefinition.SpawnProjectileEffect(Performer.ProjectileCastPointPosition, target, attack.IsHit);
+                else
+                    AttackDefinition.SpawnOnHitEffect(target.BodyMidPointPosition);
+
+                Performer.StartCoroutine(target.ReceiveAttack(Performer, attack));
+                InvokeResultEvents(attack, target);
+            }
+
+            yield return new WaitForSeconds(0.5f);
+
+            if (AreTargetsDead())
+                break;
+        }
+
+        yield return new WaitForSeconds(1f);
+    }
+
+    void InitBattleAttacks()
     {
         _battleAttacks = new Queue<BattleAttack>();
 
@@ -33,13 +74,22 @@ public class AttackAction : BattleAction, IActionBarAction, IAttackAction
         }
     }
 
-    public BattleAttack GetNextBattleAttack() => _battleAttacks.Dequeue();
+    BattleAttack GetNextBattleAttack() => _battleAttacks.Dequeue();
 
-    public override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
+    void InvokeResultEvents(BattleAttack attack, BattleParticipant target)
     {
-        yield return AttackDefinition.PreAttackMotion(Performer, Target); 
-        Performer.ConsumeMP(AttackDefinition.MPCost);
-        yield return AttackDefinition.PerformAttack(this, party, enemies);
-        yield return AttackDefinition.PostAttackMotion(Performer, Target);
+        if (attack.IsCritical)
+            BattleEvents.InvokeAttackCritAt(target.CurrentPosition);
+        else if (!attack.IsHit)
+            BattleEvents.InvokeAttackMissAt(target.CurrentPosition);
+    }
+
+    bool AreTargetsDead()
+    {
+        foreach (var target in Targets)
+            if (!target.IsDead)
+                return false;
+
+        return true;
     }
 }

@@ -1,11 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 public class AbsorbAction : BattleAction, IActionBarAction
 {
+    public override ActionDefinition ActionDefinition => AbsorbDefinition;
+    public override bool IsValid => Performer != null && Targets != null;
+
     public ActionBarResult ActionBarResult { get; set; }
+    public AbsorbDefinition AbsorbDefinition { get; set; }
     public List<SegmentData> SegmentData => _segmentData;
-    public override bool IsValid => Performer != null && Target != null;
 
     List<SegmentData> _segmentData;
 
@@ -20,8 +24,9 @@ public class AbsorbAction : BattleAction, IActionBarAction
         };
     }
 
-    public override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
+    protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
     {
-        throw new System.NotImplementedException();
+        Debug.Log("absorbing");
+        yield return new WaitForSeconds(1f);
     }
 }

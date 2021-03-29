@@ -25,7 +25,7 @@ public class TurnManager : MonoBehaviour
     {
         BattleEvents.InvokeEnemyTurnStarted(enemy);
 
-        yield return enemy.GetNextAction(party, enemies).Perform(party, enemies);
+        yield return enemy.GetNextAction(party, enemies).PerformAction(party, enemies);
 
         BattleEvents.InvokeEnemyTurnEnded(enemy);
     }
@@ -41,10 +41,7 @@ public class TurnManager : MonoBehaviour
         if (!battleActionPacket.HasValidAction)
             yield break;
 
-        if (battleActionPacket.BattleAction.Target is Enemy)
-            BattleEvents.InvokeEnemyTargetted(battleActionPacket.BattleAction.Target as Enemy);
-
-        yield return battleActionPacket.BattleAction.Perform(party, enemies);
+        yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
         
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
     }

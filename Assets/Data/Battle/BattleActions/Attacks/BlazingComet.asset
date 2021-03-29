@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
+  m_Name: BlazingComet
+  m_EditorClassIdentifier: 
+  actionName: Blazing Comet
+  animationTriggerName: 
+  actionTargetterType: 1
+  attackMotionType: {fileID: 11400000, guid: 60f54f3dff79f494e8543efa6a2ba232, type: 2}
+  delayBeforeMotion: 1
+  energyParticlesPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
+  primaryPowerColor: {r: 0.6509434, g: 0.30738997, b: 0, a: 1}
+  secondaryPowerColor: {r: 0.745283, g: 0, b: 0, a: 1}
+  _damage: 7
+  _mpCost: 6
+  _segmentData:
+  - _normalMultiplier: 0.8
+    _criticalMultiplier: 1.25
+  _onHitEffectsPrefab: {fileID: 0}
+  _projectilePrefab: {fileID: 0}
+  _environmentalEffectPrefab: {fileID: 6799560046411150978, guid: dc37ee4a9dc888641b4719d14cf36884, type: 3}

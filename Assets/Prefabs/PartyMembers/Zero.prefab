@@ -168,7 +168,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5648010378544757077}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.76, y: 3.47, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 5648010378055810046}
@@ -203,6 +203,8 @@ MonoBehaviour:
     _baseSpeed: 7
     _motionSpeed: 1
   _normalAttackDefinition: {fileID: 11400000, guid: 909e4eb07038aa5488dd5894beb7ff92, type: 2}
+  _defendDefinition: {fileID: 11400000, guid: 0b6296c110d9eb346a0214195d5bd34b, type: 2}
+  _absorbDefinition: {fileID: 11400000, guid: 2a55b227149b72545982b2af1bca99ad, type: 2}
   _specialAttackDefinitions:
   - {fileID: 11400000, guid: b7e43829add00a14cb2a4bd5e6ae8d5b, type: 2}
   - {fileID: 11400000, guid: 55228f06f22b5a144aaac02fa8d75c64, type: 2}

@@ -52,10 +52,11 @@ public class Enemy : BattleParticipant
         // todo: decide next course of action based on rules (definitions???)
 
         var attackAction = new AttackAction(this, BattleActionType.Attack);
-        attackAction.Target = party[UnityEngine.Random.Range(0, party.Count)];
+        var randomTarget = party[UnityEngine.Random.Range(0, party.Count)];
+        attackAction.Targets.Add(randomTarget);
         attackAction.AttackDefinition = _attackDefinitions[UnityEngine.Random.Range(0, _attackDefinitions.Length)];
 
-        BattleEvents.InvokeEnemySelectedTarget(attackAction.Target);
+        BattleEvents.InvokeEnemySelectedTargets(attackAction.Targets);
 
 
         var segmentResults = new List<SegmentResult>();
@@ -69,7 +70,6 @@ public class Enemy : BattleParticipant
         }
 
         attackAction.ActionBarResult = new ActionBarResult(segmentResults);
-
         return attackAction;
     }
 

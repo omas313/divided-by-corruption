@@ -13,11 +13,15 @@ public class PartyMember : BattleParticipant
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
     public AttackDefinition NormalAttackDefinition => _normalAttackDefinition;
+    public DefendDefinition DefendDefinition => _defendDefinition;
+    public AbsorbDefinition AbsorbDefinition => _absorbDefinition;
     public List<AttackDefinition> SpecialAttacksDefinitions => _specialAttackDefinitions;
 
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
     [SerializeField] AttackDefinition _normalAttackDefinition;
+    [SerializeField] DefendDefinition _defendDefinition;
+    [SerializeField] AbsorbDefinition _absorbDefinition;
     [SerializeField] List<AttackDefinition> _specialAttackDefinitions;
 
     public override IEnumerator Die()

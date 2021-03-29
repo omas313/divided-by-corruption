@@ -53,7 +53,11 @@ public class UITurnDisplay : MonoBehaviour
 
     void OnBattleParticipantHighlighted(BattleParticipant battleParticipant) => HighlightBattleParticipant(battleParticipant);
 
-    void OnEnemySelectedTarget(BattleParticipant battleParticipant) => HighlightBattleParticipant(battleParticipant);
+    void OnEnemySelectedTarget(List<BattleParticipant> battleParticipants)
+    {
+        foreach (var battleParticipant in battleParticipants)
+            HighlightBattleParticipant(battleParticipant);
+    }
 
     void OnBattleParticipantTurnStarted(BattleParticipant battleParticipant)
     {
@@ -74,7 +78,7 @@ public class UITurnDisplay : MonoBehaviour
         BattleEvents.BattleParticipantsUpdated -= OnBattleParticipantsUpdated;
         BattleEvents.BattleParticipantTurnStarted -= OnBattleParticipantTurnStarted;
         BattleEvents.BattleParticipantTurnEnded -= OnBattleParticipantTurnEnded;
-        BattleEvents.EnemySelectedTarget -= OnEnemySelectedTarget;
+        BattleEvents.EnemySelectedTargets -= OnEnemySelectedTarget;
         BattleUIEvents.BattleParticipantHighlighted -= OnBattleParticipantHighlighted;
         BattleUIEvents.SpecialAttackSelectionRequested -= OnSpecialAttackSelectionRequested;
         BattleUIEvents.BattleActionTypeSelectionRequested -= OnBattleActionTypeSelectionRequested;
@@ -91,7 +95,7 @@ public class UITurnDisplay : MonoBehaviour
         BattleEvents.BattleParticipantsUpdated += OnBattleParticipantsUpdated;
         BattleEvents.BattleParticipantTurnStarted += OnBattleParticipantTurnStarted;
         BattleEvents.BattleParticipantTurnEnded += OnBattleParticipantTurnEnded;
-        BattleEvents.EnemySelectedTarget += OnEnemySelectedTarget;
+        BattleEvents.EnemySelectedTargets += OnEnemySelectedTarget;
         BattleUIEvents.BattleParticipantHighlighted += OnBattleParticipantHighlighted;
         BattleUIEvents.SpecialAttackSelectionRequested += OnSpecialAttackSelectionRequested;
         BattleUIEvents.BattleActionTypeSelectionRequested += OnBattleActionTypeSelectionRequested;

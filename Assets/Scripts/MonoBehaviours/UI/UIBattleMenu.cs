@@ -104,11 +104,15 @@ public class UIBattleMenu : MonoBehaviour
                 break;
 
             case BattleActionType.Defend:
-                _currentBattleActionPacket.BattleAction = new DefendAction(_partyMember);
+                var defendAction = new DefendAction(_partyMember);
+                defendAction.DefendDefinition = _partyMember.DefendDefinition;
+                _currentBattleActionPacket.BattleAction = defendAction;
                 break;
 
             case BattleActionType.Absorb:
-                _currentBattleActionPacket.BattleAction = new AbsorbAction(_partyMember);
+                var absorbAction = new AbsorbAction(_partyMember);
+                absorbAction.AbsorbDefinition = _partyMember.AbsorbDefinition;
+                _currentBattleActionPacket.BattleAction = absorbAction;
                 BattleUIEvents.InvokeEnemyTargetSelectionRequested();
                 break;
             
