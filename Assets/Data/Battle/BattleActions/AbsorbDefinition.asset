@@ -20,4 +20,5 @@ MonoBehaviour:
   energyParticlesPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
   primaryPowerColor: {r: 0.98859465, g: 0.6179246, b: 1, a: 1}
   secondaryPowerColor: {r: 0.85395235, g: 0.5613208, b: 1, a: 1}
-  _percentage: 30
+  _absorbtionPercentage: 0.3
+  _effectPrefab: {fileID: 3607629409142431406, guid: aa2bb642f6d4acb4aa7c40b1913e9d78, type: 3}

@@ -20,9 +20,11 @@ MonoBehaviour:
   energyParticlesPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
   primaryPowerColor: {r: 0.28230685, g: 0.9811321, b: 0.28602397, a: 1}
   secondaryPowerColor: {r: 0.7311321, g: 1, b: 0.9037597, a: 1}
-  _damage: 7
+  _damage: 3
   _mpCost: 3
   _segmentData:
+  - _normalMultiplier: 0.8
+    _criticalMultiplier: 1.25
   - _normalMultiplier: 0.8
     _criticalMultiplier: 1.25
   _onHitEffectsPrefab: {fileID: 0}
