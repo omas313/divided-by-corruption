@@ -8,9 +8,22 @@ public class UIDamageDisplayer : MonoBehaviour
 {
     [SerializeField] UIFloatingText _damageTextPrefab;
     [SerializeField] float _yOffset;
+    [SerializeField] Color _mpAdditionColor;
+    [SerializeField] Color _mpReductionColor;
 
     UIFloatingText[] _texts;
     Vector3 _offset;
+
+    void OnMPAbsorbed(BattleParticipant performer, BattleParticipant target, int amount)
+    {
+        var reductionText = GetInactiveText();
+        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        reductionText.Play($"-{amount} MP", target.CurrentPosition + _offset, _mpReductionColor);
+
+        var additionText = GetInactiveText();
+        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        additionText.Play($"+{amount} MP", performer.CurrentPosition + _offset, _mpAdditionColor);
+    }
 
     void OnHealthDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
     {
@@ -54,6 +67,7 @@ public class UIDamageDisplayer : MonoBehaviour
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;        
         BattleEvents.AttackMissedAt -= OnAttackMissed;      
         BattleEvents.AttackCritAt -= OnAttackCrit;      
+        BattleEvents.MPAbsorbed -= OnMPAbsorbed;      
     }
 
     void Awake()
@@ -64,5 +78,6 @@ public class UIDamageDisplayer : MonoBehaviour
         BattleEvents.HealthDamageReceived += OnHealthDamageReceived;      
         BattleEvents.AttackMissedAt += OnAttackMissed;      
         BattleEvents.AttackCritAt += OnAttackCrit;      
+        BattleEvents.MPAbsorbed += OnMPAbsorbed;      
     }
 }

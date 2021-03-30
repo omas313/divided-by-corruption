@@ -38,6 +38,7 @@ public class TurnManager : MonoBehaviour
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
         yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End));
+        // end button hack
         if (!battleActionPacket.HasValidAction)
             yield break;
 

@@ -7,6 +7,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
     public override ActionDefinition ActionDefinition => AttackDefinition;
     public override bool IsValid => Performer != null
         && Targets != null
+        && Targets.Count > 0
         && ActionBarResult != null
         && AttackDefinition != null;
 

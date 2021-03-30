@@ -83,6 +83,4 @@ public class AttackDefinition : ActionDefinition
         yield return new WaitUntil(() => collided);
         target.SetColliderActive(false);
     }
-
-
 }

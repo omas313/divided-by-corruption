@@ -5,7 +5,7 @@ using UnityEngine;
 public class DefendAction : BattleAction
 {
     public override ActionDefinition ActionDefinition => DefendDefinition;
-    public override bool IsValid => Performer != null && Targets != null;
+    public override bool IsValid => Performer != null && Targets != null && Targets.Count > 0;
 
     public DefendDefinition DefendDefinition { get; set; }
 

@@ -28,7 +28,9 @@ public abstract class BattleParticipant : MonoBehaviour
         transform.position = position;
     }
 
+    public int TakeMP(int amount) => CharacterStats.TakeMP(amount);
     public void ConsumeMP(int amount) => CharacterStats.ReduceCurrentMP(amount);
+    public void AddMP(int amount) => CharacterStats.IncreaseCurrentMP(amount);
 
     public IEnumerator TriggerAnimation(string name)
     {
