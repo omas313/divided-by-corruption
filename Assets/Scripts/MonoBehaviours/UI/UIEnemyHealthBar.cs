@@ -60,7 +60,15 @@ public class UIEnemyHealthBar : MonoBehaviour
     {
         if (battleParticipant is Enemy && battleParticipant == _source)
             Show();
-        else 
+        else
+            Hide();
+    }
+
+    void OnBattleParticipantsHighlighted(List<BattleParticipant> battleParticipants)
+    {
+        if (battleParticipants.Contains(_source))
+            Show();
+        else
             Hide();
     }
 
@@ -69,13 +77,12 @@ public class UIEnemyHealthBar : MonoBehaviour
     void OnTargetSelectionCancelled() => Hide();
     
     void OnBattleParticipantTurnStarted(BattleParticipant battleParticipant) => Hide();
+    void OnBattleParticipantTurnEnded(BattleParticipant battleParticipant) => Hide();
 
     void OnEnemyTargetted(Enemy enemy)
     {
         if (enemy == _source)
             Show();
-        else 
-            Hide();
     }
 
     void OnDestroy()
@@ -84,7 +91,9 @@ public class UIEnemyHealthBar : MonoBehaviour
         BattleEvents.EnemyHealthChanged -= OnHealthChanged;
         BattleEvents.EnemyTargetted -= OnEnemyTargetted;
         BattleEvents.BattleParticipantTurnStarted -= OnBattleParticipantTurnStarted;
+        BattleEvents.BattleParticipantTurnEnded -= OnBattleParticipantTurnEnded;
         BattleUIEvents.BattleParticipantHighlighted -= OnBattleParticipantHighlighted;
+        BattleUIEvents.BattleParticipantsHighlighted -= OnBattleParticipantsHighlighted;
         BattleUIEvents.ActionBarRequested -= OnRequestedActionBar;
         BattleUIEvents.TargetSelectionCancelled -= OnTargetSelectionCancelled;
     }
@@ -101,6 +110,8 @@ public class UIEnemyHealthBar : MonoBehaviour
         BattleEvents.EnemyHealthChanged += OnHealthChanged;
         BattleEvents.EnemyTargetted += OnEnemyTargetted;
         BattleEvents.BattleParticipantTurnStarted += OnBattleParticipantTurnStarted;
+        BattleUIEvents.BattleParticipantsHighlighted += OnBattleParticipantsHighlighted;
+        BattleEvents.BattleParticipantTurnEnded += OnBattleParticipantTurnEnded;
         BattleUIEvents.BattleParticipantHighlighted += OnBattleParticipantHighlighted;
         BattleUIEvents.ActionBarRequested += OnRequestedActionBar;
         BattleUIEvents.TargetSelectionCancelled += OnTargetSelectionCancelled;

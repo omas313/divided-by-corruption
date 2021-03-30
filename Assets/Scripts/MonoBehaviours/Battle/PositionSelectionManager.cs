@@ -82,7 +82,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
                     _targetMarkers[markerIndex].PlaceAt(positionTransform.position);
                     markerIndex++;
                     
-                    BattleUIEvents.InvokeBattleParticipantHighlighted(_positionsMap[_activePositions[_currentIndex]] as BattleParticipant);
+                    BattleUIEvents.InvokeBattleParticipantsHighlighted(_positionsMap.Values.ToList<BattleParticipant>());
                 }
                 break;
 
@@ -163,6 +163,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
             return;
         
         _rightPressedEvent.Raise();
+        HideMarkers();
         _isActive = false;
     }
 
@@ -172,6 +173,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
             return;
 
         _leftPressedEvent.Raise();
+        HideMarkers();
         _isActive = false;
     }
 
