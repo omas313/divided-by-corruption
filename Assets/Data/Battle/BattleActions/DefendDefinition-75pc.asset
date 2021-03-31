@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e15ea88d0df863344883d043089e673d, type: 3}
-  m_Name: DefendDefinition
+  m_Name: DefendDefinition-75pc
   m_EditorClassIdentifier: 
   actionName: Defend
   animationTriggerName: 
@@ -20,3 +20,5 @@ MonoBehaviour:
   energyParticlesPrefab: {fileID: 0}
   primaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
   secondaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
+  _defendEffect: {fileID: 11400000, guid: caa42f13791b5d54aaa127b572112a20, type: 2}
+  _duration: 1

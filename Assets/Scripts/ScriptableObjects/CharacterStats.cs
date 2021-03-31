@@ -32,9 +32,12 @@ public class CharacterStats
 
     public void IncreaseDamageModifier(float percentage) => DamageModifier += percentage;
     public void DecreaseDamageModifier(float percentage) => DamageModifier -= percentage;
+    public int ApplyDamageModifier(int damage) => DamageModifier == 0 ? damage : Mathf.CeilToInt(damage * (1 - DamageModifier));
+
 
     public void IncreaseDefenseModifier(float percentage) => DefenseModifier += percentage;
     public void DecreaseDefenseModifier(float percentage) => DefenseModifier -= percentage;
+    public int ApplyDefenseModifier(int damage) => DefenseModifier == 0 ? damage : Mathf.CeilToInt(damage * (1 - DefenseModifier));
 
     public void SetCurrentHP(int amount) => _currentHP = amount;
     public void IncreaseCurrentHP(int amount) => _currentHP = Math.Min(_baseHP, CurrentHP + amount);

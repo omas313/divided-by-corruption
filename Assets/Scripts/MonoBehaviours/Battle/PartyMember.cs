@@ -36,9 +36,7 @@ public class PartyMember : BattleParticipant
     {
         // Debug.Log($"{Name} ReceiveAttack");
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
-        _stats.ReduceCurrentHP(attack.Damage);
-        BattleEvents.InvokeHealthDamageReceived(attacker, this, attack);
-
+        TakeDamage(attacker, attack);
         yield return new WaitForSeconds(0.5f);
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
     }

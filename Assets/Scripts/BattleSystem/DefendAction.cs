@@ -9,7 +9,6 @@ public class DefendAction : BattleAction
 
     public DefendDefinition DefendDefinition { get; set; }
 
-
     public DefendAction(BattleParticipant performer)
     {
         BattleActionType = BattleActionType.Defend;
@@ -19,7 +18,10 @@ public class DefendAction : BattleAction
 
     protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
     {
-        Debug.Log("defending");
+        var effect = new Effect(DefendDefinition.DefendEffect, Performer);
+        effect.SetDuration(DefendDefinition.Duration + 1);
+
+        Performer.EffectsManager.AddEffect(effect);
         yield return new WaitForSeconds(1f);
     }
 }

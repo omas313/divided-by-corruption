@@ -142,7 +142,7 @@ MonoBehaviour:
   _bodyMidPoint: {fileID: 9101234332017592516}
   _projectileCastPoint: {fileID: 6328314932954224948}
   _attackReceiptPoint: {fileID: 6078726124757541587}
-  _portraitSprite: {fileID: 21300000, guid: 390804772158b2246891f4240fbae945, type: 3}
+  portraitSprite: {fileID: 21300000, guid: 390804772158b2246891f4240fbae945, type: 3}
   _name: August
   _stats:
     _currentHP: 24
@@ -153,7 +153,7 @@ MonoBehaviour:
     _baseSpeed: 3
     _motionSpeed: 0.5
   _normalAttackDefinition: {fileID: 11400000, guid: 390e50b55ef63b24a89ef0560f9fd728, type: 2}
-  _defendDefinition: {fileID: 11400000, guid: 0b6296c110d9eb346a0214195d5bd34b, type: 2}
+  _defendDefinition: {fileID: 11400000, guid: 47b6577b575f46f498f2ca47ae84f26c, type: 2}
   _absorbDefinition: {fileID: 11400000, guid: 2a55b227149b72545982b2af1bca99ad, type: 2}
   _specialAttackDefinitions:
   - {fileID: 11400000, guid: f11beb75a0e8504428b9edb5efe71681, type: 2}

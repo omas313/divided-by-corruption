@@ -16,6 +16,8 @@ public class TurnManager : MonoBehaviour
         else
             yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember, party, enemies);
 
+        currentBattleParticipant.EndTurn();
+
         BattleEvents.InvokeBattleParticipantTurnEnded(currentBattleParticipant);
 
         yield return new WaitForSeconds(_delayBetweenTurns);

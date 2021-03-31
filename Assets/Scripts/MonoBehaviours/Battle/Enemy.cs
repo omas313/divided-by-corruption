@@ -77,21 +77,16 @@ public class Enemy : BattleParticipant
     {
         animator.SetTrigger(HIT_ANIMATION_TRIGGER_KEY);
 
-        if (HasArmour)
-        {
-            _stats.ReduceCurrentArmour(attack.IsCritical ? 2 : 1);
+        attack.Damage = _stats.ApplyDefenseModifier(attack.Damage);
 
-            BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
-            BattleEvents.InvokeArmourDamageReceived(attacker, this, attack);
-            
-            if (!HasArmour)
-                RemoveArmour();
-        }
-        else
+        var damageLeftToTake = 0;
+        if (HasArmour)
+            damageLeftToTake = TakePossibleArmourDamage(attacker, attack);
+
+        if (damageLeftToTake > 0)
         {
-            _stats.ReduceCurrentHP(attack.Damage);
+            TakeDamage(attacker, attack);
             BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
-            BattleEvents.InvokeHealthDamageReceived(attacker, this, attack);
         }
 
         yield return new WaitForSeconds(0.25f);
@@ -111,6 +106,21 @@ public class Enemy : BattleParticipant
         _armourlessSpriteRenderer.sortingOrder = order;
     }
 
+    int TakePossibleArmourDamage(BattleParticipant attacker, BattleAttack attack)
+    {
+        var initialArmour = _stats.CurrentArmour;
+        _stats.ReduceCurrentArmour(attack.IsCritical ? 2 : 1); // todo: go back to old armour mechanic
+
+        BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
+        BattleEvents.InvokeArmourDamageReceived(attacker, this, attack);
+        
+        if (HasArmour)
+            return 0;
+
+        RemoveArmour();
+        return attack.Damage - initialArmour;
+    }
+
     void RemoveArmour()
     {
         BattleEvents.InvokeArmourBreak(this);
@@ -127,6 +137,10 @@ public class Enemy : BattleParticipant
     {
         base.Awake();
         spriteRenderer = _armouredSpriteRenderer;
+
+        if (_stats.ArmourDefenseModifier != 0f)
+            _stats.IncreaseDefenseModifier(_stats.ArmourDefenseModifier);
+
         // Initialize(_definition);
     }
 

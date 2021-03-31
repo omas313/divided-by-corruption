@@ -142,7 +142,7 @@ MonoBehaviour:
   _bodyMidPoint: {fileID: 1849331284987755170}
   _projectileCastPoint: {fileID: 4023637721561339527}
   _attackReceiptPoint: {fileID: 3553849488746119397}
-  _portraitSprite: {fileID: 21300000, guid: 91be320d99581b542aec3b39ef461ec2, type: 3}
+  portraitSprite: {fileID: 21300000, guid: 91be320d99581b542aec3b39ef461ec2, type: 3}
   _name: Sten
   _stats:
     _currentHP: 18

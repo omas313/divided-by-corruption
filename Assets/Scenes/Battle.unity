@@ -1654,23 +1654,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._baseHP
-      value: 16
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._baseMP
       value: 115
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
-      propertyPath: portraitSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 058628bb8449647478767a9748145f43, type: 3}
-    - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._baseSpeed
       value: 7
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._currentHP
-      value: 16
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._currentMP
@@ -2123,8 +2119,6 @@ MonoBehaviour:
   _manualSetup: 1
   _usedParty:
   - {fileID: 467687471}
-  - {fileID: 1014936185}
-  - {fileID: 793328781}
   _usedEnemies:
   - {fileID: 1919865262}
   - {fileID: 1826448964}
@@ -2480,17 +2474,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2827343463394491049, guid: 7824f500b0e1ac94abbb3331dfec75aa, type: 3}
   m_PrefabInstance: {fileID: 762585028}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &793328781 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
-  m_PrefabInstance: {fileID: 1100666449}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a605e1a739bbb3443979eadeaeb8b634, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &804171150
 GameObject:
   m_ObjectHideFlags: 0
@@ -2996,17 +2979,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 4531872081752064395, guid: fa3a38b11648ed240aaeb302df32572b, type: 3}
   m_PrefabInstance: {fileID: 979685999}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1014936185 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
-  m_PrefabInstance: {fileID: 2135720936}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a605e1a739bbb3443979eadeaeb8b634, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1018819465
 GameObject:
   m_ObjectHideFlags: 0
@@ -3315,10 +3287,6 @@ PrefabInstance:
       propertyPath: _stats._baseMP
       value: 106
       objectReference: {fileID: 0}
-    - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
-      propertyPath: portraitSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 390804772158b2246891f4240fbae945, type: 3}
     - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: _stats._baseSpeed
       value: 5
@@ -5791,10 +5759,6 @@ PrefabInstance:
       propertyPath: _stats._baseMP
       value: 118
       objectReference: {fileID: 0}
-    - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
-      propertyPath: portraitSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 91be320d99581b542aec3b39ef461ec2, type: 3}
     - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: _stats._currentMP
       value: 112

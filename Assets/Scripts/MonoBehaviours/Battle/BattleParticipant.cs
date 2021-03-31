@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BattleParticipant : MonoBehaviour
+public abstract class BattleParticipant : MonoBehaviour, IEffectReceiver
 {
     public abstract string Name { get; }
     public abstract CharacterStats CharacterStats { get; }
@@ -15,6 +15,8 @@ public abstract class BattleParticipant : MonoBehaviour
     public Vector3 ProjectileCastPointPosition => _projectileCastPoint.position;
     public Vector3 AttackReceiptPointPosition => _attackReceiptPoint.position;
 
+    public IEffectsManager EffectsManager => effectsManager;
+
     [SerializeField] protected Transform _bodyMidPoint;
     [SerializeField] protected Transform _projectileCastPoint;
     [SerializeField] protected Transform _attackReceiptPoint;
@@ -22,7 +24,7 @@ public abstract class BattleParticipant : MonoBehaviour
 
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
-    protected EffectsManager effectsManager;
+    protected IEffectsManager effectsManager;
 
     public void InitPosition(Vector3 position)
     {
@@ -64,8 +66,20 @@ public abstract class BattleParticipant : MonoBehaviour
         collider.enabled = isActive;
     }
 
+    public virtual void EndTurn()
+    {
+        effectsManager.ReduceEffectDurations();
+    }
+
     public abstract IEnumerator Die();
     public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
+
+    protected void TakeDamage(BattleParticipant attacker, BattleAttack attack)
+    {
+        attack.Damage = CharacterStats.ApplyDefenseModifier(attack.Damage);;
+        CharacterStats.ReduceCurrentHP(attack.Damage);
+        BattleEvents.InvokeHealthDamageReceived(attacker, this, attack);
+    }
 
     [ContextMenu("Kill")]
     public void CM_Kill()

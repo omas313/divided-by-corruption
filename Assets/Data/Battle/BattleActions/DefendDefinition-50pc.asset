@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e15ea88d0df863344883d043089e673d, type: 3}
+  m_Name: DefendDefinition-50pc
+  m_EditorClassIdentifier: 
+  actionName: Defend
+  animationTriggerName: 
+  actionTargetterType: 0
+  attackMotionType: {fileID: 11400000, guid: 60f54f3dff79f494e8543efa6a2ba232, type: 2}
+  delayBeforeMotion: 1
+  energyParticlesPrefab: {fileID: 0}
+  primaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
+  secondaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
+  _defendEffect: {fileID: 11400000, guid: d41361d1bbfd24643b5474b63164c51b, type: 2}
+  _duration: 1
