@@ -7,7 +7,7 @@ public abstract class BattleParticipant : MonoBehaviour
     public abstract string Name { get; }
     public abstract CharacterStats CharacterStats { get; }
     public bool IsDead => CharacterStats.CurrentHP <= 0;
-    public Sprite PortraitSprite => _portraitSprite;
+    public Sprite PortraitSprite => portraitSprite;
 
     public Vector3 InitialPosition { get; protected set; }
     public Vector3 CurrentPosition => transform.position;
@@ -18,9 +18,11 @@ public abstract class BattleParticipant : MonoBehaviour
     [SerializeField] protected Transform _bodyMidPoint;
     [SerializeField] protected Transform _projectileCastPoint;
     [SerializeField] protected Transform _attackReceiptPoint;
-    [SerializeField] Sprite _portraitSprite;
+    [SerializeField] protected Sprite portraitSprite;
+
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
+    protected EffectsManager effectsManager;
 
     public void InitPosition(Vector3 position)
     {
@@ -69,5 +71,11 @@ public abstract class BattleParticipant : MonoBehaviour
     public void CM_Kill()
     {
         CharacterStats.SetCurrentHP(0);
+    }
+
+    protected virtual void Awake()
+    {
+        effectsManager = new EffectsManager(this);
+        animator = GetComponent<Animator>();
     }
 }

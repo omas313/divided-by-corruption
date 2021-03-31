@@ -4,6 +4,9 @@ using UnityEngine;
 [System.Serializable]
 public class CharacterStats
 {
+    public float DamageModifier { get; private set; }
+    public float DefenseModifier { get; private set; }
+
     public int BaseHP => _baseHP;
     public int CurrentHP => _currentHP;
 
@@ -27,6 +30,11 @@ public class CharacterStats
 
     [SerializeField] float _motionSpeed = 3f;
 
+    public void IncreaseDamageModifier(float percentage) => DamageModifier += percentage;
+    public void DecreaseDamageModifier(float percentage) => DamageModifier -= percentage;
+
+    public void IncreaseDefenseModifier(float percentage) => DefenseModifier += percentage;
+    public void DecreaseDefenseModifier(float percentage) => DefenseModifier -= percentage;
 
     public void SetCurrentHP(int amount) => _currentHP = amount;
     public void IncreaseCurrentHP(int amount) => _currentHP = Math.Min(_baseHP, CurrentHP + amount);

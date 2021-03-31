@@ -1661,6 +1661,10 @@ PrefabInstance:
       value: 115
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 058628bb8449647478767a9748145f43, type: 3}
+    - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._baseSpeed
       value: 7
       objectReference: {fileID: 0}
@@ -3166,6 +3170,10 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5015783631149270604, guid: dab76179ce813904da85b89dd5df889a, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f146b6b0e2653f44d9a81524cb47fe93, type: 3}
+    - target: {fileID: 5015783631149270604, guid: dab76179ce813904da85b89dd5df889a, type: 3}
       propertyPath: _stats._currentMP
       value: 10
       objectReference: {fileID: 0}
@@ -3307,6 +3315,10 @@ PrefabInstance:
       propertyPath: _stats._baseMP
       value: 106
       objectReference: {fileID: 0}
+    - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 390804772158b2246891f4240fbae945, type: 3}
     - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: _stats._baseSpeed
       value: 5
@@ -5054,6 +5066,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2843647581125247489, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 72379f06a6732874ab68a531795c3f39, type: 3}
+    - target: {fileID: 2843647581125247489, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
       propertyPath: _stats._currentMP
       value: 10
       objectReference: {fileID: 0}
@@ -5775,6 +5791,10 @@ PrefabInstance:
       propertyPath: _stats._baseMP
       value: 118
       objectReference: {fileID: 0}
+    - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 91be320d99581b542aec3b39ef461ec2, type: 3}
     - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: _stats._currentMP
       value: 112

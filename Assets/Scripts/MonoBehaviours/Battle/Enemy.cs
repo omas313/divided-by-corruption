@@ -123,11 +123,10 @@ public class Enemy : BattleParticipant
         animator.runtimeAnimatorController = _armourlessAnimatorController;
     }
 
-    void Awake()
+    protected override void Awake()
     {
-        animator = GetComponent<Animator>();
+        base.Awake();
         spriteRenderer = _armouredSpriteRenderer;
-
         // Initialize(_definition);
     }
 

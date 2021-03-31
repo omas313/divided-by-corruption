@@ -42,9 +42,4 @@ public class PartyMember : BattleParticipant
         yield return new WaitForSeconds(0.5f);
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
     }
-
-    void Awake()
-    {
-        animator = GetComponent<Animator>();
-    }
 }
