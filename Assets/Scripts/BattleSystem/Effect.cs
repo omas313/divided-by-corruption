@@ -33,7 +33,7 @@ public class Effect
             modifier.Undo(_target);
     }
 
-    public void ReduceDuration()
+    public void ReduceDuration() // why is the damage modifier not going away???
     {
         _duration = Math.Max(0, _duration - 1);
 

@@ -16,8 +16,6 @@ public class TurnManager : MonoBehaviour
         else
             yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember, party, enemies);
 
-        currentBattleParticipant.EndTurn();
-
         BattleEvents.InvokeBattleParticipantTurnEnded(currentBattleParticipant);
 
         yield return new WaitForSeconds(_delayBetweenTurns);
@@ -26,9 +24,8 @@ public class TurnManager : MonoBehaviour
     IEnumerator ManageEnemyTurn(Enemy enemy, List<PartyMember> party, List<Enemy> enemies)
     {
         BattleEvents.InvokeEnemyTurnStarted(enemy);
-
         yield return enemy.GetNextAction(party, enemies).PerformAction(party, enemies);
-
+        enemy.EndTurn();
         BattleEvents.InvokeEnemyTurnEnded(enemy);
     }
 
@@ -46,6 +43,7 @@ public class TurnManager : MonoBehaviour
 
         yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
 
+        partyMember.EndTurn();
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
 
         if (ShouldCombo(partyMember, battleActionPacket))

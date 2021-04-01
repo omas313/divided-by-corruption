@@ -205,6 +205,8 @@ MonoBehaviour:
   _normalAttackDefinition: {fileID: 11400000, guid: 909e4eb07038aa5488dd5894beb7ff92, type: 2}
   _defendDefinition: {fileID: 11400000, guid: 0b6296c110d9eb346a0214195d5bd34b, type: 2}
   _absorbDefinition: {fileID: 11400000, guid: 2a55b227149b72545982b2af1bca99ad, type: 2}
+  _comboRequestDefinition: {fileID: 11400000, guid: 4f33bfd9f193c5f48a9bbe7f7222ee6a, type: 2}
+  _comboTrialDefinition: {fileID: 11400000, guid: 58c5db4672ecfb249bf0ef200e3d9942, type: 2}
   _specialAttackDefinitions:
   - {fileID: 11400000, guid: b7e43829add00a14cb2a4bd5e6ae8d5b, type: 2}
   - {fileID: 11400000, guid: 55228f06f22b5a144aaac02fa8d75c64, type: 2}
