@@ -74,6 +74,7 @@ public class TurnManager : MonoBehaviour
         {
             yield return ManagePartyMemberTurn(firstAttacker.ComboPartner, party, enemies, firstAttackPacket.BattleAction.Targets[0] as Enemy);
             firstAttacker.RemoveComboPartner();
+            BattleEvents.InvokeComboFinished();
         }
     }
 }

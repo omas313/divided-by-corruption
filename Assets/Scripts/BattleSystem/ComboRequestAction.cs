@@ -22,7 +22,7 @@ public class ComboRequestAction : BattleAction
     {
         var target = Targets[0] as PartyMember;
         target.SetComboPartner(Performer as PartyMember);
-        BattleEvents.InvokeComboInitiated(Performer as PartyMember, target);
+        BattleEvents.InvokeComboRequested(Performer as PartyMember, target);
         yield return new WaitForSeconds(1f);
     }
 }

@@ -38,9 +38,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
                 yield return Performer.TriggerAnimation(AttackDefinition.AnimationTriggerName);
 
             var attack = GetNextBattleAttack();
-            Debug.Log($"before: {attack.Damage}");
             attack.Damage = Performer.CharacterStats.ApplyDamageModifier(attack.Damage);
-            Debug.Log($"after: {attack.Damage}");
 
             if (attack.IsHit && AttackDefinition.HasEnvironmentalEffect)
                 yield return AttackDefinition.SpawnEnvironmentalEffect();

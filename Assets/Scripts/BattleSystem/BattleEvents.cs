@@ -17,8 +17,9 @@ public class BattleEvents
     public static event Action<PartyMember, BattleActionPacket> PartyMemberTurnStarted;
     public static event Action<PartyMember> PartyMemberTurnEnded;
     public static event Action<PartyMember> PartyMemberDied;
-    public static event Action<PartyMember, PartyMember> ComboInitiated;
+    public static event Action<PartyMember, PartyMember> ComboRequested;
     public static event Action<BattleActionPacket> ComboTrialRequested;
+    public static event Action ComboFinished;
 
 
     public static event Action<Vector3> AttackCritAt;
@@ -55,8 +56,9 @@ public class BattleEvents
     public static void InvokePartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket) => PartyMemberTurnStarted?.Invoke(partyMember, battleActionPacket);
     public static void InvokePartyMemberTurnEnded(PartyMember partyMember) => PartyMemberTurnEnded?.Invoke(partyMember);
     public static void InvokePartyMemberDied(PartyMember partyMember) => PartyMemberDied?.Invoke(partyMember);
-    public static void InvokeComboInitiated(PartyMember partyMember1, PartyMember partyMember2) => ComboInitiated?.Invoke(partyMember1, partyMember2);
+    public static void InvokeComboRequested(PartyMember partyMember1, PartyMember partyMember2) => ComboRequested?.Invoke(partyMember1, partyMember2);
     public static void InvokeComboTrialRequested(BattleActionPacket battleActionPacket) => ComboTrialRequested?.Invoke(battleActionPacket);
+    public static void InvokeComboFinished() => ComboFinished?.Invoke();
 
 
     public static void InvokeAttackCritAt(Vector3 position) => AttackCritAt?.Invoke(position);
