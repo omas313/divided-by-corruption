@@ -4,25 +4,36 @@ using UnityEngine;
 
 public class PartyMemebersPositionManager : PositionSelectionManager<PartyMember>
 {
+
+
     protected override void OnBattleStarted(List<PartyMember> partyMembers, List<Enemy> enemies)
     {
         InitPositions(partyMembers);
     }
 
-    protected override void Awake()
+    void OnPartyMemberDied(PartyMember partyMember)
     {
-        base.Awake();
-        BattleEvents.PartyMemberDied += OnPartyMemberDied;
+        RemovePositionOf(partyMember);
+    }
+    void OnPartyMemberTargetSelectionRequested(PartyMember performer, bool canSelectSelf)
+    {
+        if (!canSelectSelf)
+            unselectables.Add(performer);
+
+        StartSelection();
     }
 
     protected override void OnDestroy()
     {
         base.OnDestroy();
         BattleEvents.PartyMemberDied -= OnPartyMemberDied;
+        BattleUIEvents.PartyMemberTargetSelectionRequested -= OnPartyMemberTargetSelectionRequested;
     }
 
-    void OnPartyMemberDied(PartyMember partyMember)
+    protected override void Awake()
     {
-        RemovePositionOf(partyMember);
+        base.Awake();
+        BattleEvents.PartyMemberDied += OnPartyMemberDied;
+        BattleUIEvents.PartyMemberTargetSelectionRequested += OnPartyMemberTargetSelectionRequested;
     }
 }

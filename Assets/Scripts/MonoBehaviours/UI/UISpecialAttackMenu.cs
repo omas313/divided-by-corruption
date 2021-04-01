@@ -131,7 +131,14 @@ public class UISpecialAttackMenu : MonoBehaviour
             return;
 
         CurrentBattleAction.AttackDefinition = _items[_currentIndex].AttackDefinition;
-        BattleUIEvents.InvokeEnemyTargetSelectionRequested();
+
+        if (_currentBattleActionPacket.HasComboTarget)
+        {
+            _currentBattleActionPacket.BattleAction.Targets.Add(_currentBattleActionPacket.ComboTarget);
+            BattleUIEvents.InvokeActionBarRequested();
+        }
+        else
+            BattleUIEvents.InvokeEnemyTargetSelectionRequested();
 
         _isActive = false;
         SelectAndHideOthers();

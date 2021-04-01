@@ -4,5 +4,6 @@ public enum BattleActionType
     Attack, 
     Special,
     Defend, 
-    Absorb
+    Absorb,
+    ComboRequest
 }

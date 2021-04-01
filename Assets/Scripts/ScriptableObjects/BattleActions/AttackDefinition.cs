@@ -15,6 +15,7 @@ public class AttackDefinition : ActionDefinition
     public bool HasProjectile => _projectilePrefab != null;
     public bool HasEnvironmentalEffect => _environmentalEffectPrefab != null;
     public bool HasOnHitParticles => _onHitEffectsPrefab != null;
+    public List<EffectDefinition> ComboEffectDefinitions => _comboEffectDefinitions;
 
     [SerializeField] int _damage;
     [SerializeField] int _mpCost;
@@ -25,6 +26,7 @@ public class AttackDefinition : ActionDefinition
     [SerializeField] GameObject _projectilePrefab; 
     [SerializeField] GameObject _environmentalEffectPrefab;
 
+    [SerializeField] List<EffectDefinition> _comboEffectDefinitions;
 
     public void SpawnOnHitEffect(Vector3 position)
     {

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class BattleParticipant : MonoBehaviour, IEffectReceiver
+public abstract class BattleParticipant : MonoBehaviour
 {
     public abstract string Name { get; }
     public abstract CharacterStats CharacterStats { get; }
@@ -15,7 +15,7 @@ public abstract class BattleParticipant : MonoBehaviour, IEffectReceiver
     public Vector3 ProjectileCastPointPosition => _projectileCastPoint.position;
     public Vector3 AttackReceiptPointPosition => _attackReceiptPoint.position;
 
-    public IEffectsManager EffectsManager => effectsManager;
+    public EffectsManager EffectsManager => effectsManager;
 
     [SerializeField] protected Transform _bodyMidPoint;
     [SerializeField] protected Transform _projectileCastPoint;
@@ -24,7 +24,7 @@ public abstract class BattleParticipant : MonoBehaviour, IEffectReceiver
 
     protected Animator animator;
     protected SpriteRenderer spriteRenderer;
-    protected IEffectsManager effectsManager;
+    protected EffectsManager effectsManager;
 
     public void InitPosition(Vector3 position)
     {

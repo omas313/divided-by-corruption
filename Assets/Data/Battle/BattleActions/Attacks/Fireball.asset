@@ -28,3 +28,5 @@ MonoBehaviour:
   _onHitEffectsPrefab: {fileID: 0}
   _projectilePrefab: {fileID: 6392100636865404471, guid: 19f0fd8e2e431624bb86b0a05259eaeb, type: 3}
   _environmentalEffectPrefab: {fileID: 0}
+  _comboEffectDefinitions:
+  - {fileID: 0}

@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class PositionSelectionManager<T> : MonoBehaviour where T : BattleParticipant
 {
+    protected List<T> unselectables = new List<T>();
+
     [SerializeField] Transform[] _positions;
     [SerializeField] GameEvent _rightPressedEvent;
     [SerializeField] GameEvent _leftPressedEvent;
@@ -106,7 +108,9 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
 
     void GoBack()
     {
-        if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack)
+        if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack
+            || _currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Absorb
+            || _currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.ComboRequest)
             BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
         else if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Special)
             BattleUIEvents.InvokeSpecialAttackSelectionRequested();
@@ -135,13 +139,17 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
 
     void ConfirmCurrentSelection()
     {
+        var selectedParticipant = _positionsMap[_activePositions[_currentIndex]];
+        if (unselectables.Contains(selectedParticipant))
+            return;
+
         HideMarkers();
         _isActive = false;
 
         switch (_currentBattleActionPacket.BattleAction.ActionDefinition.ActionTargetterType)
         {
             case ActionTargetterType.Single:
-                _currentBattleActionPacket.BattleAction.Targets.Add(_positionsMap[_activePositions[_currentIndex]]);
+                _currentBattleActionPacket.BattleAction.Targets.Add(selectedParticipant);
                 break;
 
             case ActionTargetterType.All:
@@ -153,8 +161,12 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
                 break;
         }
         
-        BattleUIEvents.InvokeActionBarRequested();
+        unselectables.Clear();
         BattleAudioSource.Instance.PlaySelectSound();
+
+        if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.ComboRequest)
+            return;
+        BattleUIEvents.InvokeActionBarRequested();
     }
 
     void RaiseRightPressedEvent()

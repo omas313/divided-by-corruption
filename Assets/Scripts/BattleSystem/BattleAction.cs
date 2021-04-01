@@ -11,6 +11,7 @@ public abstract class BattleAction
     public BattleActionType BattleActionType { get; set; }
     public BattleParticipant Performer { get; set; }
     public List<BattleParticipant> Targets { get; set; } = new List<BattleParticipant>();
+    public bool HasTarget => Targets.Count > 0;
 
     ParticleSystem _energyParticles;
 
@@ -30,7 +31,7 @@ public abstract class BattleAction
         return particles;
     }
 
-    IEnumerator PreActionSetup()
+    protected virtual IEnumerator PreActionSetup()
     {
         if (ActionDefinition.HasEnergyParticles)
             _energyParticles = SpawnEnergyParticles();
@@ -42,7 +43,7 @@ public abstract class BattleAction
         yield return ActionDefinition.AttackMotionType.PreActionMotion(Performer, Targets[0]); 
     }
 
-    IEnumerator PostActionSetup()
+    protected virtual IEnumerator PostActionSetup()
     {
         if (ActionDefinition.HasEnergyParticles)
         {

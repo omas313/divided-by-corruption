@@ -70,12 +70,18 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         Show();
     }
 
+    void OnPartyMemberTurnEnded(PartyMember partyMember)
+    {
+        _partyBarsMap[partyMember].SetActiveStatus(false);
+    }
+
     void OnDestroy()
     {
         BattleEvents.PartyUpdated -= OnPartyUpdated;
         BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;
         BattleEvents.PartyMemberDied -= OnPartyMemberDied;
         BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
         BattleUIEvents.ActionBarRequested -= OnActionBarRequested;
     }
 
@@ -87,6 +93,7 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;
         BattleEvents.PartyMemberDied += OnPartyMemberDied;
         BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
+        BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
         BattleUIEvents.ActionBarRequested += OnActionBarRequested;
     }
 }

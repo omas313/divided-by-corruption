@@ -32,8 +32,7 @@ public class CharacterStats
 
     public void IncreaseDamageModifier(float percentage) => DamageModifier += percentage;
     public void DecreaseDamageModifier(float percentage) => DamageModifier -= percentage;
-    public int ApplyDamageModifier(int damage) => DamageModifier == 0 ? damage : Mathf.CeilToInt(damage * (1 - DamageModifier));
-
+    public int ApplyDamageModifier(int damage) => DamageModifier == 0 ? damage : Mathf.CeilToInt(damage * (1 + DamageModifier));
 
     public void IncreaseDefenseModifier(float percentage) => DefenseModifier += percentage;
     public void DecreaseDefenseModifier(float percentage) => DefenseModifier -= percentage;

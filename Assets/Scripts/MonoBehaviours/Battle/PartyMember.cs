@@ -15,14 +15,25 @@ public class PartyMember : BattleParticipant
     public AttackDefinition NormalAttackDefinition => _normalAttackDefinition;
     public DefendDefinition DefendDefinition => _defendDefinition;
     public AbsorbDefinition AbsorbDefinition => _absorbDefinition;
+    public ComboRequestDefinition ComboRequestDefinition => _comboRequestDefinition;
+    public ComboTrialDefinition ComboTrialDefinition => _comboTrialDefinition;
     public List<AttackDefinition> SpecialAttacksDefinitions => _specialAttackDefinitions;
+    public PartyMember ComboPartner => _comboPartner;
+    public bool HasComboPartner => _comboPartner != null;
 
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
     [SerializeField] AttackDefinition _normalAttackDefinition;
     [SerializeField] DefendDefinition _defendDefinition;
     [SerializeField] AbsorbDefinition _absorbDefinition;
+    [SerializeField] ComboRequestDefinition _comboRequestDefinition;
+    [SerializeField] ComboTrialDefinition _comboTrialDefinition;
     [SerializeField] List<AttackDefinition> _specialAttackDefinitions;
+
+    PartyMember _comboPartner;
+
+    public void SetComboPartner(PartyMember partyMember) => _comboPartner = partyMember;
+    public void RemoveComboPartner() => _comboPartner = null;
 
     public override IEnumerator Die()
     {

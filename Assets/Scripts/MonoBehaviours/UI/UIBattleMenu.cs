@@ -95,7 +95,13 @@ public class UIBattleMenu : MonoBehaviour
                 var attackAction = new AttackAction(_partyMember, BattleActionType.Attack);
                 attackAction.AttackDefinition = _partyMember.NormalAttackDefinition;
                 _currentBattleActionPacket.BattleAction = attackAction;
-                BattleUIEvents.InvokeEnemyTargetSelectionRequested();
+                if (_currentBattleActionPacket.HasComboTarget)
+                {
+                    attackAction.Targets.Add(_currentBattleActionPacket.ComboTarget);
+                    BattleUIEvents.InvokeActionBarRequested();
+                }
+                else
+                    BattleUIEvents.InvokeEnemyTargetSelectionRequested();
                 break;
 
             case BattleActionType.Special:
@@ -114,6 +120,13 @@ public class UIBattleMenu : MonoBehaviour
                 absorbAction.AbsorbDefinition = _partyMember.AbsorbDefinition;
                 _currentBattleActionPacket.BattleAction = absorbAction;
                 BattleUIEvents.InvokeEnemyTargetSelectionRequested();
+                break;
+
+            case BattleActionType.ComboRequest:
+                var comboRequestAction = new ComboRequestAction(_partyMember);
+                comboRequestAction.ComboRequestDefinition = _partyMember.ComboRequestDefinition;
+                _currentBattleActionPacket.BattleAction = comboRequestAction;
+                BattleUIEvents.InvokePartyMemberTargetSelectionRequested(_currentBattleActionPacket.BattleAction.Performer as PartyMember, canSelectSelf: false);
                 break;
             
             case BattleActionType.None:

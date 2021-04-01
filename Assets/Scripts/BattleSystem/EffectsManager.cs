@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-public class EffectsManager : IEffectsManager
+public class EffectsManager
 {
     public List<Effect> Effects { get; private set; } = new List<Effect>();
     public BattleParticipant Client { get; private set; }
