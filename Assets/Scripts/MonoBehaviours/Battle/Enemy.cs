@@ -58,7 +58,6 @@ public class Enemy : BattleParticipant
 
         BattleEvents.InvokeEnemySelectedTargets(attackAction.Targets);
 
-
         var segmentResults = new List<SegmentResult>();
         foreach (var segment in attackAction.AttackDefinition.SegmentData)
         {
@@ -79,7 +78,7 @@ public class Enemy : BattleParticipant
 
         attack.Damage = _stats.ApplyDefenseModifier(attack.Damage);
 
-        var damageLeftToTake = 0;
+        var damageLeftToTake = attack.Damage;
         if (HasArmour)
             damageLeftToTake = TakePossibleArmourDamage(attacker, attack);
 
@@ -97,6 +96,8 @@ public class Enemy : BattleParticipant
         // Debug.Log($"{Name} died");
         BattleEvents.InvokeEnemyDied(this);
         animator.SetBool(DEATH_ANIMATION_BOOL_KEY, true);
+        foreach (var particles in GetComponentsInChildren<ParticleSystem>())
+            particles.Stop();
         yield return new WaitForSeconds(0.25f); 
     }
 
@@ -124,6 +125,8 @@ public class Enemy : BattleParticipant
     void RemoveArmour()
     {
         BattleEvents.InvokeArmourBreak(this);
+
+        _stats.DecreaseDamageModifier(_stats.ArmourDefenseModifier);
 
         _armourParticles.Play();
         _armouredSpriteRenderer.enabled = false;
