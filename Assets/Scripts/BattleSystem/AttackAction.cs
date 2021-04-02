@@ -50,7 +50,8 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
                 else
                     AttackDefinition.SpawnOnHitEffect(target.BodyMidPointPosition);
 
-                Performer.StartCoroutine(target.ReceiveAttack(Performer, attack));
+                if (attack.IsHit)
+                    Performer.StartCoroutine(target.ReceiveAttack(Performer, attack));
                 InvokeResultEvents(attack, target);
             }
 
