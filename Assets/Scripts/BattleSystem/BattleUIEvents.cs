@@ -12,6 +12,7 @@ public class BattleUIEvents
 
     public static event Action ActionBarRequested;
     public static event Action ActionBarCompleted;
+    public static event Action ComboTrialCompleted;
 
     public static event Action<BattleParticipant> BattleParticipantHighlighted;
     public static event Action<List<BattleParticipant>> BattleParticipantsHighlighted;
@@ -26,6 +27,7 @@ public class BattleUIEvents
     
     public static void InvokeActionBarRequested() => ActionBarRequested?.Invoke();
     public static void InvokeActionBarCompleted() => ActionBarCompleted?.Invoke();
+    public static void InvokeComboTrialCompleted() => ComboTrialCompleted?.Invoke();
 
     internal static void InvokeBattleParticipantHighlighted(BattleParticipant battleParticipant) => BattleParticipantHighlighted?.Invoke(battleParticipant);
     internal static void InvokeBattleParticipantsHighlighted(List<BattleParticipant> battleParticipants) => BattleParticipantsHighlighted?.Invoke(battleParticipants);

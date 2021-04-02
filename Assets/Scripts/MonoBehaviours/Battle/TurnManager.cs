@@ -76,11 +76,9 @@ public class TurnManager : MonoBehaviour
         BattleEvents.InvokeBattleParticipantsTargetted(singleTargetList);
         BattleEvents.InvokeComboTrialRequested(battleActionPacket);
 
-        Debug.Log("requested trial, waiting for result, press end for success");
-        yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End) || Input.GetKeyDown(KeyCode.Home));
-        comboTrialAction.ForceSuccess();
-        // if (!battleActionPacket.HasValidAction)
-        //     yield break;
+        yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End));
+        if (!battleActionPacket.HasValidAction)
+            yield break;
 
         yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
 
