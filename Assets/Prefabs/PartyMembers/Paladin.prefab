@@ -30,6 +30,36 @@ Transform:
   m_Father: {fileID: 1534669102603527607}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2482040118096549015
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7160841131012491650}
+  m_Layer: 0
+  m_Name: TopMarkerPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7160841131012491650
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2482040118096549015}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 3.75, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1534669102603527607}
+  m_RootOrder: 3
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3263571050112636171
 GameObject:
   m_ObjectHideFlags: 0
@@ -58,8 +88,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 9101234332017592516}
-  - {fileID: 6078726124757541587}
   - {fileID: 6328314932954224948}
+  - {fileID: 6078726124757541587}
+  - {fileID: 7160841131012491650}
   m_Father: {fileID: 5137837007951962431}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -91,7 +122,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1534669102603527607}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &5137837007951962430
 GameObject:
@@ -139,9 +170,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a605e1a739bbb3443979eadeaeb8b634, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bodyMidPoint: {fileID: 9101234332017592516}
-  _projectileCastPoint: {fileID: 6328314932954224948}
-  _attackReceiptPoint: {fileID: 6078726124757541587}
+  bodyMidPoint: {fileID: 9101234332017592516}
+  projectileCastPoint: {fileID: 6328314932954224948}
+  attackReceiptPoint: {fileID: 6078726124757541587}
+  topMarkerPoint: {fileID: 7160841131012491650}
   portraitSprite: {fileID: 21300000, guid: 390804772158b2246891f4240fbae945, type: 3}
   _name: August
   _stats:
@@ -288,5 +320,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1534669102603527607}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

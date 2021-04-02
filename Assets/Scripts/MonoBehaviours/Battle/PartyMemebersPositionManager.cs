@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class PartyMemebersPositionManager : PositionSelectionManager<PartyMember>
 {
-
-
     protected override void OnBattleStarted(List<PartyMember> partyMembers, List<Enemy> enemies)
     {
         InitPositions(partyMembers);

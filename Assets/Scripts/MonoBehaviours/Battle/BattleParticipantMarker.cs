@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class BattleParticipantMarker : MonoBehaviour
 {
+    public bool IsActive => _spriteRenderers[0].enabled;
+    public Vector3 Position => transform.position;
+    public Vector3 ClientPosition {get; private set; }
+
     SpriteRenderer[] _spriteRenderers;
     Animation _animation;
 
@@ -13,6 +17,7 @@ public class BattleParticipantMarker : MonoBehaviour
             renderer.enabled = true;
 
         _animation.Play();
+        ClientPosition = position;
         transform.position = position + new Vector3(0f, 0.125f, 0f);
     }
 

@@ -30,7 +30,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
         
         Performer.ConsumeMP(AttackDefinition.MPCost);
 
-        var targets = new List<BattleParticipant>();
+        BattleEvents.InvokeBattleParticipantsTargetted(Targets);
 
         while (HasAttacks)
         {
@@ -54,13 +54,13 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
                 InvokeResultEvents(attack, target);
             }
 
-            yield return new WaitForSeconds(0.5f);
+            yield return new WaitForSeconds(0.25f);
 
             if (AreTargetsDead())
                 break;
         }
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
     }
 
     void InitBattleAttacks()

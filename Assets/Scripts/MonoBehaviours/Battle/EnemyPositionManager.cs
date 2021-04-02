@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
 
 public class EnemyPositionManager : PositionSelectionManager<Enemy>
 {
@@ -19,17 +17,17 @@ public class EnemyPositionManager : PositionSelectionManager<Enemy>
         RemovePositionOf(enemy);
     }
 
-    protected override void Awake()
-    {
-        base.Awake();
-        BattleEvents.EnemyDied += OnEnemyDied;
-        BattleUIEvents.EnemyTargetSelectionRequested += OnEnemyTargetSelectionRequested;
-    }
-
     protected override void OnDestroy()
     {
         base.OnDestroy();
         BattleEvents.EnemyDied -= OnEnemyDied;
         BattleUIEvents.EnemyTargetSelectionRequested -= OnEnemyTargetSelectionRequested;
+    }
+
+    protected override void Awake()
+    {
+        base.Awake();
+        BattleEvents.EnemyDied += OnEnemyDied;
+        BattleUIEvents.EnemyTargetSelectionRequested += OnEnemyTargetSelectionRequested;
     }
 }

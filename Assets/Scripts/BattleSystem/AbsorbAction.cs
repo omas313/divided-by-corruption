@@ -37,6 +37,8 @@ public class AbsorbAction : BattleAction, IActionBarAction
             yield break;
         }
 
+        BattleEvents.InvokeBattleParticipantsTargetted(Targets);
+
         yield return AbsorbDefinition.SpawnEffect(Targets[0].BodyMidPointPosition, Performer.BodyMidPointPosition);
 
         var amountToAbsorb = Mathf.CeilToInt(ActionBarResult.SegmentsResults[0].Multiplier * AbsorbDefinition.AbsorbtionPercentage);

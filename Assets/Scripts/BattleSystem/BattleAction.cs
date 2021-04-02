@@ -36,8 +36,7 @@ public abstract class BattleAction
         if (ActionDefinition.HasEnergyParticles)
             _energyParticles = SpawnEnergyParticles();
 
-        if (AreTargetsEnemies())
-            InvokeEnemiesTargetted();
+        BattleEvents.InvokeBattleParticipantsTargetted(Targets);
 
         yield return new WaitForSeconds(ActionDefinition.DelayBeforeMotion);
         yield return ActionDefinition.AttackMotionType.PreActionMotion(Performer, Targets[0]); 
@@ -52,12 +51,6 @@ public abstract class BattleAction
         }
 
         yield return ActionDefinition.AttackMotionType.PostActionMotion(Performer, Targets[0]);
-    }
-    
-    void InvokeEnemiesTargetted()
-    {
-        foreach (Enemy enemy in Targets)
-            BattleEvents.InvokeEnemyTargetted(enemy);
     }
 
     bool AreTargetsEnemies() => Targets[0] is Enemy;

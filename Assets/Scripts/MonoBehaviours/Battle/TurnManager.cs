@@ -6,6 +6,7 @@ using UnityEngine;
 public class TurnManager : MonoBehaviour
 {
     [SerializeField] float _delayBetweenTurns = 2f;
+    CurrentActorMarker _marker;
 
     public IEnumerator Manage(BattleParticipant currentBattleParticipant, List<PartyMember> party, List<Enemy> enemies)
     {
@@ -24,7 +25,13 @@ public class TurnManager : MonoBehaviour
     IEnumerator ManageEnemyTurn(Enemy enemy, List<PartyMember> party, List<Enemy> enemies)
     {
         BattleEvents.InvokeEnemyTurnStarted(enemy);
+
+        _marker.Mark(enemy.TopMarkerTransform);
+        yield return new WaitForSeconds(1f);
+        _marker.Hide();
+
         yield return enemy.GetNextAction(party, enemies).PerformAction(party, enemies);
+
         enemy.EndTurn();
         BattleEvents.InvokeEnemyTurnEnded(enemy);
     }
@@ -34,20 +41,22 @@ public class TurnManager : MonoBehaviour
         var battleActionPacket = new BattleActionPacket(target);
 
         BattleEvents.InvokePartyMemberTurnStarted(partyMember, battleActionPacket);
+        _marker.Mark(partyMember.TopMarkerTransform);
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
 
         yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End));
-        // end button hack
+        // end button hack to make sure turn ends since packet is invalid
         if (!battleActionPacket.HasValidAction)
             yield break;
-
+        
+        _marker.Hide();
         yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
 
         partyMember.EndTurn();
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
 
         if (ShouldCombo(partyMember, battleActionPacket))
-            yield return StartCombo(partyMember, battleActionPacket, party, enemies);
+            yield return StartComboTrial(partyMember, battleActionPacket, party, enemies);
     }
 
     bool ShouldCombo(PartyMember partyMember, BattleActionPacket battleActionPacket) => 
@@ -55,13 +64,18 @@ public class TurnManager : MonoBehaviour
         && (battleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack
         || battleActionPacket.BattleAction.BattleActionType == BattleActionType.Special);
 
-    IEnumerator StartCombo(PartyMember firstAttacker, BattleActionPacket firstAttackPacket, List<PartyMember> party, List<Enemy> enemies)
+    IEnumerator StartComboTrial(PartyMember firstAttacker, BattleActionPacket firstAttackPacket, List<PartyMember> party, List<Enemy> enemies)
     {
+        _marker.Mark(firstAttacker.TopMarkerTransform);
+
         var battleActionPacket = new BattleActionPacket();
         var comboTrialAction = new ComboTrialAction(firstAttacker, firstAttacker.ComboPartner, firstAttackPacket.BattleAction.ActionDefinition as AttackDefinition);
         battleActionPacket.BattleAction = comboTrialAction;
 
-        BattleEvents.InvokeComboTrialRequested(battleActionPacket);        
+        var singleTargetList = new List<BattleParticipant>() { firstAttackPacket.BattleAction.Targets[0] };
+        BattleEvents.InvokeBattleParticipantsTargetted(singleTargetList);
+        BattleEvents.InvokeComboTrialRequested(battleActionPacket);
+
         Debug.Log("requested trial, waiting for result, press end for success");
         yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End) || Input.GetKeyDown(KeyCode.Home));
         comboTrialAction.ForceSuccess();
@@ -76,5 +90,12 @@ public class TurnManager : MonoBehaviour
             firstAttacker.RemoveComboPartner();
             BattleEvents.InvokeComboFinished();
         }
+        else
+            _marker.Hide();
+    }
+
+    void Awake()
+    {
+        _marker = GetComponentInChildren<CurrentActorMarker>();
     }
 }

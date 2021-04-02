@@ -55,6 +55,29 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
 
         SetSortingOrders();
     }
+
+    protected void PlaceMarketAt(BattleParticipant battleParticipant)
+    {
+        var existingMarker = _targetMarkers.FirstOrDefault(m => m.ClientPosition == battleParticipant.CurrentPosition);
+        if (existingMarker != null)
+            return;
+
+        var inactiveMarker = _targetMarkers.FirstOrDefault(m => !m.IsActive);
+        if (inactiveMarker == null)
+        {
+            Debug.Log("Error @ PositionSelectionManager: can't find inactive marker to place on target");
+            return;
+        }
+
+        inactiveMarker.PlaceAt(battleParticipant.CurrentPosition);
+        BattleUIEvents.InvokeBattleParticipantHighlighted(battleParticipant);
+    }
+    
+    protected void HideMarkers()
+    {
+        foreach (var marker in _targetMarkers)
+            marker.Hide();
+    }
     
     IEnumerator StartSelectionInSeconds(float delay)
     {
@@ -98,12 +121,6 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         int i = 0;
         foreach (var position in _activePositions)
             _positionsMap[position].SetRendererSortingOrder(i++);
-    }
-    
-    void HideMarkers()
-    {
-        foreach (var marker in _targetMarkers)
-            marker.Hide();
     }
 
     void GoBack()
@@ -199,6 +216,17 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _currentBattleActionPacket = null;
     }
 
+    void OnBattleParticipantsTargetted(List<BattleParticipant> battleParticipants)
+    {
+        foreach (BattleParticipant participant in battleParticipants)
+            PlaceMarketAt(participant);
+    }
+
+    void OnInvokeBattleParticipantTurnEnded(BattleParticipant obj)
+    {
+        HideMarkers();
+    }
+
     void Update()
     {
         if (!_isActive)    
@@ -223,6 +251,8 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         BattleEvents.BattleStarted -= OnBattleStarted;
         BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
+        BattleEvents.BattleParticipantsTargetted -= OnBattleParticipantsTargetted;
+        BattleEvents.BattleParticipantTurnEnded -= OnInvokeBattleParticipantTurnEnded;
     }
 
     protected virtual void Awake()
@@ -230,5 +260,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         BattleEvents.BattleStarted += OnBattleStarted;
         BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;
+        BattleEvents.BattleParticipantsTargetted += OnBattleParticipantsTargetted;
+        BattleEvents.BattleParticipantTurnEnded += OnInvokeBattleParticipantTurnEnded;
     }
 }

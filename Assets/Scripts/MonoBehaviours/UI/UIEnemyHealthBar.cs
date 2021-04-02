@@ -79,17 +79,18 @@ public class UIEnemyHealthBar : MonoBehaviour
     void OnBattleParticipantTurnStarted(BattleParticipant battleParticipant) => Hide();
     void OnBattleParticipantTurnEnded(BattleParticipant battleParticipant) => Hide();
 
-    void OnEnemyTargetted(Enemy enemy)
+    void OnBattleParticipantsTargetted(List<BattleParticipant> battleParticipants)
     {
-        if (enemy == _source)
-            Show();
+        foreach (var battleParticipant in battleParticipants)
+            if (battleParticipant == _source)
+                Show();
     }
 
     void OnDestroy()
     {
         BattleEvents.EnemyArmourChanged -= OnArmourChanged;
         BattleEvents.EnemyHealthChanged -= OnHealthChanged;
-        BattleEvents.EnemyTargetted -= OnEnemyTargetted;
+        BattleEvents.BattleParticipantsTargetted -= OnBattleParticipantsTargetted;
         BattleEvents.BattleParticipantTurnStarted -= OnBattleParticipantTurnStarted;
         BattleEvents.BattleParticipantTurnEnded -= OnBattleParticipantTurnEnded;
         BattleUIEvents.BattleParticipantHighlighted -= OnBattleParticipantHighlighted;
@@ -108,7 +109,7 @@ public class UIEnemyHealthBar : MonoBehaviour
 
         BattleEvents.EnemyArmourChanged += OnArmourChanged;
         BattleEvents.EnemyHealthChanged += OnHealthChanged;
-        BattleEvents.EnemyTargetted += OnEnemyTargetted;
+        BattleEvents.BattleParticipantsTargetted += OnBattleParticipantsTargetted;
         BattleEvents.BattleParticipantTurnStarted += OnBattleParticipantTurnStarted;
         BattleUIEvents.BattleParticipantsHighlighted += OnBattleParticipantsHighlighted;
         BattleEvents.BattleParticipantTurnEnded += OnBattleParticipantTurnEnded;

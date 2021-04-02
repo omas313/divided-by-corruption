@@ -11,15 +11,17 @@ public abstract class BattleParticipant : MonoBehaviour
 
     public Vector3 InitialPosition { get; protected set; }
     public Vector3 CurrentPosition => transform.position;
-    public Vector3 BodyMidPointPosition => _bodyMidPoint.position;
-    public Vector3 ProjectileCastPointPosition => _projectileCastPoint.position;
-    public Vector3 AttackReceiptPointPosition => _attackReceiptPoint.position;
+    public Vector3 BodyMidPointPosition => bodyMidPoint.position;
+    public Vector3 ProjectileCastPointPosition => projectileCastPoint.position;
+    public Vector3 AttackReceiptPointPosition => attackReceiptPoint.position;
+    public Transform TopMarkerTransform => topMarkerPoint;
 
     public EffectsManager EffectsManager => effectsManager;
 
-    [SerializeField] protected Transform _bodyMidPoint;
-    [SerializeField] protected Transform _projectileCastPoint;
-    [SerializeField] protected Transform _attackReceiptPoint;
+    [SerializeField] protected Transform bodyMidPoint;
+    [SerializeField] protected Transform projectileCastPoint;
+    [SerializeField] protected Transform attackReceiptPoint;
+    [SerializeField] protected Transform topMarkerPoint;
     [SerializeField] protected Sprite portraitSprite;
 
     protected Animator animator;
