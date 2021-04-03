@@ -47,6 +47,14 @@ public class UITextDisplayer : MonoBehaviour
         text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, attack.IsCritical ? Color.red : Color.white);
     }
 
+    void OnArmourDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
+    {
+        var text = GetInactiveText();
+        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+
+        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, attack.IsCritical ? Color.red : Color.white);
+    }
+
     void OnAttackMissed(Vector3 position)
     {
         var text = GetInactiveText();
@@ -75,11 +83,11 @@ public class UITextDisplayer : MonoBehaviour
     void OnDestroy()
     {
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;
+        BattleEvents.ArmourDamageReceived -= OnArmourDamageReceived;
         BattleEvents.AttackMissedAt -= OnAttackMissed;
         BattleEvents.AttackCritAt -= OnAttackCrit;
         BattleEvents.MPAbsorbed -= OnMPAbsorbed;
         BattleEvents.ComboRequested -= OnComboRequested;
-
     }
 
     void Awake()
@@ -88,6 +96,7 @@ public class UITextDisplayer : MonoBehaviour
         _texts = GetComponentsInChildren<UIFloatingText>();
 
         BattleEvents.HealthDamageReceived += OnHealthDamageReceived;
+        BattleEvents.ArmourDamageReceived += OnArmourDamageReceived;
         BattleEvents.AttackMissedAt += OnAttackMissed;
         BattleEvents.AttackCritAt += OnAttackCrit;  
         BattleEvents.MPAbsorbed += OnMPAbsorbed;    

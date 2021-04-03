@@ -77,16 +77,15 @@ public class Enemy : BattleParticipant
         animator.SetTrigger(HIT_ANIMATION_TRIGGER_KEY);
 
         attack.Damage = _stats.ApplyDefenseModifier(attack.Damage);
-
         var damageLeftToTake = attack.Damage;
+
         if (HasArmour)
             damageLeftToTake = TakePossibleArmourDamage(attacker, attack);
 
         if (damageLeftToTake > 0)
-        {
             TakeDamage(attacker, attack);
-            BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
-        }
+
+        BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
 
         yield return new WaitForSeconds(0.25f);
     }
@@ -110,7 +109,7 @@ public class Enemy : BattleParticipant
     int TakePossibleArmourDamage(BattleParticipant attacker, BattleAttack attack)
     {
         var initialArmour = _stats.CurrentArmour;
-        _stats.ReduceCurrentArmour(attack.IsCritical ? 2 : 1); // todo: go back to old armour mechanic
+        _stats.ReduceCurrentArmour(attack.Damage); // todo: go back to old armour mechanic
 
         BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
         BattleEvents.InvokeArmourDamageReceived(attacker, this, attack);
