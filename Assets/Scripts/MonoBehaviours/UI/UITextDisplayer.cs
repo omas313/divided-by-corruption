@@ -33,65 +33,65 @@ public class UITextDisplayer : MonoBehaviour
         var reductionText = GetInactiveText();
         _offset.x = UnityEngine.Random.Range(-1f, 1f);
         _offset.y = UnityEngine.Random.Range(-1f, 1f);
-        reductionText.Play($"-{amount} MP", target.CurrentPosition + _offset, _mpReductionColor);
+        reductionText.Play($"-{amount} MP", target.BodyMidPointPosition + _offset, _mpReductionColor);
 
         var additionText = GetInactiveText();
         _offset.x = UnityEngine.Random.Range(-1f, 1f);
         _offset.y = UnityEngine.Random.Range(-1f, 1f);
-        additionText.Play($"+{amount} MP", performer.CurrentPosition + _offset, _mpAdditionColor);
+        additionText.Play($"+{amount} MP", performer.BodyMidPointPosition + _offset, _mpAdditionColor);
     }
 
-    void OnHealthDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
+    void OnHealthDamageReceived(BattleParticipant receiver, int damage, bool isCritical)
     {
         var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(-2f, 0f);
+        _offset.x = 0f;
+        _offset.y = UnityEngine.Random.Range(0.5f, 1.5f);
+
+        text.Play(damage.ToString(), receiver.BodyMidPointPosition + _offset, Color.red, isCritical ? "critical" : "", Color.red);
+    }
+
+    void OnArmourDamageReceived(BattleParticipant receiver, int damage, bool isCritical)
+    {
+        var text = GetInactiveText();
+        _offset.x = UnityEngine.Random.Range(-1.5f, -0.5f);
         _offset.y = UnityEngine.Random.Range(0f, 0.5f);
 
-        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, Color.red);
+        text.Play(damage.ToString(), receiver.BodyMidPointPosition + _offset, Color.gray, isCritical ? "critical" : "", Color.grey);
     }
 
-    void OnArmourDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
+    void OnMissedAttackReceived(BattleParticipant target)
     {
         var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(-2f, 0f);
-        _offset.y = UnityEngine.Random.Range(0f, 0.5f);
+        _offset.x = UnityEngine.Random.Range(0f, 1f);
+        _offset.y = UnityEngine.Random.Range(0f, 1f);
 
-        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, Color.white);
+        text.Play("miss", target.BodyMidPointPosition + _offset, Color.grey);
     }
 
-    void OnAttackMissed(Vector3 position)
+    void OnCriticalAttackReceived(BattleParticipant target)
     {
         var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(0f, 2f);
+        _offset.x = UnityEngine.Random.Range(0.5f, 2f);
         _offset.y = UnityEngine.Random.Range(0.5f, 1f);
 
-        text.Play("miss", position + _offset, Color.grey);
-    }
-
-    void OnAttackCrit(Vector3 position)
-    {
-        var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(0f, 2f);
-        _offset.y = UnityEngine.Random.Range(0.5f, 1f);
-
-        text.Play("critical", position + _offset, Color.yellow);
+        text.Play("critical", target.BodyMidPointPosition + _offset, Color.yellow);
     }
 
     void OnComboRequested(PartyMember partyMember1, PartyMember partyMember2)
     {
         var text = GetInactiveText();
-        text.Play("combo", partyMember1.CurrentPosition, _comboTextColor);
+        text.Play("combo", partyMember1.BodyMidPointPosition, _comboTextColor);
         
         text = GetInactiveText();
-        text.Play("combo", partyMember2.CurrentPosition, _comboTextColor);
+        text.Play("combo", partyMember2.BodyMidPointPosition, _comboTextColor);
     }
 
     void OnDestroy()
     {
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;
         BattleEvents.ArmourDamageReceived -= OnArmourDamageReceived;
-        BattleEvents.AttackMissedAt -= OnAttackMissed;
-        BattleEvents.AttackCritAt -= OnAttackCrit;
+        BattleEvents.MissedAttackReceived -= OnMissedAttackReceived;
+        BattleEvents.CriticalAttackReceived -= OnCriticalAttackReceived;
         BattleEvents.MPAbsorbed -= OnMPAbsorbed;
         BattleEvents.ComboRequested -= OnComboRequested;
     }
@@ -103,8 +103,8 @@ public class UITextDisplayer : MonoBehaviour
 
         BattleEvents.HealthDamageReceived += OnHealthDamageReceived;
         BattleEvents.ArmourDamageReceived += OnArmourDamageReceived;
-        BattleEvents.AttackMissedAt += OnAttackMissed;
-        BattleEvents.AttackCritAt += OnAttackCrit;  
+        BattleEvents.MissedAttackReceived += OnMissedAttackReceived;
+        BattleEvents.CriticalAttackReceived += OnCriticalAttackReceived;  
         BattleEvents.MPAbsorbed += OnMPAbsorbed;    
         BattleEvents.ComboRequested += OnComboRequested;
     }

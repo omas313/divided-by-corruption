@@ -47,16 +47,16 @@ public class PartyMember : BattleParticipant
     {
         if (!attack.IsHit)
         {
-            BattleEvents.InvokeAttackMissAt(CurrentPosition);
+            BattleEvents.InvokeMissedAttackReceived(this);
             yield break;
         }
 
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
         attack.Damage = CharacterStats.ApplyDefenseModifier(attack.Damage);
-        TakeDamage(attacker, attack);
-        if (attack.IsCritical)
-            BattleEvents.InvokeAttackCritAt(CurrentPosition);
+        CharacterStats.ReduceCurrentHP(attack.Damage);
+        BattleEvents.InvokePartyMemberHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
+        BattleEvents.InvokeHealthDamageReceived(this, attack.Damage, attack.IsCritical);
         
         yield return new WaitForSeconds(0.25f);
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);

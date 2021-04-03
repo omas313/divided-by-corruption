@@ -76,7 +76,7 @@ public class Enemy : BattleParticipant
     {
         if (!attack.IsHit)
         {
-            BattleEvents.InvokeAttackMissAt(CurrentPosition);
+            BattleEvents.InvokeMissedAttackReceived(this);
             yield break;
         }
 
@@ -84,16 +84,18 @@ public class Enemy : BattleParticipant
 
         attack.Damage = _stats.ApplyDefenseModifier(attack.Damage);
         var damageLeftToTake = attack.Damage;
+        var armourDamageTaken = 0;
 
         if (HasArmour)
-            damageLeftToTake = TakePossibleArmourDamage(attacker, attack);
+            (armourDamageTaken, damageLeftToTake) = TakePossibleArmourDamage(attack.Damage);
 
         if (damageLeftToTake > 0)
-            TakeDamage(attacker, attack);
+        {
+            CharacterStats.ReduceCurrentHP(damageLeftToTake);
+            BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
+        }
 
-        BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
-        if (attack.IsCritical)
-            BattleEvents.InvokeAttackCritAt(CurrentPosition);
+        InvokeReceivedAttackEvents(armourDamageTaken, damageLeftToTake, attack.IsCritical);
         
         yield return new WaitForSeconds(0.25f);
     }
@@ -114,19 +116,26 @@ public class Enemy : BattleParticipant
         _armourlessSpriteRenderer.sortingOrder = order;
     }
 
-    int TakePossibleArmourDamage(BattleParticipant attacker, BattleAttack attack)
+    (int, int) TakePossibleArmourDamage(int damage)
     {
         var initialArmour = _stats.CurrentArmour;
-        _stats.ReduceCurrentArmour(attack.Damage); // todo: go back to old armour mechanic
+        _stats.ReduceCurrentArmour(damage);
 
         BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
-        BattleEvents.InvokeArmourDamageReceived(attacker, this, attack);
         
-        if (HasArmour)
-            return 0;
+        if (!HasArmour)
+            RemoveArmour();
 
-        RemoveArmour();
-        return attack.Damage - initialArmour;
+        return (damage, damage - initialArmour);
+    }
+
+    void InvokeReceivedAttackEvents(int armourDamageTaken, int healthDamageTaken, bool isCritical)
+    {
+        if (armourDamageTaken > 0)
+            BattleEvents.InvokeArmourDamageReceived(this, armourDamageTaken, isCritical && healthDamageTaken == 0);
+
+        if (healthDamageTaken > 0)
+            BattleEvents.InvokeHealthDamageReceived(this, healthDamageTaken, isCritical);
     }
 
     void RemoveArmour()

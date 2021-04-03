@@ -43,4 +43,9 @@ public class UIPartyMemberStatusBar : UIItem
         SetActiveStatus(false);
         SetDeathStatus(false);
     }
+
+    public void SetHP(string currentValue)
+    {
+        _hpText.SetText(currentValue);
+    }
 }

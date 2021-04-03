@@ -59,7 +59,6 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         _partyBarsMap[partyMember].SetDeathStatus(true);
     }
 
-    void OnActionBarRequested() => Hide();
     void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
     {
         var name = partyMember.Name;
@@ -75,16 +74,19 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         _partyBarsMap[partyMember].SetActiveStatus(false);
     }
     
+    void OnPartyMemberHealthChanged(PartyMember partyMember, int currentValue, int baseValue)
+    {
+        _partyBarsMap[partyMember].SetHP(currentValue.ToString());
+    }
+
     void OnBattleParticipantsTargetted(List<BattleParticipant> battleParticipants)
     {
         if (battleParticipants[0] is PartyMember)
             Show();
     }
     
-    void OnBattleParticipantTurnEnded(BattleParticipant battleParticipant)
-    {
-        Hide();
-    }
+    void OnBattleParticipantTurnEnded(BattleParticipant battleParticipant) => Hide();
+    void OnActionBarRequested() => Hide();
 
     void OnDestroy()
     {
@@ -96,6 +98,7 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         BattleUIEvents.ActionBarRequested -= OnActionBarRequested;
         BattleEvents.BattleParticipantsTargetted -= OnBattleParticipantsTargetted;
         BattleEvents.BattleParticipantTurnEnded -= OnBattleParticipantTurnEnded;
+        BattleEvents.PartyMemberHealthChanged -= OnPartyMemberHealthChanged;
     }
 
     void Awake()
@@ -110,5 +113,6 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         BattleUIEvents.ActionBarRequested += OnActionBarRequested;
         BattleEvents.BattleParticipantsTargetted += OnBattleParticipantsTargetted;
         BattleEvents.BattleParticipantTurnEnded += OnBattleParticipantTurnEnded;
+        BattleEvents.PartyMemberHealthChanged += OnPartyMemberHealthChanged;
     }
 }

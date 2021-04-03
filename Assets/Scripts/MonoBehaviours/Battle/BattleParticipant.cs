@@ -76,12 +76,6 @@ public abstract class BattleParticipant : MonoBehaviour
     public abstract IEnumerator Die();
     public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
 
-    protected void TakeDamage(BattleParticipant attacker, BattleAttack attack)
-    {
-        CharacterStats.ReduceCurrentHP(attack.Damage);
-        BattleEvents.InvokeHealthDamageReceived(attacker, this, attack);
-    }
-
     [ContextMenu("Kill")]
     public void CM_Kill()
     {

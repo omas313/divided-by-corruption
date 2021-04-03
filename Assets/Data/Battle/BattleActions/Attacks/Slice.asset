@@ -23,10 +23,10 @@ MonoBehaviour:
   _damage: 4
   _mpCost: 0
   _segmentData:
-  - _normalMultiplier: 0.6
+  - _normalMultiplier: 0.7
     _criticalMultiplier: 1.2
-  - _normalMultiplier: 0.8
-    _criticalMultiplier: 1.5
+  - _normalMultiplier: 0.7
+    _criticalMultiplier: 1.2
   _onHitEffectsPrefab: {fileID: 2053121904379684125, guid: d0eff700f2fdb6e4c8d294083dbd57c9, type: 3}
   _projectilePrefab: {fileID: 0}
   _environmentalEffectPrefab: {fileID: 0}
