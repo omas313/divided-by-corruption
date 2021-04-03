@@ -15,7 +15,6 @@ public class UIComboTrial : MonoBehaviour
     CanvasGroup _canvasGroup;
     bool _isMoving;
     float _totalWidth;
-    int _correctIndex = -1;
     bool _confirmed;
     BattleActionPacket _currentBattleActionPacket;
 
@@ -23,18 +22,19 @@ public class UIComboTrial : MonoBehaviour
 
     void Show() => _canvasGroup.alpha = 1f;
 
-    void InitSegments()
+    void Init()
     {
-        _correctIndex = UnityEngine.Random.Range(0, _segments.Length);
+        _confirmed = false;
+        _pin.anchoredPosition = Vector3.zero;
 
+        var correctIndex = UnityEngine.Random.Range(0, _segments.Length);
         for (var i = 0; i < _segments.Length; i++)
-            _segments[i].SetValue(i == _correctIndex);
+            _segments[i].SetValue(i == correctIndex);
     }
 
     IEnumerator StartTrial()
     {
         Show();
-
         yield return PlayTitleAnimation();
         yield return PlaySegmentsAnimations();
         StartCoroutine(MovePin());
@@ -65,7 +65,6 @@ public class UIComboTrial : MonoBehaviour
     IEnumerator MovePin()
     {
         _isMoving = true;
-        _pin.anchoredPosition = Vector3.zero;
         
         while (_pin.anchoredPosition.x < _totalWidth)
         {
@@ -136,15 +135,12 @@ public class UIComboTrial : MonoBehaviour
     void OnComboTrialRequested(BattleActionPacket battleActionPacket)
     {
         _currentBattleActionPacket = battleActionPacket;
-        InitSegments();
+        Init();
         StartCoroutine(StartTrial());
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.T))
-            InitSegments();
-
         if (Input.GetButtonDown("Confirm") && _isMoving)
             Confirm();
     }
