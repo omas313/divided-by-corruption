@@ -140,7 +140,7 @@ public class UIAttackBar : MonoBehaviour
             if (uiSegment.NormalArea.IsInside(pinPositionX))
             {
                 _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].NormalMultiplier));
-                CreateText("good", Color.white);
+                CreateText("hit", Color.white);
                 return;
             }
             else if (uiSegment.CriticalArea.IsInside(pinPositionX))
