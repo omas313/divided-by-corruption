@@ -2823,9 +2823,7 @@ MonoBehaviour:
   _usedParty:
   - {fileID: 467687471}
   - {fileID: 89198231}
-  - {fileID: 1450645410}
   _usedEnemies:
-  - {fileID: 1919865262}
   - {fileID: 1826448964}
   _battleParticipantsParent: {fileID: 495760053}
 --- !u!4 &606564514
@@ -3823,7 +3821,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5137837007951962430, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5137837007951962431, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: m_RootOrder
@@ -4771,17 +4769,6 @@ Transform:
   m_Father: {fileID: 227279065}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1450645410 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
-  m_PrefabInstance: {fileID: 1100666449}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a605e1a739bbb3443979eadeaeb8b634, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1463555545
 GameObject:
   m_ObjectHideFlags: 0
@@ -6349,6 +6336,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: MaskedHorror
       objectReference: {fileID: 0}
+    - target: {fileID: 2843647581125247503, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 9186095821776018038, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -6360,17 +6351,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2843647581125247488, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
   m_PrefabInstance: {fileID: 1919865260}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1919865262 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2843647581125247489, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
-  m_PrefabInstance: {fileID: 1919865260}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19ed8d984f4c2a249828c379a86f871e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1929095038
 GameObject:
   m_ObjectHideFlags: 0

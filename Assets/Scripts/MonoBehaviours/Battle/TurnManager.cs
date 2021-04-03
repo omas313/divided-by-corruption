@@ -54,6 +54,8 @@ public class TurnManager : MonoBehaviour
 
         partyMember.EndTurn();
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
+        
+        yield return new WaitForSeconds(1f);
 
         if (ShouldCombo(partyMember, battleActionPacket))
             yield return StartComboTrial(partyMember, battleActionPacket, party, enemies);

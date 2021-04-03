@@ -94,12 +94,13 @@ public class UIComboTrial : MonoBehaviour
 
     void TrialSucceeded(UIComboTrialSegment segment)
     {
-        CreateText("combo success", Color.yellow, 1.1f);
+        CreateText("success", Color.yellow, 1.1f);
     }
 
     void TrialFailed()
     {
-        CreateText("combo failed", Color.red);
+        CreateText("failure", Color.red);
+        // BattleUIEvents.InvokeComboTrialFailed(); // todo: remove the combo indicators
     }
 
     void Confirm()
