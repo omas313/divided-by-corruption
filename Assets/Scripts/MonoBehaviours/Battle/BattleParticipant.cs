@@ -78,7 +78,6 @@ public abstract class BattleParticipant : MonoBehaviour
 
     protected void TakeDamage(BattleParticipant attacker, BattleAttack attack)
     {
-        attack.Damage = CharacterStats.ApplyDefenseModifier(attack.Damage);
         CharacterStats.ReduceCurrentHP(attack.Damage);
         BattleEvents.InvokeHealthDamageReceived(attacker, this, attack);
     }
