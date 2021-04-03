@@ -45,10 +45,18 @@ public class PartyMember : BattleParticipant
 
     public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)
     {
+        if (!attack.IsHit)
+        {
+            BattleEvents.InvokeAttackMissAt(CurrentPosition);
+            yield break;
+        }
+
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
         attack.Damage = CharacterStats.ApplyDefenseModifier(attack.Damage);
         TakeDamage(attacker, attack);
+        if (attack.IsCritical)
+            BattleEvents.InvokeAttackCritAt(CurrentPosition);
         
         yield return new WaitForSeconds(0.25f);
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);

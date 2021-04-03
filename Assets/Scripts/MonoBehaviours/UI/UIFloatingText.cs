@@ -10,13 +10,13 @@ public class UIFloatingText : MonoBehaviour
 
     Animation _animation;
 
-    public void Play(string text, Vector3 position, Color colour, string additionalText = "")
+    public void Play(string text, Vector3 position, Color colour, string miscText = "", Color miscTextColor = new Color())
     {
         _damageText.SetText(text);
         _damageText.color = colour;
 
-        _additionalText.SetText(additionalText);
-        _additionalText.color = colour;
+        _additionalText.SetText(miscText);
+        _additionalText.color = miscTextColor;
 
         transform.position = position;
         _animation.Play();

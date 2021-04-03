@@ -50,9 +50,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
                 else
                     AttackDefinition.SpawnOnHitEffect(target.BodyMidPointPosition);
 
-                if (attack.IsHit)
-                    Performer.StartCoroutine(target.ReceiveAttack(Performer, attack));
-                InvokeResultEvents(attack, target);
+                Performer.StartCoroutine(target.ReceiveAttack(Performer, attack));    
             }
 
             yield return new WaitForSeconds(0.25f);
@@ -76,14 +74,6 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
     }
 
     BattleAttack GetNextBattleAttack() => _battleAttacks.Dequeue();
-
-    void InvokeResultEvents(BattleAttack attack, BattleParticipant target)
-    {
-        if (attack.IsCritical)
-            BattleEvents.InvokeAttackCritAt(target.CurrentPosition);
-        else if (!attack.IsHit)
-            BattleEvents.InvokeAttackMissAt(target.CurrentPosition);
-    }
 
     bool AreTargetsDead()
     {

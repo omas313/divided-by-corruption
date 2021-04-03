@@ -32,33 +32,38 @@ public class UITextDisplayer : MonoBehaviour
     {
         var reductionText = GetInactiveText();
         _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        _offset.y = UnityEngine.Random.Range(-1f, 1f);
         reductionText.Play($"-{amount} MP", target.CurrentPosition + _offset, _mpReductionColor);
 
         var additionText = GetInactiveText();
         _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        _offset.y = UnityEngine.Random.Range(-1f, 1f);
         additionText.Play($"+{amount} MP", performer.CurrentPosition + _offset, _mpAdditionColor);
     }
 
     void OnHealthDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
     {
         var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        _offset.x = UnityEngine.Random.Range(-2f, 0f);
+        _offset.y = UnityEngine.Random.Range(0f, 0.5f);
 
-        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, attack.IsCritical ? Color.red : Color.white);
+        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, Color.red);
     }
 
     void OnArmourDamageReceived(BattleParticipant attacker, BattleParticipant receiver, BattleAttack attack)
     {
         var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        _offset.x = UnityEngine.Random.Range(-2f, 0f);
+        _offset.y = UnityEngine.Random.Range(0f, 0.5f);
 
-        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, attack.IsCritical ? Color.red : Color.white);
+        text.Play(attack.Damage.ToString(), receiver.transform.position + _offset, Color.white);
     }
 
     void OnAttackMissed(Vector3 position)
     {
         var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        _offset.x = UnityEngine.Random.Range(0f, 2f);
+        _offset.y = UnityEngine.Random.Range(0.5f, 1f);
 
         text.Play("miss", position + _offset, Color.grey);
     }
@@ -66,9 +71,10 @@ public class UITextDisplayer : MonoBehaviour
     void OnAttackCrit(Vector3 position)
     {
         var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(-1f, 1f);
+        _offset.x = UnityEngine.Random.Range(0f, 2f);
+        _offset.y = UnityEngine.Random.Range(0.5f, 1f);
 
-        text.Play("critical", position + _offset, Color.red);
+        text.Play("critical", position + _offset, Color.yellow);
     }
 
     void OnComboRequested(PartyMember partyMember1, PartyMember partyMember2)

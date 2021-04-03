@@ -74,6 +74,12 @@ public class Enemy : BattleParticipant
 
     public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)
     {
+        if (!attack.IsHit)
+        {
+            BattleEvents.InvokeAttackMissAt(CurrentPosition);
+            yield break;
+        }
+
         animator.SetTrigger(HIT_ANIMATION_TRIGGER_KEY);
 
         attack.Damage = _stats.ApplyDefenseModifier(attack.Damage);
@@ -86,7 +92,9 @@ public class Enemy : BattleParticipant
             TakeDamage(attacker, attack);
 
         BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
-
+        if (attack.IsCritical)
+            BattleEvents.InvokeAttackCritAt(CurrentPosition);
+        
         yield return new WaitForSeconds(0.25f);
     }
 
