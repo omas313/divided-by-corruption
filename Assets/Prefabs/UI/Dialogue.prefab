@@ -103,6 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bf3d7478c6dc014e8a3276a0e191002, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _useDelayBetweenLines: 0
   _delayBetweenLines: 4
   _canvasFadeSpeed: 2
   _delayToAutoConfirm: 4
@@ -175,8 +176,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
-  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ca89e6ff18386854fb6798d972066b90, type: 2}
+  m_sharedMaterial: {fileID: -5687770177479264869, guid: ca89e6ff18386854fb6798d972066b90, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []

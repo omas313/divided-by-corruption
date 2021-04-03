@@ -67,8 +67,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Action
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
-  m_sharedMaterial: {fileID: 2140032, guid: dc36b3fdc14f47ebb36fd484a67e268a, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: ca89e6ff18386854fb6798d972066b90, type: 2}
+  m_sharedMaterial: {fileID: -5687770177479264869, guid: ca89e6ff18386854fb6798d972066b90, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -92,8 +92,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 36
-  m_fontSizeBase: 36
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -102,7 +102,7 @@ MonoBehaviour:
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 512
   m_textAlignment: 65535
-  m_characterSpacing: 0
+  m_characterSpacing: 10
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -425,7 +425,7 @@ GameObject:
   - component: {fileID: 5899802065689242201}
   - component: {fileID: 3721571784448280396}
   m_Layer: 5
-  m_Name: BattleMenuActionBar
+  m_Name: BattleMenuAction
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -506,4 +506,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _overlayImage: {fileID: 3217970488825996627}
   _animation: {fileID: 3812547725627465179}
-  _event: {fileID: 0}
+  _battleActionType: 0

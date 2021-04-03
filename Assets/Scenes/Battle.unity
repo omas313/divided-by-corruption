@@ -1476,7 +1476,7 @@ GameObject:
   - component: {fileID: 369945869}
   - component: {fileID: 369945870}
   m_Layer: 5
-  m_Name: DamageDisplayer
+  m_Name: TextDisplayer
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6427,6 +6427,10 @@ PrefabInstance:
     - target: {fileID: 2833520522607384592, guid: 0e6c41526be96e34e94d65a7302746f3, type: 3}
       propertyPath: m_Name
       value: UIFloatingText (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4914423400929323912, guid: 0e6c41526be96e34e94d65a7302746f3, type: 3}
+      propertyPath: m_text
+      value: critical
       objectReference: {fileID: 0}
     - target: {fileID: 7736251638488491329, guid: 0e6c41526be96e34e94d65a7302746f3, type: 3}
       propertyPath: m_AnchorMax.y
