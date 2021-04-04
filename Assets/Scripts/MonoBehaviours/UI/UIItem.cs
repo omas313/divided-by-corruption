@@ -9,7 +9,7 @@ public abstract class UIItem : MonoBehaviour
     [SerializeField] Image _overlayImage;
     [SerializeField] Animation _animation;
 
-    readonly Vector3 _inactiveScale = new Vector3(0.85f, 0.85f, 0.85f);
+    readonly Vector3 _inactiveScale = new Vector3(0.85f, 1f, 1f);
     Color _overlayImageActiveColor;
     Color _overlayImageInactiveColor;
 
@@ -40,6 +40,6 @@ public abstract class UIItem : MonoBehaviour
     protected virtual void Awake()
     {
         _overlayImageActiveColor = _overlayImage.color;    
-        _overlayImageInactiveColor = new Color(_overlayImage.color.r, _overlayImage.color.g, _overlayImage.color.b, 0.75f);    
+        _overlayImageInactiveColor = new Color(_overlayImage.color.r, _overlayImage.color.g, _overlayImage.color.b, 0.5f);    
     }
 }

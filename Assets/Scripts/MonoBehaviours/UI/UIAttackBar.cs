@@ -206,7 +206,7 @@ public class UIAttackBar : MonoBehaviour
     {
         _canvasGroup = GetComponent<CanvasGroup>();
         _rectTransform = GetComponent<RectTransform>();
-        _totalWidth = _rectTransform.sizeDelta.x;    
+        _totalWidth = _rectTransform.sizeDelta.x;
 
         Hide();
 

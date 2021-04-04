@@ -11,6 +11,7 @@ public class UISpecialAttackMenuItem : UIItem
     [SerializeField] TextMeshProUGUI _text;
     [SerializeField] TextMeshProUGUI _mpCost;
     
+    readonly Color _darkGreyColor = new Color(0.2f, 0.2f, 0.2f, 1f);
     AttackDefinition _attackDefinition;
 
     public void Init(AttackDefinition attackDefinition, bool isSelectable)
@@ -30,7 +31,7 @@ public class UISpecialAttackMenuItem : UIItem
         IsSelectable = isSelectable;
 
         if (!IsSelectable)
-            _mpCost.color = Color.black;
+            _mpCost.color = _darkGreyColor;
     }
 
     public void SetActiveState(bool isActive)
