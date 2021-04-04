@@ -12,4 +12,6 @@ public class AttackDamageEffectModifierDefinition : EffectModifierDefinition
     {
         target.CharacterStats.DecreaseDamageModifier(value);
     }
+
+    public override string Stringify(float value) => $"{value * 100}%";
 }

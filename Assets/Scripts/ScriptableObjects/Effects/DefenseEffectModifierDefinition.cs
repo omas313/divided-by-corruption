@@ -12,4 +12,6 @@ public class DefenseEffectModifierDefinition : EffectModifierDefinition
     {
         target.CharacterStats.DecreaseDefenseModifier(value);
     }
+ 
+    public override string Stringify(float value) => $"{value * 100}%";
 }

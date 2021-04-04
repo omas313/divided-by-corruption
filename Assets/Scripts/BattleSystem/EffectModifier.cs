@@ -6,6 +6,7 @@ public class EffectModifier
 {
     public string ShortDescription => _effectModifierDefinition.ShortDescription;
     public float Value => _value;
+    public string ValueString => _effectModifierDefinition.Stringify(_value);
 
     [SerializeField] EffectModifierDefinition _effectModifierDefinition;
     [SerializeField] float _value;

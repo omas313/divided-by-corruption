@@ -7,7 +7,7 @@ public class Effect
     public bool HasFinished { get; private set; }
     public int Duration => _duration;
     public List<EffectModifier> Modifiers => _modifiers;
-    public string ShortDescription => String.Join($"\n", Modifiers.Select(m => $"{m.ShortDescription} +{m.Value}"));
+    public string ShortDescription => String.Join($"\n", Modifiers.Select(m => $"{m.ShortDescription} +{m.ValueString}"));
 
 
     List<EffectModifier> _modifiers;
