@@ -102,14 +102,9 @@ public class UIAttackBar : MonoBehaviour
             if (_pin.anchoredPosition.x > uiSegment.Area.End && uiSegment.IsActive)
             {
                 uiSegment.SetActive(false);
-                InstantiateMissTextAt(_pin.position); 
+                CreateText("miss", Color.gray);
                 _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], 0f, false, true));
             }
-    }
-
-    void InstantiateMissTextAt(Vector3 position)
-    {
-        Instantiate(_textPrefab, position, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>().SetText("miss");
     }
 
     void CleanUp()
@@ -151,16 +146,23 @@ public class UIAttackBar : MonoBehaviour
             }
         }
         
-        Instantiate(_textPrefab, _pin.position, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>().SetText("miss");
-        Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
+        CreateMissAtNextActiveSegment();
+    }
 
+    void CreateMissAtNextActiveSegment()
+    {
         foreach (var uiSegment in _uiSegments)
+        {
             if (uiSegment.IsActive)
             {
                 uiSegment.SetActive(false);
+
+                Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
+                CreateText("miss", Color.gray);
                 _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], 0f, false, true));
                 break;
             }
+        }
     }
 
     void CreateText(string text, Color color, float scale = 1f)

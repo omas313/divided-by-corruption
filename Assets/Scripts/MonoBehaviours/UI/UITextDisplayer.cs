@@ -86,6 +86,12 @@ public class UITextDisplayer : MonoBehaviour
         text.Play("combo", partyMember2.BodyMidPointPosition, _comboTextColor);
     }
 
+    void OnComboEffectsGained(BattleParticipant battleParticipant, string effectsString)
+    {
+        var text = GetInactiveText();
+        text.Play(effectsString, battleParticipant.BodyMidPointPosition, _comboTextColor);
+    }
+
     void OnDestroy()
     {
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;
@@ -94,6 +100,7 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.CriticalAttackReceived -= OnCriticalAttackReceived;
         BattleEvents.MPAbsorbed -= OnMPAbsorbed;
         BattleEvents.ComboRequested -= OnComboRequested;
+        BattleEvents.ComboEffectsGained -= OnComboEffectsGained;
     }
 
     void Awake()
@@ -101,11 +108,13 @@ public class UITextDisplayer : MonoBehaviour
         _offset.y = _yOffset;
         _texts = GetComponentsInChildren<UIFloatingText>();
 
+        // todo: maybe all these should just get the positions instead of the entire reference
         BattleEvents.HealthDamageReceived += OnHealthDamageReceived;
         BattleEvents.ArmourDamageReceived += OnArmourDamageReceived;
         BattleEvents.MissedAttackReceived += OnMissedAttackReceived;
         BattleEvents.CriticalAttackReceived += OnCriticalAttackReceived;  
         BattleEvents.MPAbsorbed += OnMPAbsorbed;    
         BattleEvents.ComboRequested += OnComboRequested;
+        BattleEvents.ComboEffectsGained += OnComboEffectsGained;
     }
 }

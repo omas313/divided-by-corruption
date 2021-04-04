@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "EffectDefinition.asset", menuName = "Battle/Effects/Effect Definition")]

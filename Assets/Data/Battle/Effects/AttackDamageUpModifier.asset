@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _name: Damage increase
   _description: Damage increased by
+  _shortDescription: DMG
   _iconSprite: {fileID: 0}

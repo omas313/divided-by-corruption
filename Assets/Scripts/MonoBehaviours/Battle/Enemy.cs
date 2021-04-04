@@ -126,7 +126,7 @@ public class Enemy : BattleParticipant
         if (!HasArmour)
             RemoveArmour();
 
-        return (damage, damage - initialArmour);
+        return (damage, HasArmour ? 0 : damage - initialArmour);
     }
 
     void InvokeReceivedAttackEvents(int armourDamageTaken, int healthDamageTaken, bool isCritical)

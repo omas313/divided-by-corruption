@@ -4,6 +4,9 @@ using UnityEngine;
 [System.Serializable]
 public class EffectModifier
 {
+    public string ShortDescription => _effectModifierDefinition.ShortDescription;
+    public float Value => _value;
+
     [SerializeField] EffectModifierDefinition _effectModifierDefinition;
     [SerializeField] float _value;
 

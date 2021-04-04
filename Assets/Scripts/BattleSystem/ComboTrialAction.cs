@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text;
 
 public class ComboTrialAction : BattleAction
 {
@@ -35,8 +36,15 @@ public class ComboTrialAction : BattleAction
             yield break;
 
         var comboEnder = Targets[0] as PartyMember;
+        var effectsString = new StringBuilder();
         foreach (var effectDefinition in AttackDefinition.ComboEffectDefinitions)
-            comboEnder.EffectsManager.AddEffect(new Effect(effectDefinition, comboEnder));
+        {
+            var effect = new Effect(effectDefinition, comboEnder);
+            comboEnder.EffectsManager.AddEffect(effect);
+            effectsString.AppendLine(effect.ShortDescription);
+        }
+
+        BattleEvents.InvokeComboEffectsGained(comboEnder, effectsString.ToString());
     }
 
     protected override IEnumerator PreActionSetup()
