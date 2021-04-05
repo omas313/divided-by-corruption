@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class UIPortrait : MonoBehaviour
 {
     [SerializeField] Image _highlightImage;
+    [SerializeField] Image _bg;
     [SerializeField] RectTransform _bgImageRectTransform;
     [SerializeField] Image _image;
     
@@ -22,4 +23,9 @@ public class UIPortrait : MonoBehaviour
     public bool IsPortraitFor(BattleParticipant battleParticipant) => _battleParticipant == battleParticipant;
 
     public void SetHighlightedState(bool isHighlighted) => _highlightImage.enabled = isHighlighted;
+
+    void Start()
+    {
+        _bg.color = Theme.Instance.PrimaryLighterColor;
+    }
 }

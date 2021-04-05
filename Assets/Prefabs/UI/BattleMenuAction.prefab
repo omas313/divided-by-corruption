@@ -475,4 +475,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _overlayImage: {fileID: 3217970488825996627}
   _animation: {fileID: 3303061654631889441}
+  _bg: {fileID: 6786505958222996321}
+  _texts:
+  - {fileID: 7489243591116168251}
   _battleActionType: 0

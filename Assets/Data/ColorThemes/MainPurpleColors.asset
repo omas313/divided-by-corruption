@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb010aec3edc61f418f07237196320d5, type: 3}
+  m_Name: MainPurpleColors
+  m_EditorClassIdentifier: 
+  _primary: {r: 0.3019608, g: 0, b: 0.43529415, a: 1}
+  _primaryLighter: {r: 0.4580996, g: 0, b: 0.6603774, a: 1}
+  _text: {r: 0.7490655, g: 0.76858836, b: 0.8773585, a: 1}
+  _contrast: {r: 0.8867924, g: 0.83103347, b: 0, a: 1}

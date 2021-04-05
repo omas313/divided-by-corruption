@@ -277,5 +277,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _highlightImage: {fileID: 3450358358512221240}
+  _bg: {fileID: 8313435132217105698}
   _bgImageRectTransform: {fileID: 3129538225958823121}
   _image: {fileID: 5377731992775239318}

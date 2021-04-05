@@ -1,6 +1,6 @@
-using System;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 public abstract class UIItem : MonoBehaviour
 {
@@ -8,6 +8,8 @@ public abstract class UIItem : MonoBehaviour
 
     [SerializeField] Image _overlayImage;
     [SerializeField] Animation _animation;
+    [SerializeField] Image _bg;
+    [SerializeField] TextMeshProUGUI[] _texts;
 
     readonly Vector3 _inactiveScale = new Vector3(0.85f, 1f, 1f);
     Color _overlayImageActiveColor;
@@ -35,6 +37,14 @@ public abstract class UIItem : MonoBehaviour
             _animation.Play();
         else
             _animation.Stop();
+    }
+
+    protected virtual void Start()
+    {
+        _bg.color = Theme.Instance.PrimaryLighterColor;
+
+        foreach (var text in _texts)
+            text.color = Theme.Instance.TextColor;
     }
 
     protected virtual void Awake()

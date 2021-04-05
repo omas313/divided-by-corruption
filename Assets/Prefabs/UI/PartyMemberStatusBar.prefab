@@ -911,6 +911,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _overlayImage: {fileID: 1074696786}
   _animation: {fileID: 0}
+  _bg: {fileID: 9038390263429574371}
+  _texts:
+  - {fileID: 5424484877971942202}
+  - {fileID: 5117632939773231719}
+  - {fileID: 1084263117686776811}
   _commandSetText: {fileID: 0}
   _nameText: {fileID: 5424484877971942202}
   _hpText: {fileID: 5117632939773231719}
