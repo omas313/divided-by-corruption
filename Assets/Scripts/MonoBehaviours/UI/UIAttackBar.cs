@@ -28,11 +28,12 @@ public class UIAttackBar : MonoBehaviour
     RectTransform _rectTransform;
     bool _isMoving;
     float _totalWidth;
+    bool _isNextTextPositionIsDown;
     List<SegmentResult> _currentSegmentResults;
     BattleActionPacket _currentBattleActionPacket;
     IActionBarAction CurrentBattleAction => _currentBattleActionPacket.BattleAction as IActionBarAction;
 
-    bool _isNextTextPositionIsDown;
+    bool _hasMissedConfirm;
 
     void Hide() => _canvasGroup.alpha = 0f;
 
@@ -72,6 +73,7 @@ public class UIAttackBar : MonoBehaviour
     IEnumerator StartOperation(float pinSpeed)
     {
         _isMoving = true;
+        _hasMissedConfirm = false;
 
         _pin.anchoredPosition = Vector3.zero;
         
@@ -79,9 +81,7 @@ public class UIAttackBar : MonoBehaviour
         {
             _pin.anchoredPosition = new Vector3(_pin.anchoredPosition.x + Time.deltaTime * pinSpeed, 0f, 0f);    
 
-            DeactivatePassedSegments();
-            
-            if (HasEnoughResults())
+            if (HasEnoughResults() || HasMissedASegment() || _hasMissedConfirm)
                 break;
 
             yield return null;
@@ -97,27 +97,40 @@ public class UIAttackBar : MonoBehaviour
         _isMoving = false;
     }
 
-    bool HasEnoughResults() => _currentSegmentResults.Count == _uiSegments.Count;
-
-    void DeactivatePassedSegments()
+    bool HasMissedASegment()
     {
         foreach (var uiSegment in _uiSegments)
             if (_pin.anchoredPosition.x > uiSegment.Area.End && uiSegment.IsActive)
             {
                 uiSegment.SetActive(false);
-                CreateText("miss", Color.gray);
-                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], 0f, false, true));
+                CreateMiss(uiSegment);
+                return true;
             }
+
+        return false;
     }
 
-    void CleanUp()
+    void ConfirmMissed()
     {
-        foreach (var confirmPoint in _confirmPointsParent.GetComponentsInChildren<UIConfirmPoint>())
-            Destroy(confirmPoint.gameObject);
-        foreach (var text in _textsParent.GetComponentsInChildren<Animation>())
-            Destroy(text.gameObject);
-        foreach (var segment in _uiSegments)
-            Destroy(segment.gameObject);
+        foreach (var uiSegment in _uiSegments)
+        {
+            if (uiSegment.IsActive)
+            {
+                uiSegment.SetActive(false);
+                CreateConfirmPoint();
+                CreateMiss(uiSegment);
+                _hasMissedConfirm = true;
+                break;
+            }
+        }
+    }
+
+    bool HasEnoughResults() => _currentSegmentResults.Count == _uiSegments.Count;
+
+    void CreateMiss(UIAttackBarSegment uiSegment)
+    {
+        CreateText("miss", Color.gray);
+        _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], 0f, false, true));
     }
 
     void Confirm()
@@ -133,7 +146,7 @@ public class UIAttackBar : MonoBehaviour
                 continue;
 
             uiSegment.SetActive(false);
-            Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
+            CreateConfirmPoint();
 
             if (uiSegment.NormalArea.IsInside(pinPositionX))
             {
@@ -149,34 +162,30 @@ public class UIAttackBar : MonoBehaviour
             }
         }
         
-        CreateMissAtNextActiveSegment();
+        ConfirmMissed();
     }
 
-    void CreateMissAtNextActiveSegment()
-    {
-        foreach (var uiSegment in _uiSegments)
-        {
-            if (uiSegment.IsActive)
-            {
-                uiSegment.SetActive(false);
-
-                Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
-                CreateText("miss", Color.gray);
-                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], 0f, false, true));
-                break;
-            }
-        }
-    }
+    void CreateConfirmPoint() => Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
 
     void CreateText(string text, Color color, float scale = 1f)
     {
         var position = _pin.position + new Vector3(0f, _isNextTextPositionIsDown ? -_yPositionOffset : _yPositionOffset, 0f);
         _isNextTextPositionIsDown = !_isNextTextPositionIsDown;
-        
+
         var textMesh = Instantiate(_textPrefab, position , Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>();
         textMesh.SetText(text);
         textMesh.color = color;
         textMesh.transform.localScale = new Vector3(scale, scale, scale);
+    }
+
+    void CleanUp()
+    {
+        foreach (var confirmPoint in _confirmPointsParent.GetComponentsInChildren<UIConfirmPoint>())
+            Destroy(confirmPoint.gameObject);
+        foreach (var text in _textsParent.GetComponentsInChildren<Animation>())
+            Destroy(text.gameObject);
+        foreach (var segment in _uiSegments)
+            Destroy(segment.gameObject);
     }
 
     void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
