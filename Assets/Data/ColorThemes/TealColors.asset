@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bb010aec3edc61f418f07237196320d5, type: 3}
-  m_Name: DarkGreenForestColors
+  m_Name: TealColors
   m_EditorClassIdentifier: 
-  _primary: {r: 0.043137256, g: 0.16470589, b: 0.14901961, a: 1}
-  _primaryLighter: {r: 0.08627451, g: 0.21960786, b: 0.19215688, a: 1}
-  _text: {r: 0.7407885, g: 0.8773585, b: 0.76453984, a: 1}
-  _contrast: {r: 0.7075472, g: 0.04468719, b: 0, a: 1}
+  _primary: {r: 0.0627451, g: 0.16470589, b: 0.22352943, a: 1}
+  _primaryLighter: {r: 0.11764707, g: 0.23529413, b: 0.25882354, a: 1}
+  _text: {r: 0.70888215, g: 0.82544833, b: 0.8490566, a: 1}
+  _contrast: {r: 0.7169812, g: 0, b: 0.55036676, a: 1}

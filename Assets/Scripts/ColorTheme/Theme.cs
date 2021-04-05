@@ -8,6 +8,7 @@ public class Theme : MonoBehaviour
     public Color PrimaryLighterColor => _colorThemeDefinition.PrimaryLighter;
     public Color PrimaryColor => _colorThemeDefinition.Primary;
     public Color TextColor => _colorThemeDefinition.Text;
+    public Color ContrastColor => _colorThemeDefinition.Contrast;
 
 
     // todo: set the color theme from the "area definition" we are in

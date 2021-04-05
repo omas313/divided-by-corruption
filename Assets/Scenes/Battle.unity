@@ -1456,7 +1456,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96f9bb57df7a63d4f9e225eb598b316f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorThemeDefinition: {fileID: 11400000, guid: 4d23a499d987380489cd5b32631c4b0e, type: 2}
+  _colorThemeDefinition: {fileID: 11400000, guid: d24b63ed163fc3f45b64b06353c64c12, type: 2}
 --- !u!4 &329237301
 Transform:
   m_ObjectHideFlags: 0

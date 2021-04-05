@@ -55,7 +55,8 @@ MonoBehaviour:
   _highlightImage: {fileID: 5253972713832430733}
   _bg: {fileID: 1465006649054174615}
   _bgImageRectTransform: {fileID: 5504987069659751524}
-  _image: {fileID: 3290570281074501155}
+  _specialImage: {fileID: 5587155629368836912}
+  _portraitImage: {fileID: 3290570281074501155}
 --- !u!1 &3865431437060708017
 GameObject:
   m_ObjectHideFlags: 0

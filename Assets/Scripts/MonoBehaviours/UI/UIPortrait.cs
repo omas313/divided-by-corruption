@@ -9,14 +9,15 @@ public class UIPortrait : MonoBehaviour
     [SerializeField] Image _highlightImage;
     [SerializeField] Image _bg;
     [SerializeField] RectTransform _bgImageRectTransform;
-    [SerializeField] Image _image;
+    [SerializeField] Image _specialImage;
+    [SerializeField] Image _portraitImage;
     
     BattleParticipant _battleParticipant;
 
     public void Init(BattleParticipant battleParticipant)
     {
         _battleParticipant = battleParticipant;
-        _image.sprite = _battleParticipant.PortraitSprite;
+        _portraitImage.sprite = _battleParticipant.PortraitSprite;
         SetHighlightedState(false);
     }
 
@@ -27,5 +28,8 @@ public class UIPortrait : MonoBehaviour
     void Start()
     {
         _bg.color = Theme.Instance.PrimaryLighterColor;
+
+        if (_specialImage != null)
+            _specialImage.color = Theme.Instance.ContrastColor;
     }
 }
