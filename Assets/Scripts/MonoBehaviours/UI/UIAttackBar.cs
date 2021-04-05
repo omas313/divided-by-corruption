@@ -20,6 +20,7 @@ public class UIAttackBar : MonoBehaviour
 
     [SerializeField] Transform _textsParent;
     [SerializeField] GameObject _textPrefab;
+    [SerializeField] float _yPositionOffset = 100f;
 
     List<UIAttackBarSegment> _uiSegments;
     Dictionary<UIAttackBarSegment, SegmentData> _uiSegmentsDataMap;
@@ -30,6 +31,8 @@ public class UIAttackBar : MonoBehaviour
     List<SegmentResult> _currentSegmentResults;
     BattleActionPacket _currentBattleActionPacket;
     IActionBarAction CurrentBattleAction => _currentBattleActionPacket.BattleAction as IActionBarAction;
+
+    bool _isNextTextPositionIsDown;
 
     void Hide() => _canvasGroup.alpha = 0f;
 
@@ -141,7 +144,7 @@ public class UIAttackBar : MonoBehaviour
             else if (uiSegment.CriticalArea.IsInside(pinPositionX))
             {
                 _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].CriticalMultiplier, isCritical: true));
-                CreateText("critical", Color.red, scale: 1.1f);
+                CreateText("critical!", Color.red, scale: 1.1f);
                 return;
             }
         }
@@ -167,7 +170,10 @@ public class UIAttackBar : MonoBehaviour
 
     void CreateText(string text, Color color, float scale = 1f)
     {
-        var textMesh = Instantiate(_textPrefab, _pin.position, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>();
+        var position = _pin.position + new Vector3(0f, _isNextTextPositionIsDown ? -_yPositionOffset : _yPositionOffset, 0f);
+        _isNextTextPositionIsDown = !_isNextTextPositionIsDown;
+        
+        var textMesh = Instantiate(_textPrefab, position , Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>();
         textMesh.SetText(text);
         textMesh.color = color;
         textMesh.transform.localScale = new Vector3(scale, scale, scale);
