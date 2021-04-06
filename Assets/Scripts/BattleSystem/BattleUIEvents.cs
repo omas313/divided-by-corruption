@@ -6,7 +6,7 @@ public class BattleUIEvents
     public static event Action BattleActionTypeSelectionRequested;
     public static event Action SpecialAttackSelectionRequested;
     
-    public static event Action<PartyMember, bool> PartyMemberTargetSelectionRequested;
+    public static event Action<PartyMember, List<PartyMember>> PartyMemberTargetSelectionRequested;
     public static event Action EnemyTargetSelectionRequested;
     public static event Action TargetSelectionCancelled;
 
@@ -21,7 +21,7 @@ public class BattleUIEvents
     public static void InvokeBattleActionTypeSelectionRequested() => BattleActionTypeSelectionRequested?.Invoke();
     public static void InvokeSpecialAttackSelectionRequested() => SpecialAttackSelectionRequested?.Invoke();
     
-    public static void InvokePartyMemberTargetSelectionRequested(PartyMember performer, bool canSelectSelf = true) => PartyMemberTargetSelectionRequested?.Invoke(performer, canSelectSelf);
+    public static void InvokePartyMemberTargetSelectionRequested(PartyMember performer, List<PartyMember> unselectables) => PartyMemberTargetSelectionRequested?.Invoke(performer, unselectables);
     public static void InvokeEnemyTargetSelectionRequested() => EnemyTargetSelectionRequested?.Invoke();
     public static void InvokeTargetSelectionCancelled() => TargetSelectionCancelled?.Invoke();
     

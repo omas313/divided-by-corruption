@@ -126,7 +126,12 @@ public class UIBattleMenu : MonoBehaviour
                 var comboRequestAction = new ComboRequestAction(_partyMember);
                 comboRequestAction.ComboRequestDefinition = _partyMember.ComboRequestDefinition;
                 _currentBattleActionPacket.BattleAction = comboRequestAction;
-                BattleUIEvents.InvokePartyMemberTargetSelectionRequested(_currentBattleActionPacket.BattleAction.Performer as PartyMember, canSelectSelf: false);
+
+                var performer = _currentBattleActionPacket.BattleAction.Performer as PartyMember;
+                var unselectables = new List<PartyMember>() { performer };
+                if (performer.HasComboPartner)
+                    unselectables.Add(performer.ComboPartner);
+                BattleUIEvents.InvokePartyMemberTargetSelectionRequested(performer, unselectables);
                 break;
             
             case BattleActionType.None:

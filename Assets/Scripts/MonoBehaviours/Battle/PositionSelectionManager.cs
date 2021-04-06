@@ -12,6 +12,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     [SerializeField] GameEvent _leftPressedEvent;
     [SerializeField] BattleParticipantMarker[] _targetMarkers;
     [SerializeField] Color _selectionMarkerColor;
+    [SerializeField] Color _unselectableMarkerColor;
 
     List<Transform> _activePositions;
     Dictionary<Transform, T> _positionsMap;
@@ -56,11 +57,16 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         SetSortingOrders();
     }
 
-    protected void PlaceMarketAt(BattleParticipant battleParticipant)
+    protected void PlaceMarkerAt(Transform targetTransform)
     {
+        var battleParticipant = _positionsMap[targetTransform];
+
         var existingMarker = _targetMarkers.FirstOrDefault(m => m.ClientPosition == battleParticipant.CurrentPosition);
         if (existingMarker != null)
+        {
+            existingMarker.SetColor(unselectables.Contains(battleParticipant) ? _unselectableMarkerColor : _selectionMarkerColor);
             return;
+        }
 
         var inactiveMarker = _targetMarkers.FirstOrDefault(m => !m.IsActive);
         if (inactiveMarker == null)
@@ -69,8 +75,16 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
             return;
         }
 
-        inactiveMarker.PlaceAt(battleParticipant.CurrentPosition);
+        inactiveMarker.PlaceAt(targetTransform.position);
+        inactiveMarker.SetColor(unselectables.Contains(battleParticipant) ? _unselectableMarkerColor : _selectionMarkerColor);
         BattleUIEvents.InvokeBattleParticipantHighlighted(battleParticipant);
+    }
+
+    protected void PlaceMarkerAt(BattleParticipant battleParticipant)
+    {
+        foreach (var kv in _positionsMap)
+            if (kv.Key == battleParticipant)
+                PlaceMarkerAt(kv.Value);
     }
     
     protected void HideMarkers()
@@ -92,23 +106,15 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         switch (_currentBattleActionPacket.BattleAction.ActionDefinition.ActionTargetterType)
         {
             case ActionTargetterType.Single:
-                _targetMarkers[0].SetColor(_selectionMarkerColor);
-                _targetMarkers[0].PlaceAt(_activePositions[_currentIndex].position);
-
-                BattleUIEvents.InvokeBattleParticipantHighlighted(_positionsMap[_activePositions[_currentIndex]] as BattleParticipant);
+                var currentPositionTransform = _activePositions[_currentIndex];
+                HideMarkers();
+                PlaceMarkerAt(currentPositionTransform);
                 break;
 
             case ActionTargetterType.All:
                 _currentIndex = 0;
-                var markerIndex = 0;
                 foreach (var positionTransform in _activePositions)
-                {
-                    _targetMarkers[markerIndex].SetColor(_selectionMarkerColor);
-                    _targetMarkers[markerIndex].PlaceAt(positionTransform.position);
-                    markerIndex++;
-                    
-                    BattleUIEvents.InvokeBattleParticipantsHighlighted(_positionsMap.Values.ToList<BattleParticipant>());
-                }
+                    PlaceMarkerAt(positionTransform);
                 break;
 
             default: 
@@ -219,7 +225,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     void OnBattleParticipantsTargetted(List<BattleParticipant> battleParticipants)
     {
         foreach (BattleParticipant participant in battleParticipants)
-            PlaceMarketAt(participant);
+            PlaceMarkerAt(participant);
     }
 
     void OnInvokeBattleParticipantTurnEnded(BattleParticipant obj)

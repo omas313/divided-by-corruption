@@ -13,11 +13,9 @@ public class PartyMemebersPositionManager : PositionSelectionManager<PartyMember
     {
         RemovePositionOf(partyMember);
     }
-    void OnPartyMemberTargetSelectionRequested(PartyMember performer, bool canSelectSelf)
+    void OnPartyMemberTargetSelectionRequested(PartyMember performer, List<PartyMember> unselectables)
     {
-        if (!canSelectSelf)
-            unselectables.Add(performer);
-
+        this.unselectables = unselectables;
         StartSelection();
     }
 
