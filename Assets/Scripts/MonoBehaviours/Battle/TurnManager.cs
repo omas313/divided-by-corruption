@@ -52,6 +52,9 @@ public class TurnManager : MonoBehaviour
         _marker.Hide();
         yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
 
+        if (ShouldCancelCombo(partyMember, battleActionPacket))
+            CancelCombo(partyMember);
+
         partyMember.EndTurn();
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
         
@@ -65,6 +68,11 @@ public class TurnManager : MonoBehaviour
         partyMember.HasComboPartner 
         && (battleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack
         || battleActionPacket.BattleAction.BattleActionType == BattleActionType.Special);
+
+    bool ShouldCancelCombo(PartyMember partyMember, BattleActionPacket battleActionPacket) => 
+        partyMember.HasComboPartner 
+        && (battleActionPacket.BattleAction.BattleActionType != BattleActionType.Attack
+        || battleActionPacket.BattleAction.BattleActionType != BattleActionType.Special);
 
     IEnumerator StartComboTrial(PartyMember firstAttacker, BattleActionPacket firstAttackPacket, List<PartyMember> party, List<Enemy> enemies)
     {
@@ -92,6 +100,12 @@ public class TurnManager : MonoBehaviour
         }
         else
             _marker.Hide();
+    }
+
+    void CancelCombo(PartyMember partyMember)
+    {
+        BattleEvents.InvokeComboCancelled(partyMember, partyMember.ComboPartner);
+        partyMember.RemoveComboPartner();
     }
 
     void Awake()

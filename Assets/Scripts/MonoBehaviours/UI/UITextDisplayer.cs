@@ -86,6 +86,12 @@ public class UITextDisplayer : MonoBehaviour
         text.Play("combo", partyMember2.BodyMidPointPosition, _comboTextColor);
     }
 
+    void OnComboCancelled(PartyMember partyMember1, PartyMember partyMember2)
+    {
+        var text = GetInactiveText();
+        text.Play("combo break", partyMember1.BodyMidPointPosition, _comboTextColor);
+    }
+
     void OnComboEffectsGained(BattleParticipant battleParticipant, string effectsString)
     {
         var text = GetInactiveText();
@@ -100,6 +106,7 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.CriticalAttackReceived -= OnCriticalAttackReceived;
         BattleEvents.MPAbsorbed -= OnMPAbsorbed;
         BattleEvents.ComboRequested -= OnComboRequested;
+        BattleEvents.ComboCancelled -= OnComboCancelled;
         BattleEvents.ComboEffectsGained -= OnComboEffectsGained;
     }
 
@@ -115,6 +122,7 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.CriticalAttackReceived += OnCriticalAttackReceived;  
         BattleEvents.MPAbsorbed += OnMPAbsorbed;    
         BattleEvents.ComboRequested += OnComboRequested;
+        BattleEvents.ComboCancelled += OnComboCancelled;
         BattleEvents.ComboEffectsGained += OnComboEffectsGained;
     }
 }

@@ -19,9 +19,11 @@ public class BattleEvents
     public static event Action<PartyMember> PartyMemberTurnEnded;
     public static event Action<PartyMember> PartyMemberDied;
     public static event Action<PartyMember, PartyMember> ComboRequested;
+    public static event Action<PartyMember, PartyMember> ComboCancelled;
     public static event Action<BattleActionPacket> ComboTrialRequested;
     public static event Action ComboFinished;
     public static event Action<BattleParticipant, string> ComboEffectsGained;
+
 
 
     public static event Action<BattleParticipant> CriticalAttackReceived;
@@ -59,6 +61,7 @@ public class BattleEvents
     public static void InvokePartyMemberTurnEnded(PartyMember partyMember) => PartyMemberTurnEnded?.Invoke(partyMember);
     public static void InvokePartyMemberDied(PartyMember partyMember) => PartyMemberDied?.Invoke(partyMember);
     public static void InvokeComboRequested(PartyMember partyMember1, PartyMember partyMember2) => ComboRequested?.Invoke(partyMember1, partyMember2);
+    public static void InvokeComboCancelled(PartyMember partyMember1, PartyMember partyMember2) => ComboCancelled?.Invoke(partyMember1, partyMember2);
     public static void InvokeComboTrialRequested(BattleActionPacket battleActionPacket) => ComboTrialRequested?.Invoke(battleActionPacket);
     public static void InvokeComboFinished() => ComboFinished?.Invoke();
     public static void InvokeComboEffectsGained(BattleParticipant battleParticipant, string effectsString) => ComboEffectsGained?.Invoke(battleParticipant, effectsString);
