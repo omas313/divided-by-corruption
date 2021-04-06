@@ -48,6 +48,6 @@ public class AbsorbAction : BattleAction, IActionBarAction
 
         Performer.AddMP(amountAbsorbed);
         BattleEvents.InvokeMPAbsorbed(Performer, Targets[0], amountAbsorbed);
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.25f);
     }
 }
