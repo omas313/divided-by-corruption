@@ -18,7 +18,7 @@ public class DefendAction : BattleAction
 
     protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
     {
-        var effect = new Effect(DefendDefinition.DefendEffect, Performer);
+        var effect = new Effect(DefendDefinition.DefendEffect);
         effect.SetDuration(DefendDefinition.Duration + 1);
 
         Performer.EffectsManager.AddEffect(effect);

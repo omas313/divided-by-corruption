@@ -15,9 +15,6 @@ public class BattleController : MonoBehaviour
 
     [SerializeField] Transform _battleParticipantsParent;
 
-    BattleParticipant CurrentBattleParticipant => _battleParticipants[_currentIndex];
-    int _currentIndex;
-
     List<Enemy> _enemies = new List<Enemy>();
     List<PartyMember> _party = new List<PartyMember>();
     List<BattleParticipant> _battleParticipants;
@@ -61,6 +58,8 @@ public class BattleController : MonoBehaviour
         _activeEnemies = new List<Enemy>(_enemies);
 
         _battleParticipants = _battleParticipants.OrderByDescending(bp => bp.CharacterStats.CurrentSpeed).ToList();
+
+        _turnManager.Init(_battleParticipants, _activeParty, _activeEnemies);
     }
 
     IEnumerator TurnBasedBattle()
@@ -69,18 +68,14 @@ public class BattleController : MonoBehaviour
         
         BattleEvents.InvokeBattleParticipantsUpdated(_battleParticipants);
 
-        int loopNumber = 0;
+        // int loopNumber = 0;
         while (true)
         {
-            loopNumber++;
+            // loopNumber++;
             // Debug.Log($"battle loop: {loopNumber}");
 
             BattleEvents.InvokePartyUpdated(_activeParty);
-            BattleEvents.InvokeCurrentPartyMemberChanged(CurrentBattleParticipant is PartyMember ? CurrentBattleParticipant as PartyMember : null);
-
-            yield return _turnManager.Manage(CurrentBattleParticipant, _activeParty, _activeEnemies);
-
-            _currentIndex = (_currentIndex + 1) % _battleParticipants.Count;
+            yield return _turnManager.ManageTurn();
             yield return CheckDeadParticipants();
 
             if (AllEnemiesAreDead())
@@ -109,17 +104,14 @@ public class BattleController : MonoBehaviour
         if (deadParticipants.Count == 0)
             yield break;
 
-        var nextParticipant = _battleParticipants[_currentIndex];
-        while (nextParticipant.IsDead)
-        {
-            _currentIndex = (_currentIndex + 1) % _battleParticipants.Count;
-            nextParticipant = _battleParticipants[_currentIndex];
-        }
+        while (_turnManager.CurrentBattleParticipant.IsDead)
+            _turnManager.IncrementCurrentIndex();
+        var nextParticipant = _turnManager.CurrentBattleParticipant;
 
         if (deadParticipants.Count > 0)
             yield return KillAndRemoveDeadParticipants(deadParticipants);
 
-        _currentIndex = _battleParticipants.IndexOf(nextParticipant);
+        _turnManager.SetCurrentIndex(_battleParticipants.IndexOf(nextParticipant));
     }
 
     IEnumerator KillAndRemoveDeadParticipants(List<BattleParticipant> deadParticipants)

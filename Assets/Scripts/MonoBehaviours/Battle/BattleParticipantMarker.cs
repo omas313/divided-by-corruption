@@ -11,12 +11,18 @@ public class BattleParticipantMarker : MonoBehaviour
     SpriteRenderer[] _spriteRenderers;
     Animation _animation;
 
-    public void PlaceAt(Vector3 position)
+    public void Show()
     {
         foreach (var renderer in _spriteRenderers)
             renderer.enabled = true;
 
         _animation.Play();
+    }
+
+    public void PlaceAt(Vector3 position)
+    {
+        Show();
+
         ClientPosition = position;
         transform.position = position + new Vector3(0f, 0.125f, 0f);
     }

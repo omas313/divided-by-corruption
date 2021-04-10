@@ -9,38 +9,35 @@ public class Effect
     public List<EffectModifier> Modifiers => _modifiers;
     public string ShortDescription => String.Join($"\n", Modifiers.Select(m => $"{m.ShortDescription} +{m.ValueString}"));
 
-
     List<EffectModifier> _modifiers;
-    BattleParticipant _target;
     int _duration;
 
-    public Effect(EffectDefinition effectDefinition, BattleParticipant target)
+    public Effect(EffectDefinition effectDefinition)
     {
         _modifiers = effectDefinition.Modifiers;
         _duration = effectDefinition.Duration;
-        _target = target;
     }
 
     public void SetDuration(int duration) => _duration = duration;
 
-    public void ApplyEffect()
+    public void ApplyEffect(BattleParticipant target)
     {
         foreach (var modifier in _modifiers)
-            modifier.Apply(_target);
+            modifier.Apply(target);
     }
 
-    public void UndoEffect()
+    public void UndoEffect(BattleParticipant target)
     {
         HasFinished = true;
         foreach (var modifier in _modifiers)
-            modifier.Undo(_target);
+            modifier.Undo(target);
     }
 
-    public void ReduceDuration() // why is the damage modifier not going away???
+    public void ReduceDuration(BattleParticipant target)
     {
         _duration = Math.Max(0, _duration - 1);
 
         if (_duration <= 0)
-            UndoEffect();
+            UndoEffect(target);
     }
 }

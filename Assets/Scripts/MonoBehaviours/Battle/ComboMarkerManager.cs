@@ -9,23 +9,31 @@ public class ComboMarkerManager : MonoBehaviour
 
     void HideMarkers()
     {
-        _markers[0].Hide();
-        _markers[1].Hide();
+        foreach (var marker in _markers)
+            marker.Hide();
     }
 
-    void OnComboRequested(PartyMember partyMember1, PartyMember partyMember2)
+    void ShowMarkersFor(List<PartyMember> participants)
     {
-        _markers[0].PlaceAt(partyMember1.transform);
-        _markers[1].PlaceAt(partyMember2.transform);
+        HideMarkers();
+
+        var i = 0;
+        foreach (var participant in participants)
+            _markers[i++].PlaceAt(participant.Transform);
     }
 
-    void OnComboCancelled(PartyMember partyMember1, PartyMember partyMember2) => HideMarkers();
+    void OnComboParticipantsChanged(List<PartyMember> participants) => ShowMarkersFor(participants);
+
+    void OnComboRequested(List<PartyMember> participants) => ShowMarkersFor(participants);
+
+    void OnComboBroken(PartyMember partyMember) => HideMarkers();
     void OnComboFinished() => HideMarkers();
 
     void OnDestroy()
     {
         BattleEvents.ComboRequested -= OnComboRequested;
-        BattleEvents.ComboCancelled -= OnComboCancelled;
+        BattleEvents.ComboParticipantsChanged -= OnComboParticipantsChanged;
+        BattleEvents.ComboBroken -= OnComboBroken;
         BattleEvents.ComboFinished -= OnComboFinished;
     }
 
@@ -34,7 +42,8 @@ public class ComboMarkerManager : MonoBehaviour
         _markers = GetComponentsInChildren<ComboParticipantMarker>();
 
         BattleEvents.ComboRequested += OnComboRequested;
-        BattleEvents.ComboCancelled += OnComboCancelled;
+        BattleEvents.ComboParticipantsChanged += OnComboParticipantsChanged;
+        BattleEvents.ComboBroken += OnComboBroken;
         BattleEvents.ComboFinished += OnComboFinished;
     }
 }

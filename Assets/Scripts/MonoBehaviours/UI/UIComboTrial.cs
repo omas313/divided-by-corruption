@@ -9,10 +9,12 @@ public class UIComboTrial : MonoBehaviour
     [SerializeField] Transform _textsParent;
     [SerializeField] GameObject _textPrefab;
     [SerializeField] Animation _titleAnimation;
+    [SerializeField] float _textYPositionOffset = 100f;
 
     UIComboTrialSegment[] _segments;
     RectTransform _rectTransform;
     CanvasGroup _canvasGroup;
+    Vector3 _textOffset;
     bool _isMoving;
     float _totalWidth;
     bool _confirmed;
@@ -127,7 +129,7 @@ public class UIComboTrial : MonoBehaviour
 
     void CreateText(string text, Color color, float scale = 1f)
     {
-        var textMesh = Instantiate(_textPrefab, _pin.position, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>();
+        var textMesh = Instantiate(_textPrefab, _pin.position + _textOffset, Quaternion.identity, _textsParent).GetComponentInChildren<TextMeshProUGUI>();
         textMesh.SetText(text);
         textMesh.color = color;
         textMesh.transform.localScale = new Vector3(scale, scale, scale);
@@ -157,6 +159,7 @@ public class UIComboTrial : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
         _rectTransform = GetComponent<RectTransform>();
         _totalWidth = _rectTransform.sizeDelta.x;
+        _textOffset = new Vector3(0f, _textYPositionOffset, 0f);
 
         Hide();
 

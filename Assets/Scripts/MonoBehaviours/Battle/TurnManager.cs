@@ -1,115 +1,197 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class TurnManager : MonoBehaviour
 {
+    public BattleParticipant CurrentBattleParticipant => _battleParticipants[_currentIndex];
+    public int CurrentIndex => _currentIndex;
+    
     [SerializeField] float _delayBetweenTurns = 2f;
-    CurrentActorMarker _marker;
 
-    public IEnumerator Manage(BattleParticipant currentBattleParticipant, List<PartyMember> party, List<Enemy> enemies)
+    PartyMember CurrentPartyMember => CurrentBattleParticipant as PartyMember;
+    Enemy CurrentEnemy => CurrentBattleParticipant as Enemy;
+    bool ShouldHandleComboTurns => _currentCombo != null && _currentCombo.HasStarted && _currentCombo.HasParticipants;
+    List<BattleParticipant> _battleParticipants;
+    List<PartyMember> _activeParty;
+    List<Enemy> _activeEnemies;
+    int _currentIndex;
+    CurrentActorMarker _currentActorMarker;
+    Combo _currentCombo;
+
+    public void Init(List<BattleParticipant> battleParticipants, List<PartyMember> activeParty, List<Enemy> activeEnemies)
     {
-        BattleEvents.InvokeBattleParticipantTurnStarted(currentBattleParticipant);
+        _battleParticipants = battleParticipants;
+        _activeParty = activeParty;
+        _activeEnemies = activeEnemies;
+    }
+    
+    public void IncrementCurrentIndex() => _currentIndex = (_currentIndex + 1) % _battleParticipants.Count;
+    public void SetCurrentIndex(int index) => _currentIndex = index;
 
-        if (currentBattleParticipant is Enemy)
-            yield return ManageEnemyTurn(currentBattleParticipant as Enemy, party, enemies);
+    public IEnumerator ManageTurn()
+    {
+        if (!ShouldHandleComboTurns)
+            yield return ManageNextTurn();
         else
-            yield return ManagePartyMemberTurn(currentBattleParticipant as PartyMember, party, enemies);
+            yield return ManageComboTurn();
+    }
 
-        BattleEvents.InvokeBattleParticipantTurnEnded(currentBattleParticipant);
+    IEnumerator ManageNextTurn()
+    {
+        BattleEvents.InvokeBattleParticipantTurnStarted(CurrentBattleParticipant);
+
+        if (CurrentBattleParticipant is Enemy)
+            yield return ManageEnemyTurn();
+        else
+            yield return ManagePartyMemberTurn(CurrentPartyMember);
+
+        BattleEvents.InvokeBattleParticipantTurnEnded(CurrentBattleParticipant);
+
+        IncrementCurrentIndex();
 
         yield return new WaitForSeconds(_delayBetweenTurns);
     }
 
-    IEnumerator ManageEnemyTurn(Enemy enemy, List<PartyMember> party, List<Enemy> enemies)
+    IEnumerator ManageEnemyTurn()
     {
-        BattleEvents.InvokeEnemyTurnStarted(enemy);
+        BattleEvents.InvokeEnemyTurnStarted(CurrentEnemy);
 
-        _marker.Mark(enemy.TopMarkerTransform);
+        _currentActorMarker.Mark(CurrentEnemy.TopMarkerTransform);
         yield return new WaitForSeconds(1f);
-        _marker.Hide();
+        _currentActorMarker.Hide();
 
-        yield return enemy.GetNextAction(party, enemies).PerformAction(party, enemies);
+        yield return CurrentEnemy.GetNextAction(_activeParty, _activeEnemies).PerformAction(_activeParty, _activeEnemies);
 
-        enemy.EndTurn();
-        BattleEvents.InvokeEnemyTurnEnded(enemy);
+        CurrentEnemy.EndTurn();
+        BattleEvents.InvokeEnemyTurnEnded(CurrentEnemy);
     }
 
-    IEnumerator ManagePartyMemberTurn(PartyMember partyMember, List<PartyMember> party, List<Enemy> enemies, Enemy target = null) 
+    IEnumerator ManagePartyMemberTurn(PartyMember partyMember)
     {
-        var battleActionPacket = new BattleActionPacket(target);
+        var battleActionPacket = new BattleActionPacket() { Combo = _currentCombo };
 
         BattleEvents.InvokePartyMemberTurnStarted(partyMember, battleActionPacket);
-        _marker.Mark(partyMember.TopMarkerTransform);
         BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
+        _currentActorMarker.Mark(partyMember.TopMarkerTransform);
 
-        yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End));
-        // end button hack to make sure turn ends since packet is invalid
-        if (!battleActionPacket.HasValidAction)
-            yield break;
+        yield return new WaitUntil(() => battleActionPacket.HasValidAction);
         
-        _marker.Hide();
-        yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
+        _currentActorMarker.Hide();
+        yield return battleActionPacket.BattleAction.PerformAction(_activeParty, _activeEnemies);
 
-        if (ShouldCancelCombo(partyMember, battleActionPacket))
-            CancelCombo(partyMember);
+        yield return new WaitForSeconds(0.5f);
+        yield return HandleComboStatus(battleActionPacket);
 
         partyMember.EndTurn();
         BattleEvents.InvokePartyMemberTurnEnded(partyMember);
-        
-        yield return new WaitForSeconds(1f);
-
-        if (ShouldCombo(partyMember, battleActionPacket))
-            yield return StartComboTrial(partyMember, battleActionPacket, party, enemies);
     }
 
-    bool ShouldCombo(PartyMember partyMember, BattleActionPacket battleActionPacket) => 
-        partyMember.HasComboPartner 
-        && (battleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack
-        || battleActionPacket.BattleAction.BattleActionType == BattleActionType.Special);
-
-    bool ShouldCancelCombo(PartyMember partyMember, BattleActionPacket battleActionPacket) => 
-        partyMember.HasComboPartner 
-        && (battleActionPacket.BattleAction.BattleActionType != BattleActionType.Attack
-        || battleActionPacket.BattleAction.BattleActionType != BattleActionType.Special);
-
-    IEnumerator StartComboTrial(PartyMember firstAttacker, BattleActionPacket firstAttackPacket, List<PartyMember> party, List<Enemy> enemies)
+    IEnumerator ManageComboTurn()
     {
-        _marker.Mark(firstAttacker.TopMarkerTransform);
+        var currentComboPerformer = _currentCombo.NextParticipant;
 
-        var battleActionPacket = new BattleActionPacket();
-        var comboTrialAction = new ComboTrialAction(firstAttacker, firstAttacker.ComboPartner, firstAttackPacket.BattleAction.ActionDefinition as AttackDefinition);
-        battleActionPacket.BattleAction = comboTrialAction;
+        yield return ManagePartyMemberTurn(currentComboPerformer);
 
-        var singleTargetList = new List<BattleParticipant>() { firstAttackPacket.BattleAction.Targets[0] };
-        BattleEvents.InvokeBattleParticipantsTargetted(singleTargetList);
-        BattleEvents.InvokeComboTrialRequested(battleActionPacket);
+        _currentCombo.RemoveParticipant(currentComboPerformer);
+        BattleEvents.InvokeComboParticipantsChanged(_currentCombo.Participants.ToList());
 
-        yield return new WaitUntil(() => battleActionPacket.HasValidAction || Input.GetKeyDown(KeyCode.End));
-        if (!battleActionPacket.HasValidAction)
+        if (_currentCombo.HasFinished)
+            yield return EndCombo();
+    }
+
+    IEnumerator HandleComboStatus(BattleActionPacket battleActionPacket)
+    {
+        var partyMember = battleActionPacket.BattleAction.Performer as PartyMember;
+
+        if (HasNoComboToHandle(battleActionPacket))
             yield break;
 
-        yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
-
-        if (comboTrialAction.IsSuccess)
+        if (HasComboBeenRequested(battleActionPacket))
         {
-            yield return ManagePartyMemberTurn(firstAttacker.ComboPartner, party, enemies, firstAttackPacket.BattleAction.Targets[0] as Enemy);
-            firstAttacker.RemoveComboPartner();
-            BattleEvents.InvokeComboFinished();
+            _currentCombo = battleActionPacket.Combo;
+            yield break;
         }
-        else
-            _marker.Hide();
+
+        if (!IsPartyMemberParticipatingInACombo(partyMember))
+            yield break;
+
+        var battleActionType = battleActionPacket.BattleAction.BattleActionType;
+        
+        if (_currentCombo.ShouldPerformComboTrial(partyMember, battleActionType))
+        {
+            yield return PerformComboTrial(battleActionPacket, _activeParty, _activeEnemies);
+            
+            _currentCombo.RemoveParticipant(partyMember);
+            BattleEvents.InvokeComboParticipantsChanged(_currentCombo.Participants);
+            yield break;
+        }
+
+        if (_currentCombo.ShouldBreakCombo(partyMember, battleActionType))
+            yield return BreakCombo(battleActionPacket, partyMember);
     }
 
-    void CancelCombo(PartyMember partyMember)
+    bool HasNoComboToHandle(BattleActionPacket battleActionPacket) 
+        => _currentCombo == null && !battleActionPacket.HasCombo;
+    bool IsPartyMemberParticipatingInACombo(PartyMember partyMember) 
+        => _currentCombo != null && _currentCombo.IsParticipant(partyMember);
+    bool HasComboBeenRequested(BattleActionPacket battleActionPacket) 
+        => _currentCombo == null && battleActionPacket.HasCombo;
+
+    IEnumerator BreakCombo(BattleActionPacket battleActionPacket, PartyMember partyMember)
     {
-        BattleEvents.InvokeComboCancelled(partyMember, partyMember.ComboPartner);
-        partyMember.RemoveComboPartner();
+        BattleEvents.InvokeComboBroken(partyMember);
+        _currentCombo.Clear();
+        _currentCombo = null;
+
+        yield return new WaitForSeconds(1f);
+    }
+
+    IEnumerator EndCombo()
+    {
+        _currentCombo.Clear();
+        _currentCombo = null;
+        BattleEvents.InvokeComboFinished();
+
+        // do some combo feedback animations
+        yield return null;
+    }
+
+    IEnumerator PerformComboTrial(BattleActionPacket firstAttackPacket, List<PartyMember> party, List<Enemy> enemies)
+    {
+        var partyMember = firstAttackPacket.BattleAction.Performer as PartyMember;
+
+        _currentActorMarker.Mark(partyMember.TopMarkerTransform);
+
+        var targets = firstAttackPacket.BattleAction.Targets;
+        var comboTrialAction = new ComboTrialAction(
+            partyMember, 
+            firstAttackPacket.BattleAction.ActionDefinition as AttackDefinition, 
+            _currentCombo);
+
+        var battleActionPacket = new BattleActionPacket()
+        {
+            BattleAction = comboTrialAction,
+            Combo = _currentCombo
+        };
+        battleActionPacket.SetTargets(targets);
+
+        BattleEvents.InvokeBattleParticipantsTargetted(targets);
+        BattleEvents.InvokeComboTrialRequested(battleActionPacket);
+
+        yield return new WaitUntil(() => battleActionPacket.HasValidAction);
+        yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
+
+        if (!comboTrialAction.IsSuccess)
+            _currentCombo = null;
+
+        _currentActorMarker.Hide();
     }
 
     void Awake()
     {
-        _marker = GetComponentInChildren<CurrentActorMarker>();
+        _currentActorMarker = GetComponentInChildren<CurrentActorMarker>();
     }
 }

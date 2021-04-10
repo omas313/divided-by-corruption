@@ -48,12 +48,6 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         }
     }
 
-    void OnCurrentPartyMemberChanged(PartyMember partyMember)
-    {
-        foreach (var pair in _partyBarsMap)
-            _partyBarsMap[pair.Key].SetActiveStatus(pair.Key == partyMember);
-    }
-    
     void OnPartyMemberDied(PartyMember partyMember)
     {
         _partyBarsMap[partyMember].SetDeathStatus(true);
@@ -61,6 +55,9 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
 
     void OnPartyMemberTurnStarted(PartyMember partyMember, BattleActionPacket battleActionPacket)
     {
+        foreach (var pair in _partyBarsMap)
+            _partyBarsMap[pair.Key].SetActiveStatus(pair.Key == partyMember);
+
         var name = partyMember.Name;
         var hp = partyMember.CharacterStats.CurrentHP.ToString();
         var mp = partyMember.CharacterStats.CurrentMP.ToString();
@@ -91,7 +88,6 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
     void OnDestroy()
     {
         BattleEvents.PartyUpdated -= OnPartyUpdated;
-        BattleEvents.CurrentPartyMemberChanged -= OnCurrentPartyMemberChanged;
         BattleEvents.PartyMemberDied -= OnPartyMemberDied;
         BattleEvents.PartyMemberTurnStarted -= OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded -= OnPartyMemberTurnEnded;
@@ -106,7 +102,6 @@ public class UIPartyMemberStatusHandler : MonoBehaviour
         _canvasGroup = GetComponent<CanvasGroup>();
         
         BattleEvents.PartyUpdated += OnPartyUpdated;  
-        BattleEvents.CurrentPartyMemberChanged += OnCurrentPartyMemberChanged;
         BattleEvents.PartyMemberDied += OnPartyMemberDied;
         BattleEvents.PartyMemberTurnStarted += OnPartyMemberTurnStarted;
         BattleEvents.PartyMemberTurnEnded += OnPartyMemberTurnEnded;

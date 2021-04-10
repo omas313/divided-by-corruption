@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class UIBattleMenu : MonoBehaviour
@@ -9,8 +10,8 @@ public class UIBattleMenu : MonoBehaviour
     CanvasGroup _canvasGroup;
     int _currentIndex;
     bool _isActive;
-    private PartyMember _partyMember;
-    private BattleActionPacket _currentBattleActionPacket;
+    PartyMember _partyMember;
+    BattleActionPacket _currentBattleActionPacket;
 
     public void Hide() => _canvasGroup.alpha = 0f;
 
@@ -95,13 +96,11 @@ public class UIBattleMenu : MonoBehaviour
                 var attackAction = new AttackAction(_partyMember, BattleActionType.Attack);
                 attackAction.AttackDefinition = _partyMember.NormalAttackDefinition;
                 _currentBattleActionPacket.BattleAction = attackAction;
-                if (_currentBattleActionPacket.HasComboTarget)
-                {
-                    attackAction.Targets.Add(_currentBattleActionPacket.ComboTarget);
+
+                if (_currentBattleActionPacket.HasTargetBeenSet())
                     BattleUIEvents.InvokeActionBarRequested();
-                }
                 else
-                    BattleUIEvents.InvokeEnemyTargetSelectionRequested();
+                    BattleUIEvents.InvokeEnemyTargetSelectionRequested(_currentBattleActionPacket.GetSelectableTargets());
                 break;
 
             case BattleActionType.Special:
@@ -123,15 +122,10 @@ public class UIBattleMenu : MonoBehaviour
                 break;
 
             case BattleActionType.ComboRequest:
-                var comboRequestAction = new ComboRequestAction(_partyMember);
-                comboRequestAction.ComboRequestDefinition = _partyMember.ComboRequestDefinition;
+                var comboRequestAction = new ComboRequestAction(_partyMember, _currentBattleActionPacket.Combo, _partyMember.ComboRequestDefinition);
                 _currentBattleActionPacket.BattleAction = comboRequestAction;
-
-                var performer = _currentBattleActionPacket.BattleAction.Performer as PartyMember;
-                var unselectables = new List<PartyMember>() { performer };
-                if (performer.HasComboPartner)
-                    unselectables.Add(performer.ComboPartner);
-                BattleUIEvents.InvokePartyMemberTargetSelectionRequested(performer, unselectables);
+                _currentBattleActionPacket.Combo = comboRequestAction.Combo;
+                BattleUIEvents.InvokePartyMemberTargetSelectionRequested(_partyMember, comboRequestAction.Combo.Participants);
                 break;
             
             case BattleActionType.None:

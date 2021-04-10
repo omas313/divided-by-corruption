@@ -87,14 +87,13 @@ public class UIAttackBar : MonoBehaviour
             yield return null;
         }
 
+        _isMoving = false;
         yield return new WaitForSeconds(2f);
 
         Hide();
         CurrentBattleAction.ActionBarResult = new ActionBarResult(_currentSegmentResults);
         BattleUIEvents.InvokeActionBarCompleted();
-            
         CleanUp();
-        _isMoving = false;
     }
 
     bool HasMissedASegment()

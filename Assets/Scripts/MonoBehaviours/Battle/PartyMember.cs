@@ -18,8 +18,6 @@ public class PartyMember : BattleParticipant
     public ComboRequestDefinition ComboRequestDefinition => _comboRequestDefinition;
     public ComboTrialDefinition ComboTrialDefinition => _comboTrialDefinition;
     public List<AttackDefinition> SpecialAttacksDefinitions => _specialAttackDefinitions;
-    public PartyMember ComboPartner => _comboPartner;
-    public bool HasComboPartner => _comboPartner != null;
 
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
@@ -29,11 +27,6 @@ public class PartyMember : BattleParticipant
     [SerializeField] ComboRequestDefinition _comboRequestDefinition;
     [SerializeField] ComboTrialDefinition _comboTrialDefinition;
     [SerializeField] List<AttackDefinition> _specialAttackDefinitions;
-
-    PartyMember _comboPartner;
-
-    public void SetComboPartner(PartyMember partyMember) => _comboPartner = partyMember;
-    public void RemoveComboPartner() => _comboPartner = null;
 
     public override IEnumerator Die()
     {

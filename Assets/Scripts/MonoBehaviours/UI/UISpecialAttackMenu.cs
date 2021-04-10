@@ -130,20 +130,22 @@ public class UISpecialAttackMenu : MonoBehaviour
         if (!_items[_currentIndex].IsSelectable)
             return;
 
-        CurrentBattleAction.AttackDefinition = _items[_currentIndex].AttackDefinition;
+        var attackDefinition = _items[_currentIndex].AttackDefinition;
+        CurrentBattleAction.AttackDefinition = attackDefinition;
 
-        if (_currentBattleActionPacket.HasComboTarget)
-        {
-            _currentBattleActionPacket.BattleAction.Targets.Add(_currentBattleActionPacket.ComboTarget);
+        var isSingleTargetType = attackDefinition.ActionTargetterType == ActionTargetterType.Single;
+        var isAOETargetType = attackDefinition.ActionTargetterType == ActionTargetterType.All;
+
+        if (isSingleTargetType && _currentBattleActionPacket.HasTargetBeenSet())
             BattleUIEvents.InvokeActionBarRequested();
-        }
-        else
+        else if (isSingleTargetType)
+            BattleUIEvents.InvokeEnemyTargetSelectionRequested(_currentBattleActionPacket.GetSelectableTargets());
+        else if (isAOETargetType)
             BattleUIEvents.InvokeEnemyTargetSelectionRequested();
 
         _isActive = false;
         SelectAndHideOthers();
         BattleAudioSource.Instance.PlaySelectSound();
-
     }
 
     void SelectAndHideOthers()

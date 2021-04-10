@@ -9,6 +9,7 @@ public abstract class BattleParticipant : MonoBehaviour
     public bool IsDead => CharacterStats.CurrentHP <= 0;
     public Sprite PortraitSprite => portraitSprite;
 
+    public Transform Transform => transform;
     public Vector3 InitialPosition { get; protected set; }
     public Vector3 CurrentPosition => transform.position;
     public Vector3 BodyMidPointPosition => bodyMidPoint.position;

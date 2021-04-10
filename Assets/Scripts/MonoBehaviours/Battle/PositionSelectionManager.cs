@@ -5,6 +5,8 @@ using UnityEngine;
 
 public abstract class PositionSelectionManager<T> : MonoBehaviour where T : BattleParticipant
 {
+    protected Dictionary<Transform, T> positionsMap;
+    protected List<Transform> activePositions;
     protected List<T> unselectables = new List<T>();
 
     [SerializeField] Transform[] _positions;
@@ -14,8 +16,6 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     [SerializeField] Color _selectionMarkerColor;
     [SerializeField] Color _unselectableMarkerColor;
 
-    List<Transform> _activePositions;
-    Dictionary<Transform, T> _positionsMap;
     bool _isActive;
     int _currentIndex;
     BattleActionPacket _currentBattleActionPacket;
@@ -31,39 +31,40 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     {
         Transform positionToRemove = null;
 
-        foreach (var pair in _positionsMap)
+        foreach (var pair in positionsMap)
             if (pair.Value == participant)
                 positionToRemove = pair.Key;
         
-        _activePositions.Remove(positionToRemove);
-        _positionsMap.Remove(positionToRemove);
+        activePositions.Remove(positionToRemove);
+        positionsMap.Remove(positionToRemove);
     }
 
     protected void InitPositions(List<T> participants)
     {
-        _positionsMap = new Dictionary<Transform, T>();
-        _activePositions = new List<Transform>();
+        positionsMap = new Dictionary<Transform, T>();
+        activePositions = new List<Transform>();
 
         for (var i = 0; i < participants.Count; i++)
         {
             var position = _positions[i];
-            _positionsMap[position] = participants[i];
-            _activePositions.Add(position);
-            participants[i].InitPosition(_activePositions[i].position);
+            positionsMap[position] = participants[i];
+            activePositions.Add(position);
+            participants[i].InitPosition(activePositions[i].position);
         }
 
-        _activePositions = _activePositions.OrderBy(p => p.name).ToList();
+        activePositions = activePositions.OrderBy(p => p.name).ToList();
 
         SetSortingOrders();
     }
 
     protected void PlaceMarkerAt(Transform targetTransform)
     {
-        var battleParticipant = _positionsMap[targetTransform];
+        var battleParticipant = positionsMap[targetTransform];
 
         var existingMarker = _targetMarkers.FirstOrDefault(m => m.ClientPosition == battleParticipant.CurrentPosition);
         if (existingMarker != null)
         {
+            existingMarker.Show();
             existingMarker.SetColor(unselectables.Contains(battleParticipant) ? _unselectableMarkerColor : _selectionMarkerColor);
             return;
         }
@@ -82,7 +83,7 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
 
     protected void PlaceMarkerAt(BattleParticipant battleParticipant)
     {
-        foreach (var kv in _positionsMap)
+        foreach (var kv in positionsMap)
             if (kv.Key == battleParticipant)
                 PlaceMarkerAt(kv.Value);
     }
@@ -106,14 +107,14 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         switch (_currentBattleActionPacket.BattleAction.ActionDefinition.ActionTargetterType)
         {
             case ActionTargetterType.Single:
-                var currentPositionTransform = _activePositions[_currentIndex];
+                var currentPositionTransform = activePositions[_currentIndex];
                 HideMarkers();
                 PlaceMarkerAt(currentPositionTransform);
                 break;
 
             case ActionTargetterType.All:
                 _currentIndex = 0;
-                foreach (var positionTransform in _activePositions)
+                foreach (var positionTransform in activePositions)
                     PlaceMarkerAt(positionTransform);
                 break;
 
@@ -125,8 +126,8 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
     void SetSortingOrders()
     {
         int i = 0;
-        foreach (var position in _activePositions)
-            _positionsMap[position].SetRendererSortingOrder(i++);
+        foreach (var position in activePositions)
+            positionsMap[position].SetRendererSortingOrder(i++);
     }
 
     void GoBack()
@@ -150,46 +151,43 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
         _currentIndex = Mathf.Max(_currentIndex - 1, 0);        
         SetCurrentPosition();
         BattleAudioSource.Instance.PlaySelectSound();
-
     }
 
     void GoToNextPosition()
     {
-        _currentIndex = Mathf.Min(_currentIndex + 1, _activePositions.Count - 1);              
+        _currentIndex = Mathf.Min(_currentIndex + 1, activePositions.Count - 1);              
         SetCurrentPosition();
         BattleAudioSource.Instance.PlaySelectSound();
     }
 
     void ConfirmCurrentSelection()
     {
-        var selectedParticipant = _positionsMap[_activePositions[_currentIndex]];
+        var selectedParticipant = positionsMap[activePositions[_currentIndex]];
         if (unselectables.Contains(selectedParticipant))
             return;
-
-        HideMarkers();
-        _isActive = false;
 
         switch (_currentBattleActionPacket.BattleAction.ActionDefinition.ActionTargetterType)
         {
             case ActionTargetterType.Single:
-                _currentBattleActionPacket.BattleAction.Targets.Add(selectedParticipant);
+                _currentBattleActionPacket.SetTargets(selectedParticipant as BattleParticipant);
                 break;
 
             case ActionTargetterType.All:
-                foreach (var positionTransform in _activePositions)
-                    _currentBattleActionPacket.BattleAction.Targets.Add(_positionsMap[positionTransform]);
+                var activeTargets = activePositions.Select(transform => positionsMap[transform] as BattleParticipant).ToList();
+                _currentBattleActionPacket.SetTargets(activeTargets);
                 break;
 
             default: 
                 break;
         }
         
+        HideMarkers();
+        _isActive = false;
         unselectables.Clear();
         BattleAudioSource.Instance.PlaySelectSound();
 
-        if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.ComboRequest)
-            return;
-        BattleUIEvents.InvokeActionBarRequested();
+        if (_currentBattleActionPacket.BattleAction is IActionBarAction)
+            BattleUIEvents.InvokeActionBarRequested();
     }
 
     void RaiseRightPressedEvent()

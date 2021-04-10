@@ -7,8 +7,21 @@ public class EnemyPositionManager : PositionSelectionManager<Enemy>
         InitPositions(enemies);
     }
 
-    void OnEnemyTargetSelectionRequested()
+    void OnEnemyTargetSelectionRequested(List<Enemy> selectables)
     {
+        if (selectables == null || selectables.Count == 0)
+            unselectables.Clear();
+        else
+        {
+            foreach (var positionTransform in activePositions)
+            {
+                var enemy = positionsMap[positionTransform];
+
+                if (!selectables.Contains(enemy))
+                    unselectables.Add(enemy);
+            }
+        }
+
         StartSelection();
     }
 

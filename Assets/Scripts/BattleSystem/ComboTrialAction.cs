@@ -1,50 +1,69 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 public class ComboTrialAction : BattleAction
 {
     public override ActionDefinition ActionDefinition => ComboTrialDefinition;
-    public override bool IsValid => 
-        Performer != null 
-        && Targets != null 
-        && Targets.Count > 0
-        && HasResult;
+    public override bool IsValid => Performer != null && HasResult;
 
     public ComboTrialDefinition ComboTrialDefinition { get; set; }
     public bool HasResult { get; private set; }
     public bool IsSuccess { get; private set; }
     public AttackDefinition AttackDefinition { get; private set; }
 
-    public ComboTrialAction(PartyMember starter, PartyMember ender, AttackDefinition attackDefinition)
+    Combo _combo;
+
+    public ComboTrialAction(PartyMember starter, AttackDefinition attackDefinition, Combo combo)
     {
         Performer = starter;
-        Targets.Add(ender);
         AttackDefinition = attackDefinition;
+        _combo = combo;
     }
 
     public void SetResult(bool result)
     {
-        HasResult = true;
         IsSuccess = result;
+        HasResult = true;
     }
 
     protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
     {
         if (!IsSuccess)
+        {
+            _combo.Clear();
+            BattleEvents.InvokeComboBroken(Performer as PartyMember);
             yield break;
+        }
 
-        var comboEnder = Targets[0] as PartyMember;
+        _combo.StartCombo();
+
+        var comboFollower = _combo.GetParticipantAfter(Performer as PartyMember);
         var effectsString = new StringBuilder();
+
+        foreach (var existingComboEffect in _combo.Effects)
+        {
+            comboFollower.EffectsManager.AddEffect(existingComboEffect);
+            effectsString.AppendLine(existingComboEffect.ShortDescription);
+        }
+
         foreach (var effectDefinition in AttackDefinition.ComboEffectDefinitions)
         {
-            var effect = new Effect(effectDefinition, comboEnder);
-            comboEnder.EffectsManager.AddEffect(effect);
+            var effect = new Effect(effectDefinition);
+            _combo.AddEffect(effect);
+            comboFollower.EffectsManager.AddEffect(effect);
             effectsString.AppendLine(effect.ShortDescription);
         }
 
-        BattleEvents.InvokeComboEffectsGained(comboEnder, effectsString.ToString());
+        BattleEvents.InvokeComboEffectsGained(comboFollower, effectsString.ToString());
+
+        var targetsToAdd = Targets
+            .Select(t => t as Enemy)
+            .Where(e => !e.IsDead)
+            .ToList();
+        _combo.AddTargets(targetsToAdd);
     }
 
     protected override IEnumerator PreActionSetup()

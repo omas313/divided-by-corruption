@@ -77,19 +77,19 @@ public class UITextDisplayer : MonoBehaviour
         text.Play("critical", target.BodyMidPointPosition + _offset, Color.yellow);
     }
 
-    void OnComboRequested(PartyMember partyMember1, PartyMember partyMember2)
+    void OnComboRequested(List<PartyMember> partyMembers)
     {
-        var text = GetInactiveText();
-        text.Play("combo", partyMember1.BodyMidPointPosition, _comboTextColor);
-        
-        text = GetInactiveText();
-        text.Play("combo", partyMember2.BodyMidPointPosition, _comboTextColor);
+        foreach (var partyMember in partyMembers)
+        {
+            var text = GetInactiveText();
+            text.Play("combo", partyMember.BodyMidPointPosition, _comboTextColor);
+        }
     }
 
-    void OnComboCancelled(PartyMember partyMember1, PartyMember partyMember2)
+    void OnComboBroken(PartyMember partyMember)
     {
         var text = GetInactiveText();
-        text.Play("combo break", partyMember1.BodyMidPointPosition, _comboTextColor);
+        text.Play("combo break", partyMember.BodyMidPointPosition, _comboTextColor);
     }
 
     void OnComboEffectsGained(BattleParticipant battleParticipant, string effectsString)
@@ -106,7 +106,7 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.CriticalAttackReceived -= OnCriticalAttackReceived;
         BattleEvents.MPAbsorbed -= OnMPAbsorbed;
         BattleEvents.ComboRequested -= OnComboRequested;
-        BattleEvents.ComboCancelled -= OnComboCancelled;
+        BattleEvents.ComboBroken -= OnComboBroken;
         BattleEvents.ComboEffectsGained -= OnComboEffectsGained;
     }
 
@@ -122,7 +122,7 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.CriticalAttackReceived += OnCriticalAttackReceived;  
         BattleEvents.MPAbsorbed += OnMPAbsorbed;    
         BattleEvents.ComboRequested += OnComboRequested;
-        BattleEvents.ComboCancelled += OnComboCancelled;
+        BattleEvents.ComboBroken += OnComboBroken;
         BattleEvents.ComboEffectsGained += OnComboEffectsGained;
     }
 }

@@ -13,7 +13,7 @@ public class EffectsManager
     public void AddEffect(Effect effect)
     {
         Effects.Add(effect);
-        effect.ApplyEffect();
+        effect.ApplyEffect(Client);
     }
 
     public void ReduceEffectDurations()
@@ -22,7 +22,7 @@ public class EffectsManager
             return;
 
         foreach (var effect in Effects)
-            effect.ReduceDuration();
+            effect.ReduceDuration(Client);
 
         Effects.RemoveAll(e => e.HasFinished);
     }
