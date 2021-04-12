@@ -6,6 +6,7 @@ using UnityEngine;
 public class AttackDefinition : ActionDefinition
 {
     public int Damage => _damage;
+    public float SplashDamageModifier => _splashDamageModifier;
     public int MPCost => _mpCost;
     public List<SegmentData> SegmentData => _segmentData;
     public GameObject OnHitEffectsPrefab => _onHitEffectsPrefab;
@@ -18,6 +19,7 @@ public class AttackDefinition : ActionDefinition
     public List<EffectDefinition> ComboEffectDefinitions => _comboEffectDefinitions;
 
     [SerializeField] int _damage;
+    [SerializeField] float _splashDamageModifier = 0.5f;
     [SerializeField] int _mpCost;
     [SerializeField] List<SegmentData> _segmentData;
     [SerializeField] GameObject _onHitEffectsPrefab;

@@ -56,7 +56,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
                 else
                     AttackDefinition.SpawnOnHitEffect(target.BodyMidPointPosition);
 
-                Performer.StartCoroutine(target.ReceiveAttack(Performer, attack));    
+                Performer.StartCoroutine(target.ReceiveAttack(attack));    
             }
 
             yield return new WaitForSeconds(0.25f);
@@ -74,12 +74,22 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 
         foreach (var segmentResult in ActionBarResult.SegmentsResults)
         {
-            var damage = Mathf.CeilToInt(AttackDefinition.Damage * segmentResult.Multiplier);
-            _battleAttacks.Enqueue(new BattleAttack(AttackDefinition.Name, damage, segmentResult.IsHit, segmentResult.IsCritical));
+            var attack = CreateBattleAttack(segmentResult);
+            _battleAttacks.Enqueue(attack);
         }
     }
 
     BattleAttack GetNextBattleAttack() => _battleAttacks.Dequeue();
+    BattleAttack CreateBattleAttack(SegmentResult segmentResult) => new BattleAttack()
+        {
+            Attacker = Performer,
+            Targets = Targets,
+            Name = AttackDefinition.Name,
+            Damage = Mathf.CeilToInt(AttackDefinition.Damage * segmentResult.Multiplier),
+            IsHit = segmentResult.IsHit,
+            IsCritical = segmentResult.IsCritical,
+            AttackDefinition = AttackDefinition
+        };
 
     bool AreTargetsDead()
     {

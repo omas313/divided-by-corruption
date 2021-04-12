@@ -196,8 +196,32 @@ public class TurnManager : MonoBehaviour
         _currentActorMarker.Hide();
     }
 
+    void OnBattleAttackReceived(BattleParticipant battleParticipant, BattleAttack battleAttack)
+    {
+        if (!(battleParticipant is PartyMember) || !battleAttack.IsHit || battleAttack.Damage <= 0 || _currentCombo == null)
+            return;
+
+        var attackedPartyMember = battleParticipant as PartyMember;
+        if (!_currentCombo.IsParticipant(attackedPartyMember) || _currentCombo.ParticipantsCount < 2)
+            return;
+
+        var otherComboParticipants = _currentCombo.Participants.Where(pm => pm != attackedPartyMember).ToList();
+        foreach (var partyMember in otherComboParticipants)
+        {
+            var splashDamageAttack = battleAttack.CreateSplashAttackFor(partyMember);
+            StartCoroutine(partyMember.ReceiveAttack(splashDamageAttack));
+        }
+    }
+
+    void OnDestroy()
+    {
+        BattleEvents.BattleAttackReceived -= OnBattleAttackReceived;
+    }
+
     void Awake()
     {
         _currentActorMarker = GetComponentInChildren<CurrentActorMarker>();
+
+        BattleEvents.BattleAttackReceived += OnBattleAttackReceived;
     }
 }

@@ -68,15 +68,6 @@ public class UITextDisplayer : MonoBehaviour
         text.Play("miss", target.BodyMidPointPosition + _offset, Color.grey);
     }
 
-    void OnCriticalAttackReceived(BattleParticipant target)
-    {
-        var text = GetInactiveText();
-        _offset.x = UnityEngine.Random.Range(0.5f, 2f);
-        _offset.y = UnityEngine.Random.Range(0.5f, 1f);
-
-        text.Play("critical", target.BodyMidPointPosition + _offset, Color.yellow);
-    }
-
     void OnComboRequested(List<PartyMember> partyMembers)
     {
         foreach (var partyMember in partyMembers)
@@ -103,7 +94,6 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;
         BattleEvents.ArmourDamageReceived -= OnArmourDamageReceived;
         BattleEvents.MissedAttackReceived -= OnMissedAttackReceived;
-        BattleEvents.CriticalAttackReceived -= OnCriticalAttackReceived;
         BattleEvents.MPAbsorbed -= OnMPAbsorbed;
         BattleEvents.ComboRequested -= OnComboRequested;
         BattleEvents.ComboBroken -= OnComboBroken;
@@ -118,8 +108,7 @@ public class UITextDisplayer : MonoBehaviour
         // todo: maybe all these should just get the positions instead of the entire reference
         BattleEvents.HealthDamageReceived += OnHealthDamageReceived;
         BattleEvents.ArmourDamageReceived += OnArmourDamageReceived;
-        BattleEvents.MissedAttackReceived += OnMissedAttackReceived;
-        BattleEvents.CriticalAttackReceived += OnCriticalAttackReceived;  
+        BattleEvents.MissedAttackReceived += OnMissedAttackReceived; 
         BattleEvents.MPAbsorbed += OnMPAbsorbed;    
         BattleEvents.ComboRequested += OnComboRequested;
         BattleEvents.ComboBroken += OnComboBroken;

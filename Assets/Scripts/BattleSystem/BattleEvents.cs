@@ -26,7 +26,7 @@ public class BattleEvents
 
 
 
-    public static event Action<BattleParticipant> CriticalAttackReceived;
+    public static event Action<BattleParticipant, BattleAttack> BattleAttackReceived;
     public static event Action<BattleParticipant> MissedAttackReceived;
 
     public static event Action<List<BattleParticipant>> BattleParticipantsTargetted;
@@ -66,6 +66,8 @@ public class BattleEvents
     public static void InvokeComboFinished() => ComboFinished?.Invoke();
     public static void InvokeComboEffectsGained(BattleParticipant battleParticipant, string effectsString) => ComboEffectsGained?.Invoke(battleParticipant, effectsString);
 
+        
+    public static void InvokeBattleAttackReceived(BattleParticipant recipient, BattleAttack battleAttack) => BattleAttackReceived?.Invoke(recipient, battleAttack);
     public static void InvokeMissedAttackReceived(BattleParticipant target) => MissedAttackReceived?.Invoke(target);
     public static void InvokeBattleParticipantsTargetted(List<BattleParticipant> battleParticipants) => BattleParticipantsTargetted?.Invoke(battleParticipants);
 

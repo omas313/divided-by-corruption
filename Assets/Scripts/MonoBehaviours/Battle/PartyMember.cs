@@ -36,7 +36,7 @@ public class PartyMember : BattleParticipant
         yield return null;
     }
 
-    public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)
+    public override IEnumerator ReceiveAttack(BattleAttack attack)
     {
         if (!attack.IsHit)
         {
@@ -46,10 +46,13 @@ public class PartyMember : BattleParticipant
 
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
-        attack.Damage = CharacterStats.ApplyDefenseModifier(attack.Damage);
-        CharacterStats.ReduceCurrentHP(attack.Damage);
+        var damageToTake = CharacterStats.ApplyDefenseModifier(attack.Damage);
+        CharacterStats.ReduceCurrentHP(damageToTake);
         BattleEvents.InvokePartyMemberHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
-        BattleEvents.InvokeHealthDamageReceived(this, attack.Damage, attack.IsCritical);
+        BattleEvents.InvokeHealthDamageReceived(this, damageToTake, attack.IsCritical);
+        
+        if (!attack.IsSplashAttack)
+            BattleEvents.InvokeBattleAttackReceived(this, attack);
         
         yield return new WaitForSeconds(0.25f);
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);

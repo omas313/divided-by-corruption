@@ -72,7 +72,7 @@ public class Enemy : BattleParticipant
         return attackAction;
     }
 
-    public override IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack)
+    public override IEnumerator ReceiveAttack(BattleAttack attack)
     {
         if (!attack.IsHit)
         {
@@ -82,12 +82,12 @@ public class Enemy : BattleParticipant
 
         animator.SetTrigger(HIT_ANIMATION_TRIGGER_KEY);
 
-        attack.Damage = _stats.ApplyDefenseModifier(attack.Damage);
-        var damageLeftToTake = attack.Damage;
+        var modifiedDamageToTake = _stats.ApplyDefenseModifier(attack.Damage);
+        var damageLeftToTake = modifiedDamageToTake;
         var armourDamageTaken = 0;
 
         if (HasArmour)
-            (armourDamageTaken, damageLeftToTake) = TakePossibleArmourDamage(attack.Damage);
+            (armourDamageTaken, damageLeftToTake) = TakePossibleArmourDamage(modifiedDamageToTake);
 
         if (damageLeftToTake > 0)
         {
@@ -95,14 +95,13 @@ public class Enemy : BattleParticipant
             BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
         }
 
-        InvokeReceivedAttackEvents(armourDamageTaken, damageLeftToTake, attack.IsCritical);
+        InvokeReceivedAttackEvents(attack, armourDamageTaken, damageLeftToTake);
         
         yield return new WaitForSeconds(0.25f);
     }
 
     public override IEnumerator Die()
     {
-        // Debug.Log($"{Name} died");
         BattleEvents.InvokeEnemyDied(this);
         animator.SetBool(DEATH_ANIMATION_BOOL_KEY, true);
         foreach (var particles in GetComponentsInChildren<ParticleSystem>())
@@ -129,13 +128,16 @@ public class Enemy : BattleParticipant
         return (damage, HasArmour ? 0 : damage - initialArmour);
     }
 
-    void InvokeReceivedAttackEvents(int armourDamageTaken, int healthDamageTaken, bool isCritical)
+    void InvokeReceivedAttackEvents(BattleAttack attack, int armourDamageTaken, int healthDamageTaken)
     {
+        if (!attack.IsSplashAttack)
+            BattleEvents.InvokeBattleAttackReceived(this, attack);
+        
         if (armourDamageTaken > 0)
-            BattleEvents.InvokeArmourDamageReceived(this, armourDamageTaken, isCritical && healthDamageTaken == 0);
+            BattleEvents.InvokeArmourDamageReceived(this, armourDamageTaken, attack.IsCritical && healthDamageTaken == 0);
 
         if (healthDamageTaken > 0)
-            BattleEvents.InvokeHealthDamageReceived(this, healthDamageTaken, isCritical);
+            BattleEvents.InvokeHealthDamageReceived(this, healthDamageTaken, attack.IsCritical);
     }
 
     void RemoveArmour()

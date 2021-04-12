@@ -75,7 +75,7 @@ public abstract class BattleParticipant : MonoBehaviour
     }
 
     public abstract IEnumerator Die();
-    public abstract IEnumerator ReceiveAttack(BattleParticipant attacker, BattleAttack attack);
+    public abstract IEnumerator ReceiveAttack(BattleAttack attack);
 
     [ContextMenu("Kill")]
     public void CM_Kill()
