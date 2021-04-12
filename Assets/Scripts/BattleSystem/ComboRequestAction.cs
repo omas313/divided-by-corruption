@@ -10,6 +10,7 @@ public class ComboRequestAction : BattleAction
         Performer != null 
         && Targets != null 
         && Targets.Count > 0;
+    public override bool HasFailed { get; protected set; }
     public ComboRequestDefinition ComboRequestDefinition { get; set; }
     public Combo Combo => _combo;
 
@@ -34,6 +35,7 @@ public class ComboRequestAction : BattleAction
             _combo.AddParticipantsInOrder(targetPartner, performer);
 
         BattleEvents.InvokeComboRequested(_combo.Participants);
+
         yield return new WaitForSeconds(0.5f);
     }
 

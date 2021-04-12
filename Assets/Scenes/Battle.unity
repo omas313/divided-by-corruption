@@ -2414,7 +2414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._baseSpeed
-      value: 107
+      value: 207
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._currentHP
@@ -2426,7 +2426,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _stats._currentSpeed
-      value: 107
+      value: 207
       objectReference: {fileID: 0}
     - target: {fileID: 5648010378544757075, guid: 5cfd588a632e6dd4da5363da58ad0394, type: 3}
       propertyPath: _comboInitiationDefinition

@@ -11,6 +11,8 @@ public class UIComboTrial : MonoBehaviour
     [SerializeField] Animation _titleAnimation;
     [SerializeField] float _textYPositionOffset = 100f;
 
+
+    ComboTrialAction ComboTrialAction => _currentBattleActionPacket.BattleAction as ComboTrialAction;
     UIComboTrialSegment[] _segments;
     RectTransform _rectTransform;
     CanvasGroup _canvasGroup;
@@ -78,31 +80,35 @@ public class UIComboTrial : MonoBehaviour
             yield return null;
         }
 
+        _isMoving = false;
+
         if (!_confirmed)
             TrialFailed();
 
+        yield return ShowSegments();
+        
+        Hide();
+        CleanUp();
+        BattleUIEvents.InvokeComboTrialCompleted();
+    }
+
+    IEnumerator ShowSegments()
+    {
         foreach (var segment in _segments)
             segment.RevealType();
-            
         yield return new WaitForSeconds(2f);
-        Hide();
-        
-        (_currentBattleActionPacket.BattleAction as ComboTrialAction).SetResult(_confirmed);
-        BattleUIEvents.InvokeComboTrialCompleted();
-
-        CleanUp();
-        _isMoving = false;
     }
 
     void TrialSucceeded(UIComboTrialSegment segment)
     {
         CreateText("success", Color.yellow, 1.1f);
+        ComboTrialAction.SetResult(success: true);
     }
 
     void TrialFailed()
     {
         CreateText("failure", Color.red);
-        // BattleUIEvents.InvokeComboTrialFailed(); // todo: remove the combo indicators
+        ComboTrialAction.SetResult(success: false);
     }
 
     void Confirm()

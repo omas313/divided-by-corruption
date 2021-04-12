@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 {
@@ -10,6 +11,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
         && Targets.Count > 0
         && ActionBarResult != null
         && AttackDefinition != null;
+    public override bool HasFailed { get; protected set; }
 
     public AttackDefinition AttackDefinition { get; set; }
     public bool HasAttacks => _battleAttacks.Count > 0;
@@ -18,10 +20,11 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 
     Queue<BattleAttack> _battleAttacks;
 
-    public AttackAction(BattleParticipant performer, BattleActionType battleActionType)
+    public AttackAction(BattleParticipant performer, BattleActionType battleActionType, AttackDefinition attackDefinition = null)
     {
         BattleActionType = battleActionType;
         Performer = performer;
+        AttackDefinition = attackDefinition;
     }
 
     protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
@@ -32,13 +35,16 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 
         BattleEvents.InvokeBattleParticipantsTargetted(Targets);
 
+        if (AreAllAttacksMisses())
+            HasFailed = true;
+
         while (HasAttacks)
         {
-            if (AttackDefinition.HasTriggerAnimation)
-                yield return Performer.TriggerAnimation(AttackDefinition.AnimationTriggerName);
-
             var attack = GetNextBattleAttack();
             attack.Damage = Performer.CharacterStats.ApplyDamageModifier(attack.Damage);
+
+            if (AttackDefinition.HasTriggerAnimation)
+                yield return Performer.TriggerAnimation(AttackDefinition.AnimationTriggerName);
 
             if (attack.IsHit && AttackDefinition.HasEnvironmentalEffect)
                 yield return AttackDefinition.SpawnEnvironmentalEffect();
@@ -83,4 +89,6 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 
         return true;
     }
+
+    bool AreAllAttacksMisses() => _battleAttacks.All(ba => !ba.IsHit);
 }

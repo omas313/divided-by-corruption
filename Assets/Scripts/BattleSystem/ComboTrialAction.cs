@@ -3,15 +3,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 public class ComboTrialAction : BattleAction
 {
     public override ActionDefinition ActionDefinition => ComboTrialDefinition;
-    public override bool IsValid => Performer != null && HasResult;
+    public override bool IsValid => Performer != null && HasUIResult;
+    public override bool HasFailed { get; protected set; }
 
     public ComboTrialDefinition ComboTrialDefinition { get; set; }
-    public bool HasResult { get; private set; }
-    public bool IsSuccess { get; private set; }
+    public bool HasUIResult { get; private set; }
     public AttackDefinition AttackDefinition { get; private set; }
 
     Combo _combo;
@@ -23,22 +24,28 @@ public class ComboTrialAction : BattleAction
         _combo = combo;
     }
 
-    public void SetResult(bool result)
+    public void SetResult(bool success)
     {
-        IsSuccess = result;
-        HasResult = true;
+        HasUIResult = true;
+        HasFailed = !success;
     }
 
     protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
     {
-        if (!IsSuccess)
+        if (!HasUIResult)
         {
-            _combo.Clear();
+            Debug.Log("Error @ ComboTrialAction: performing combo trial action without UI result");
+            yield break;
+        }
+
+        if (HasFailed)
+        {
+            _combo.Break();
             BattleEvents.InvokeComboBroken(Performer as PartyMember);
             yield break;
         }
 
-        _combo.StartCombo();
+        _combo.Start();
 
         var comboFollower = _combo.GetParticipantAfter(Performer as PartyMember);
         var effectsString = new StringBuilder();
@@ -75,6 +82,4 @@ public class ComboTrialAction : BattleAction
     {
         yield return null;
     }
-
-    public void ForceSuccess() => IsSuccess = true;
 }

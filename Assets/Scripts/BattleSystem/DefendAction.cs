@@ -6,12 +6,14 @@ public class DefendAction : BattleAction
 {
     public override ActionDefinition ActionDefinition => DefendDefinition;
     public override bool IsValid => Performer != null && Targets != null && Targets.Count > 0;
+    public override bool HasFailed { get; protected set; }
 
     public DefendDefinition DefendDefinition { get; set; }
 
-    public DefendAction(BattleParticipant performer)
+    public DefendAction(BattleParticipant performer, DefendDefinition defendDefinition)
     {
         BattleActionType = BattleActionType.Defend;
+        DefendDefinition = defendDefinition;
         Performer = performer;
         Targets.Add(performer);
     }

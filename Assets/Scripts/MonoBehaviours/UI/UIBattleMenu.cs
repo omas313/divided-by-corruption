@@ -93,9 +93,8 @@ public class UIBattleMenu : MonoBehaviour
         switch (actionType)
         {
             case BattleActionType.Attack:
-                var attackAction = new AttackAction(_partyMember, BattleActionType.Attack);
-                attackAction.AttackDefinition = _partyMember.NormalAttackDefinition;
-                _currentBattleActionPacket.BattleAction = attackAction;
+                _currentBattleActionPacket.BattleAction = 
+                    new AttackAction(_partyMember, BattleActionType.Attack, _partyMember.NormalAttackDefinition);
 
                 if (_currentBattleActionPacket.HasTargetBeenSet())
                     BattleUIEvents.InvokeActionBarRequested();
@@ -104,28 +103,32 @@ public class UIBattleMenu : MonoBehaviour
                 break;
 
             case BattleActionType.Special:
-                _currentBattleActionPacket.BattleAction = new AttackAction(_partyMember, BattleActionType.Special);
+                _currentBattleActionPacket.BattleAction = 
+                    new AttackAction(_partyMember, BattleActionType.Special);
                 BattleUIEvents.InvokeSpecialAttackSelectionRequested();
                 break;
 
             case BattleActionType.Defend:
-                var defendAction = new DefendAction(_partyMember);
-                defendAction.DefendDefinition = _partyMember.DefendDefinition;
-                _currentBattleActionPacket.BattleAction = defendAction;
+                _currentBattleActionPacket.BattleAction = 
+                    new DefendAction(_partyMember, _partyMember.DefendDefinition);;
                 break;
 
             case BattleActionType.Absorb:
-                var absorbAction = new AbsorbAction(_partyMember);
-                absorbAction.AbsorbDefinition = _partyMember.AbsorbDefinition;
-                _currentBattleActionPacket.BattleAction = absorbAction;
+                _currentBattleActionPacket.BattleAction = 
+                    new AbsorbAction(_partyMember, _partyMember.AbsorbDefinition);;
                 BattleUIEvents.InvokeEnemyTargetSelectionRequested();
                 break;
 
             case BattleActionType.ComboRequest:
-                var comboRequestAction = new ComboRequestAction(_partyMember, _currentBattleActionPacket.Combo, _partyMember.ComboRequestDefinition);
+                var comboRequestAction = new ComboRequestAction(
+                    _partyMember, 
+                    _currentBattleActionPacket.Combo, 
+                    _partyMember.ComboRequestDefinition);
                 _currentBattleActionPacket.BattleAction = comboRequestAction;
                 _currentBattleActionPacket.Combo = comboRequestAction.Combo;
-                BattleUIEvents.InvokePartyMemberTargetSelectionRequested(_partyMember, comboRequestAction.Combo.Participants);
+                BattleUIEvents.InvokePartyMemberTargetSelectionRequested(
+                    _partyMember, 
+                    unselectables: comboRequestAction.Combo.Participants);
                 break;
             
             case BattleActionType.None:

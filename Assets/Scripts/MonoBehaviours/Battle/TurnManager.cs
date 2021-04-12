@@ -95,10 +95,13 @@ public class TurnManager : MonoBehaviour
 
         yield return ManagePartyMemberTurn(currentComboPerformer);
 
-        _currentCombo.RemoveParticipant(currentComboPerformer);
-        BattleEvents.InvokeComboParticipantsChanged(_currentCombo.Participants.ToList());
+        if (_currentCombo != null)
+        {
+            _currentCombo.RemoveParticipant(currentComboPerformer);
+            BattleEvents.InvokeComboParticipantsChanged(_currentCombo.Participants.ToList());
+        }
 
-        if (_currentCombo.HasFinished)
+        if (_currentCombo != null && _currentCombo.HasFinished)
             yield return EndCombo();
     }
 
@@ -118,19 +121,25 @@ public class TurnManager : MonoBehaviour
         if (!IsPartyMemberParticipatingInACombo(partyMember))
             yield break;
 
-        var battleActionType = battleActionPacket.BattleAction.BattleActionType;
+        var battleAction = battleActionPacket.BattleAction;
         
-        if (_currentCombo.ShouldPerformComboTrial(partyMember, battleActionType))
+        if (_currentCombo.ShouldPerformComboTrial(partyMember, battleAction))
         {
             yield return PerformComboTrial(battleActionPacket, _activeParty, _activeEnemies);
+
+            if (_currentCombo.IsBroken)
+            {
+                yield return BreakCombo(partyMember);
+                yield break;
+            }
             
             _currentCombo.RemoveParticipant(partyMember);
             BattleEvents.InvokeComboParticipantsChanged(_currentCombo.Participants);
             yield break;
         }
 
-        if (_currentCombo.ShouldBreakCombo(partyMember, battleActionType))
-            yield return BreakCombo(battleActionPacket, partyMember);
+        if (_currentCombo.ShouldBreakCombo(partyMember, battleAction))
+            yield return BreakCombo(partyMember);
     }
 
     bool HasNoComboToHandle(BattleActionPacket battleActionPacket) 
@@ -140,13 +149,13 @@ public class TurnManager : MonoBehaviour
     bool HasComboBeenRequested(BattleActionPacket battleActionPacket) 
         => _currentCombo == null && battleActionPacket.HasCombo;
 
-    IEnumerator BreakCombo(BattleActionPacket battleActionPacket, PartyMember partyMember)
+    IEnumerator BreakCombo(PartyMember partyMember)
     {
-        BattleEvents.InvokeComboBroken(partyMember);
-        _currentCombo.Clear();
+        _currentCombo.Break();
         _currentCombo = null;
+        BattleEvents.InvokeComboBroken(partyMember);
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.5f);
     }
 
     IEnumerator EndCombo()
@@ -155,7 +164,7 @@ public class TurnManager : MonoBehaviour
         _currentCombo = null;
         BattleEvents.InvokeComboFinished();
 
-        // do some combo feedback animations
+        // do some combo feedback animations of damage and bonus damage
         yield return null;
     }
 
@@ -183,9 +192,6 @@ public class TurnManager : MonoBehaviour
 
         yield return new WaitUntil(() => battleActionPacket.HasValidAction);
         yield return battleActionPacket.BattleAction.PerformAction(party, enemies);
-
-        if (!comboTrialAction.IsSuccess)
-            _currentCombo = null;
 
         _currentActorMarker.Hide();
     }

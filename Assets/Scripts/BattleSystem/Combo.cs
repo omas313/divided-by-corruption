@@ -5,6 +5,7 @@ using System.Linq;
 public class Combo
 {
     public bool HasStarted { get; private set; }
+    public bool IsBroken { get; private set; }
     public bool HasFinished => !HasParticipants;
     public bool HasParticipants => _participants.Count > 0;
     public PartyMember NextParticipant => _participants.First.Value;
@@ -37,17 +38,24 @@ public class Combo
         _participants.AddFirst(comboStarterPartyMember);
     }
 
-    public void StartCombo() => HasStarted = true;
+    public void Start() => HasStarted = true;
 
-    public bool ShouldPerformComboTrial(PartyMember currentPartyMember, BattleActionType battleActionType) =>
+    public void Break()
+    {
+        IsBroken = true;
+        Clear();
+    }
+
+    public bool ShouldPerformComboTrial(PartyMember currentPartyMember, BattleAction battleAction) =>
         HasParticipants
         && _participants.Count > 1
-        && _comboTrialBattleActions.Contains(battleActionType);
+        && !battleAction.HasFailed
+        && _comboTrialBattleActions.Contains(battleAction.BattleActionType);
 
-    public bool ShouldBreakCombo(PartyMember currentPartyMember, BattleActionType battleActionType) =>
-        HasStarted 
-        && IsParticipant(currentPartyMember)
-        && _comboBreakingBattleActions.Contains(battleActionType);
+    public bool ShouldBreakCombo(PartyMember currentPartyMember, BattleAction battleAction) =>
+        IsFirstParticipant(currentPartyMember)
+        && (battleAction.HasFailed
+        || _comboBreakingBattleActions.Contains(battleAction.BattleActionType));
         
     public void AddFirstParticipant(PartyMember participant) => _participants.AddFirst(participant);
     public void AddParticipantsInOrder(PartyMember firstParticipant, PartyMember secondParticipant)
@@ -58,6 +66,7 @@ public class Combo
     public void RemoveParticipant(PartyMember participant) => _participants.Remove(participant);
     public PartyMember GetParticipantAfter(PartyMember participant) => _participants.Find(participant).Next.Value;
     public bool IsParticipant(PartyMember partyMember) => _participants.Find(partyMember) != null;
+    public bool IsFirstParticipant(PartyMember partyMember) => _participants.First.Value == partyMember;
 
     public void AddEffect(Effect effect) => _effects.Add(effect);
     public void RemoveEffect(Effect effect) => _effects.Remove(effect);

@@ -7,6 +7,7 @@ public abstract class BattleAction
 {
     public abstract ActionDefinition ActionDefinition { get; }
     public abstract bool IsValid { get; }
+    public abstract bool HasFailed { get; protected set; }
     
     public BattleActionType BattleActionType { get; set; }
     public BattleParticipant Performer { get; set; }

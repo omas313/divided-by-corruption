@@ -17,7 +17,7 @@ public class BattleActionPacket
 
         if (Combo.TargetsCount == 1)
         {
-            BattleAction.Targets = Combo.Targets.Select(t => t as BattleParticipant).ToList();
+            SetTargets(Combo.Targets.Select(t => t as BattleParticipant).ToList());
             return true;
         }
 

@@ -10,6 +10,7 @@ public class AbsorbAction : BattleAction, IActionBarAction
         && Targets != null 
         && Targets.Count > 0
         && ActionBarResult != null;
+    public override bool HasFailed { get; protected set; }
 
     public ActionBarResult ActionBarResult { get; set; }
     public AbsorbDefinition AbsorbDefinition { get; set; }
@@ -17,10 +18,11 @@ public class AbsorbAction : BattleAction, IActionBarAction
 
     List<SegmentData> _segmentData;
 
-    public AbsorbAction(BattleParticipant performer)
+    public AbsorbAction(BattleParticipant performer, AbsorbDefinition absorbDefinition)
     {
         BattleActionType = BattleActionType.Absorb;
         Performer = performer;
+        AbsorbDefinition = absorbDefinition;
 
         _segmentData = new List<SegmentData>() 
         { 
