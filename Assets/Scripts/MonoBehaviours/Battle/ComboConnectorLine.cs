@@ -30,4 +30,18 @@ public class ComboConnectorLine : MonoBehaviour
 
         Show();
     }
+
+    void UpdatePoints()
+    {
+        _line.SetPosition(0, PartyMembers[0].CurrentPosition);
+        _line.SetPosition(1, PartyMembers[1].CurrentPosition);
+    }
+
+    void Update()
+    {
+        if (!IsActive)
+            return;
+        
+        UpdatePoints();
+    }
 }
