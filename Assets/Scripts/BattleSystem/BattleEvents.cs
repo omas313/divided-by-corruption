@@ -21,7 +21,7 @@ public class BattleEvents
     public static event Action<List<PartyMember>> ComboParticipantsChanged;
     public static event Action<PartyMember> ComboBroken;
     public static event Action<BattleActionPacket> ComboTrialRequested;
-    public static event Action ComboFinished;
+    public static event Action<Combo> ComboFinished;
     public static event Action<BattleParticipant, string> ComboEffectsGained;
 
 
@@ -63,7 +63,7 @@ public class BattleEvents
     public static void InvokeComboRequested(List<PartyMember> participants) => ComboRequested?.Invoke(participants);
     public static void InvokeComboBroken(PartyMember comboBreaker) => ComboBroken?.Invoke(comboBreaker);
     public static void InvokeComboTrialRequested(BattleActionPacket battleActionPacket) => ComboTrialRequested?.Invoke(battleActionPacket);
-    public static void InvokeComboFinished() => ComboFinished?.Invoke();
+    public static void InvokeComboFinished(Combo combo) => ComboFinished?.Invoke(combo);
     public static void InvokeComboEffectsGained(BattleParticipant battleParticipant, string effectsString) => ComboEffectsGained?.Invoke(battleParticipant, effectsString);
 
         

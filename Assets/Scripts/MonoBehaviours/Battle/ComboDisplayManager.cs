@@ -66,7 +66,7 @@ public class ComboDisplayManager : MonoBehaviour
         HideLines();
     }
 
-    void OnComboFinished()
+    void OnComboFinished(Combo combo)
     {
         HideMarkers();
         HideLines();

@@ -5,6 +5,7 @@ public class BattleAttack
 {
     public string Name { get; set; }
     public int Damage { get; set; }
+    public int ActualDamageTaken { get; set; }
     public bool IsHit { get; set; }
     public bool IsCritical { get; set; }
     public BattleParticipant Attacker { get; set; }

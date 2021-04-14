@@ -84,6 +84,8 @@ public class Enemy : BattleParticipant
 
         var modifiedDamageToTake = _stats.ApplyDefenseModifier(attack.Damage);
         var damageLeftToTake = modifiedDamageToTake;
+        attack.ActualDamageTaken = damageLeftToTake;
+        
         var armourDamageTaken = 0;
 
         if (HasArmour)
@@ -125,7 +127,7 @@ public class Enemy : BattleParticipant
         if (!HasArmour)
             RemoveArmour();
 
-        return (damage, HasArmour ? 0 : damage - initialArmour);
+        return (HasArmour ? damage : initialArmour, HasArmour ? 0 : damage - initialArmour);
     }
 
     void InvokeReceivedAttackEvents(BattleAttack attack, int armourDamageTaken, int healthDamageTaken)

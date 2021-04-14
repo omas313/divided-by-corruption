@@ -152,20 +152,24 @@ public class TurnManager : MonoBehaviour
     IEnumerator BreakCombo(PartyMember partyMember)
     {
         _currentCombo.Break();
-        _currentCombo = null;
         BattleEvents.InvokeComboBroken(partyMember);
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
+        BattleEvents.InvokeComboFinished(_currentCombo);
+        yield return new WaitForSeconds(1f);
+
+        _currentCombo.Clear();
+        _currentCombo = null;
     }
 
     IEnumerator EndCombo()
     {
+        yield return new WaitForSeconds(1f);
+        BattleEvents.InvokeComboFinished(_currentCombo);
+        yield return new WaitForSeconds(1f);
+
         _currentCombo.Clear();
         _currentCombo = null;
-        BattleEvents.InvokeComboFinished();
-
-        // do some combo feedback animations of damage and bonus damage
-        yield return null;
     }
 
     IEnumerator PerformComboTrial(BattleActionPacket firstAttackPacket, List<PartyMember> party, List<Enemy> enemies)
@@ -198,10 +202,26 @@ public class TurnManager : MonoBehaviour
 
     void OnBattleAttackReceived(BattleParticipant battleParticipant, BattleAttack battleAttack)
     {
-        if (!(battleParticipant is PartyMember) || !battleAttack.IsHit || battleAttack.Damage <= 0 || _currentCombo == null)
+        if (ShouldUpdateComboDamage(battleParticipant, battleAttack))
+            _currentCombo.AddDamage(battleAttack.ActualDamageTaken);
+
+        if (ShouldApplySplashDamage(battleParticipant))
+            ApplySplashDamage(battleParticipant as PartyMember, battleAttack);
+    }
+
+    bool ShouldUpdateComboDamage(BattleParticipant battleParticipant, BattleAttack battleAttack) 
+        => _currentCombo != null 
+        && battleParticipant is Enemy 
+        && _currentCombo.IsParticipant(battleAttack.Attacker as PartyMember);
+
+    bool ShouldApplySplashDamage(BattleParticipant battleParticipant) 
+        => _currentCombo != null && battleParticipant is PartyMember;
+
+    void ApplySplashDamage(PartyMember attackedPartyMember, BattleAttack battleAttack)
+    {
+        if (!battleAttack.IsHit || battleAttack.Damage <= 0)
             return;
 
-        var attackedPartyMember = battleParticipant as PartyMember;
         if (!_currentCombo.IsParticipant(attackedPartyMember) || _currentCombo.ParticipantsCount < 2)
             return;
 

@@ -8,6 +8,7 @@ public class Combo
     public bool IsBroken { get; private set; }
     public bool HasFinished => !HasParticipants;
     public bool HasParticipants => _participants.Count > 0;
+    public int TotalDamage { get; private set; }
     public PartyMember NextParticipant => _participants.First.Value;
     public int ParticipantsCount => _participants.Count;
     public int EffectsCount => _effects.Count;
@@ -80,11 +81,15 @@ public class Combo
     }
     public void RemoveTarget(Enemy enemy) => _targets.Remove(enemy);
 
+    public void AddDamage(int damage) => TotalDamage += damage;
 
     public void Clear()
     {
-        _targets.Clear();
-        _participants.Clear();
-        _effects.Clear();
+        _targets?.Clear();
+        _targets = null;
+        _participants?.Clear();
+        _participants = null;
+        _effects?.Clear();
+        _effects = null;
     }
 }
