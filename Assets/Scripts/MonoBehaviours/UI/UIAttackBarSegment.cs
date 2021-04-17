@@ -6,45 +6,82 @@ using UnityEngine.UI;
 public class UIAttackBarSegment : MonoBehaviour
 {
     public bool IsActive { get; private set; }
+    public bool HasNormalArea => _normalAreaRect != null;
+    public bool HasCriticalArea => _criticalAreaRect != null;
     public Area Area { get; private set; }
     public Area NormalArea { get; private set; }
     public Area CriticalArea { get; private set; }
-    public float AnchoredPosition => _rectTransform.anchoredPosition.x;
+    public float AnchoredPosition => _mainRectTransform.anchoredPosition.x;
     public float NormalMultiplier => _normalMultiplier;
     public float CriticalMultiplier => _criticalMultiplier;
 
     [SerializeField] float _normalMultiplier = 1f;
     [SerializeField] float _criticalMultiplier = 1.25f;
-    [SerializeField] RectTransform _normalArea;
-    [SerializeField] RectTransform _criticalArea;
+    [SerializeField] RectTransform _normalAreaRect;
+    [SerializeField] RectTransform _criticalAreaRect;
     [SerializeField] Image _overlayImage;
+    [SerializeField] bool _criticalAreaFirst;
 
-    RectTransform _rectTransform;
+    RectTransform _mainRectTransform;
+    float _mainHeight;
 
-    public void Init(float xPosition)
+    public void Init(SegmentData data, float mainXPosition)
     {
-        _rectTransform.anchoredPosition = new Vector2(xPosition, 0f);
+        var mainWidth = data.NormalSubSegmentWidth + data.CriticalSubSegmentWidth;
 
-        Area = new Area(_rectTransform.anchoredPosition.x, _rectTransform.anchoredPosition.x + _rectTransform.sizeDelta.x);
+        _mainRectTransform.anchoredPosition = new Vector2(mainXPosition, 0f);
+        _mainRectTransform.sizeDelta = new Vector2(mainWidth, _mainHeight);
 
-        NormalArea = new Area(
-            _rectTransform.anchoredPosition.x + _normalArea.anchoredPosition.x, 
-            _rectTransform.anchoredPosition.x + _normalArea.anchoredPosition.x + _normalArea.sizeDelta.x);
+        if (HasNormalArea && data.HasNormalArea)
+        {
+            var normalXPosition = 0f; // for now, assuming normal is first
+            var normalXWidth = data.NormalSubSegmentWidth;
 
-        CriticalArea = new Area(
-            _rectTransform.anchoredPosition.x + _criticalArea.anchoredPosition.x, 
-            _rectTransform.anchoredPosition.x + _criticalArea.anchoredPosition.x + _criticalArea.sizeDelta.x);
+            _normalAreaRect.anchoredPosition = new Vector2(normalXPosition, 0f);
+            _normalAreaRect.sizeDelta = new Vector2(normalXWidth, _mainHeight);
+
+            NormalArea = new Area(
+                mainXPosition + normalXPosition, 
+                mainXPosition + normalXPosition + normalXWidth);
+        }
+
+        if (HasCriticalArea && data.HasCriticalArea)
+        {
+            // for now, assuming normal is first
+            var normalXPosition = HasNormalArea ? _normalAreaRect.anchoredPosition.x : 0f; 
+            var normalWidth = HasNormalArea ? _normalAreaRect.sizeDelta.x : 0f;
+
+            var criticalXPosition = normalXPosition + normalWidth; 
+            var criticalXWidth = data.CriticalSubSegmentWidth;
+
+            _criticalAreaRect.anchoredPosition = new Vector2(criticalXPosition, 0f);
+            _criticalAreaRect.sizeDelta = new Vector2(criticalXWidth, _mainHeight);
+
+            _criticalAreaRect.sizeDelta = new Vector2(data.CriticalSubSegmentWidth, _mainHeight);
+            CriticalArea = new Area(
+                mainXPosition + criticalXPosition,
+                mainXPosition + criticalXPosition + criticalXWidth);
+        }
+        
+        Area = new Area(mainXPosition, mainXPosition + mainWidth);
+
+        // Debug.Log($"TTL AREA: [{Area.Start}, {Area.End}]");
+        // Debug.Log($"NORMAL AREA: [{NormalArea.Start}, {NormalArea.End}]");
+        // Debug.Log($"CRITICAL AREA: [{CriticalArea.Start}, {CriticalArea.End}]");
+        // Debug.Log($"RECT SIZE DELTA: {_mainRectTransform.sizeDelta}");
 
         SetActive(true);
     }
 
     public bool IsInside(float position) => Area.IsInside(position);
+    public bool IsInsideNormalArea(float position) => HasNormalArea ? NormalArea.IsInside(position) : false;
+    public bool IsInsideCriticalArea(float position) => HasCriticalArea ? CriticalArea.IsInside(position) : false;
 
     public float GetMultiplier(float position)
     {
-        if (NormalArea.IsInside(position))
+        if (HasNormalArea && NormalArea.IsInside(position))
             return NormalMultiplier;
-        else if (CriticalArea.IsInside(position))
+        else if (HasCriticalArea && CriticalArea.IsInside(position))
             return CriticalMultiplier;
         else 
             return 0f;
@@ -58,6 +95,10 @@ public class UIAttackBarSegment : MonoBehaviour
 
     void Awake()
     {
-        _rectTransform = GetComponent<RectTransform>();    
+        _mainRectTransform = GetComponent<RectTransform>();    
+        _mainHeight = _mainRectTransform.sizeDelta.y;
+
+        if (!HasCriticalArea && !HasNormalArea)
+            Debug.Log($"Error in segment {name}: No normal or critical area specified (serialized field)");
     }
 }

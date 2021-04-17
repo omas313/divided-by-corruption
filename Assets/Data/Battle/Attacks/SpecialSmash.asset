@@ -10,21 +10,25 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
-  m_Name: Scratch
+  m_Name: SpecialSmash
   m_EditorClassIdentifier: 
-  actionName: Scratch
+  actionName: Super Smash
   animationTriggerName: Attack
   actionTargetterType: 0
   attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   delayBeforeMotion: 1
-  energyParticlesPrefab: {fileID: 0}
-  primaryPowerColor: {r: 0.3018868, g: 0.3018868, b: 0.3018868, a: 0}
-  secondaryPowerColor: {r: 0.6792453, g: 0.6792453, b: 0.6792453, a: 0}
-  _damage: 5
-  _mpCost: 0
+  energyParticlesPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
+  primaryPowerColor: {r: 0.5471698, g: 0, b: 0, a: 1}
+  secondaryPowerColor: {r: 0, g: 0, b: 0, a: 1}
+  _damage: 10
+  _splashDamageModifier: 0.5
+  _mpCost: 6
   _segmentData:
-  - _normalMultiplier: 0.9
-    _criticalMultiplier: 1.25
+  - _normalMultiplier: 0.5
+    _normalSubSegmentSize: 50
+    _criticalMultiplier: 2.5
+    _criticalSubSegmentSize: 5
+    _segmentType: {fileID: 11400000, guid: 05a71d961d802194eba5e8983f14af89, type: 2}
   _onHitEffectsPrefab: {fileID: 2053121904379684125, guid: d0eff700f2fdb6e4c8d294083dbd57c9, type: 3}
   _projectilePrefab: {fileID: 0}
   _environmentalEffectPrefab: {fileID: 0}

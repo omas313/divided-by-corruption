@@ -10,21 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
-  m_Name: SpecialSmash
+  m_Name: SpecialSlice
   m_EditorClassIdentifier: 
-  actionName: Super Smash
+  actionName: Super Splice
   animationTriggerName: Attack
   actionTargetterType: 0
   attackMotionType: {fileID: 11400000, guid: aeb567c842e2e3e40ab3080a05d2ce4c, type: 2}
   delayBeforeMotion: 1
   energyParticlesPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
-  primaryPowerColor: {r: 0.5471698, g: 0, b: 0, a: 1}
-  secondaryPowerColor: {r: 0, g: 0, b: 0, a: 1}
-  _damage: 10
-  _mpCost: 6
+  primaryPowerColor: {r: 0.13679248, g: 1, b: 0.9002979, a: 1}
+  secondaryPowerColor: {r: 0, g: 0, b: 0, a: 0}
+  _damage: 4
+  _splashDamageModifier: 0.5
+  _mpCost: 5
   _segmentData:
   - _normalMultiplier: 0.5
-    _criticalMultiplier: 2
+    _normalSubSegmentSize: 60
+    _criticalMultiplier: 0
+    _criticalSubSegmentSize: 0
+    _segmentType: {fileID: 11400000, guid: a078cc31fcac0aa4bb1c6e7ba39819c6, type: 2}
+  - _normalMultiplier: 0.65
+    _normalSubSegmentSize: 60
+    _criticalMultiplier: 1.2
+    _criticalSubSegmentSize: 20
+    _segmentType: {fileID: 11400000, guid: 05a71d961d802194eba5e8983f14af89, type: 2}
+  - _normalMultiplier: 0
+    _normalSubSegmentSize: 0
+    _criticalMultiplier: 1.5
+    _criticalSubSegmentSize: 30
+    _segmentType: {fileID: 11400000, guid: 1033bec5634a4c64aac54d74e401f2f8, type: 2}
   _onHitEffectsPrefab: {fileID: 2053121904379684125, guid: d0eff700f2fdb6e4c8d294083dbd57c9, type: 3}
   _projectilePrefab: {fileID: 0}
   _environmentalEffectPrefab: {fileID: 0}
+  _comboEffectDefinitions: []

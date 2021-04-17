@@ -39,33 +39,34 @@ public class UIAttackBar : MonoBehaviour
 
     void Show() => _canvasGroup.alpha = 1f;
 
-    void StartWithSegments(List<SegmentData> segments, float pinSpeed)
+    void StartWithSegments(List<SegmentData> segmentsData, float pinSpeed)
     {
-        if (segments.Count > MAX_SEGMENT_COUNT)
-            Debug.Log($"Error: received {segments.Count} segment count, where max is {MAX_SEGMENT_COUNT}");
+        if (segmentsData.Count > MAX_SEGMENT_COUNT)
+            Debug.Log($"Error: received {segmentsData.Count} segment count, where max is {MAX_SEGMENT_COUNT}");
 
-        CreateSegments(segments);
+        CreateSegments(segmentsData);
         Show();
         StartCoroutine(StartOperation(pinSpeed));
     }
 
-    void CreateSegments(List<SegmentData> segments)
+    void CreateSegments(List<SegmentData> segmentsData)
     {
         _uiSegments = new List<UIAttackBarSegment>();
 
-        for (int i = 0; i < segments.Count; i++)
+        for (int i = 0; i < segmentsData.Count; i++)
         {
+            var data = segmentsData[i];
             var xPosition = (_firstSegmentPosition + _segmentSpacing * i) % _totalWidth;
-            var segment = Instantiate(_segmentPrefab, Vector3.zero, Quaternion.identity, _segmentsParent);
-            segment.Init(xPosition);
+            var segment = Instantiate(data.UIAttackBarSegmentPrefab, Vector3.zero, Quaternion.identity, _segmentsParent);
+            segment.Init(data, xPosition);
             _uiSegments.Add(segment);
         }
 
         _uiSegments = _uiSegments.OrderBy(s => s.AnchoredPosition).ToList();
 
         _uiSegmentsDataMap = new Dictionary<UIAttackBarSegment, SegmentData>();
-        for (int i = 0; i < segments.Count; i++)
-            _uiSegmentsDataMap[_uiSegments[i]] = segments[i];
+        for (int i = 0; i < segmentsData.Count; i++)
+            _uiSegmentsDataMap[_uiSegments[i]] = segmentsData[i];
 
         _currentSegmentResults = new List<SegmentResult>();
     }
@@ -147,13 +148,13 @@ public class UIAttackBar : MonoBehaviour
             uiSegment.SetActive(false);
             CreateConfirmPoint();
 
-            if (uiSegment.NormalArea.IsInside(pinPositionX))
+            if (uiSegment.IsInsideNormalArea(pinPositionX))
             {
                 _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].NormalMultiplier));
                 CreateText("hit", Color.white);
                 return;
             }
-            else if (uiSegment.CriticalArea.IsInside(pinPositionX))
+            else if (uiSegment.IsInsideCriticalArea(pinPositionX))
             {
                 _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].CriticalMultiplier, isCritical: true));
                 CreateText("critical!", Color.red, scale: 1.1f);

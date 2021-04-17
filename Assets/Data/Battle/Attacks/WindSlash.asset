@@ -21,12 +21,20 @@ MonoBehaviour:
   primaryPowerColor: {r: 0.28230685, g: 0.9811321, b: 0.28602397, a: 1}
   secondaryPowerColor: {r: 0.7311321, g: 1, b: 0.9037597, a: 1}
   _damage: 3
+  _splashDamageModifier: 0.5
   _mpCost: 3
   _segmentData:
-  - _normalMultiplier: 0.8
-    _criticalMultiplier: 1.25
-  - _normalMultiplier: 0.8
-    _criticalMultiplier: 1.25
+  - _normalMultiplier: 0.9
+    _normalSubSegmentSize: 75
+    _criticalMultiplier: 0
+    _criticalSubSegmentSize: 0
+    _segmentType: {fileID: 11400000, guid: a078cc31fcac0aa4bb1c6e7ba39819c6, type: 2}
+  - _normalMultiplier: 0.9
+    _normalSubSegmentSize: 75
+    _criticalMultiplier: 0
+    _criticalSubSegmentSize: 0
+    _segmentType: {fileID: 11400000, guid: a078cc31fcac0aa4bb1c6e7ba39819c6, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
   _projectilePrefab: {fileID: 7807944414959136323, guid: dc8433c509f5d684a90f79de8ed2a1f6, type: 3}
   _environmentalEffectPrefab: {fileID: 0}
+  _comboEffectDefinitions: []

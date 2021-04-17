@@ -226,7 +226,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 10047666}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -4524,7 +4524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: _stats._baseSpeed
-      value: 1
+      value: 1111
       objectReference: {fileID: 0}
     - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: _stats._currentMP
@@ -4532,7 +4532,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: _stats._currentSpeed
-      value: 1
+      value: 1111
       objectReference: {fileID: 0}
     - target: {fileID: 5137837007951962428, guid: b7c11f12eab3ce044ae0985d1aea6f66, type: 3}
       propertyPath: _comboInitiationDefinition
@@ -8251,7 +8251,7 @@ PrefabInstance:
       objectReference: {fileID: 4422084297763085224, guid: 0000000000000000d000000000000000, type: 0}
     - target: {fileID: 3761183044502570729, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: m_Name
-      value: Swordsman
+      value: Sten
       objectReference: {fileID: 0}
     - target: {fileID: 3761183044502570729, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: m_IsActive
@@ -8307,11 +8307,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: _stats._baseSpeed
-      value: 110
+      value: 654654
       objectReference: {fileID: 0}
     - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: _stats._currentMP
-      value: 2
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: _stats._motionSpeed
@@ -8319,7 +8319,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: _stats._currentSpeed
-      value: 110
+      value: 654654
       objectReference: {fileID: 0}
     - target: {fileID: 3761183044502570731, guid: 10009cd915f3df24bbd17afc024e1c78, type: 3}
       propertyPath: _comboInitiationDefinition

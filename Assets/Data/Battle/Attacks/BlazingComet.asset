@@ -10,23 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d7be8dfeffed1c54395813622d135811, type: 3}
-  m_Name: Fireball
+  m_Name: BlazingComet
   m_EditorClassIdentifier: 
-  actionName: Fireball
+  actionName: Blazing Comet
   animationTriggerName: 
-  actionTargetterType: 0
+  actionTargetterType: 1
   attackMotionType: {fileID: 11400000, guid: 60f54f3dff79f494e8543efa6a2ba232, type: 2}
   delayBeforeMotion: 1
   energyParticlesPrefab: {fileID: 5113422444846859650, guid: 90516cf0972e1a24d8bf19d5b242e858, type: 3}
-  primaryPowerColor: {r: 0.8490566, g: 0, b: 0, a: 1}
-  secondaryPowerColor: {r: 1, g: 0.22822624, b: 0, a: 1}
+  primaryPowerColor: {r: 0.6509434, g: 0.30738997, b: 0, a: 1}
+  secondaryPowerColor: {r: 0.745283, g: 0, b: 0, a: 1}
   _damage: 7
-  _mpCost: 3
+  _splashDamageModifier: 0.5
+  _mpCost: 6
   _segmentData:
   - _normalMultiplier: 0.8
+    _normalSubSegmentSize: 80
     _criticalMultiplier: 1.25
+    _criticalSubSegmentSize: 10
+    _segmentType: {fileID: 11400000, guid: 05a71d961d802194eba5e8983f14af89, type: 2}
   _onHitEffectsPrefab: {fileID: 0}
-  _projectilePrefab: {fileID: 6392100636865404471, guid: 19f0fd8e2e431624bb86b0a05259eaeb, type: 3}
-  _environmentalEffectPrefab: {fileID: 0}
-  _comboEffectDefinitions:
-  - {fileID: 11400000, guid: 562ca91fda3c1074c90fa581f1dca091, type: 2}
+  _projectilePrefab: {fileID: 0}
+  _environmentalEffectPrefab: {fileID: 6799560046411150978, guid: dc37ee4a9dc888641b4719d14cf36884, type: 3}
+  _comboEffectDefinitions: []
