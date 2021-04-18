@@ -4,8 +4,10 @@ using UnityEngine;
 [System.Serializable]
 public class CharacterStats
 {
-    public float DamageModifier { get; private set; }
-    public float DefenseModifier { get; private set; }
+    public float DamageModifier { get; private set; } = 1f;
+    public float DefenseModifier { get; private set; } = 1f;
+    public SegmentModifier NormalSegmentModifier { get; private set; } = new SegmentModifier();
+    public SegmentModifier CriticalSegmentModifier { get; private set; } = new SegmentModifier();
 
     public int BaseHP => _baseHP;
     public int CurrentHP => _currentHP;
@@ -30,13 +32,31 @@ public class CharacterStats
 
     [SerializeField] float _motionSpeed = 3f;
 
-    public void IncreaseDamageModifier(float percentage) => DamageModifier += percentage;
-    public void DecreaseDamageModifier(float percentage) => DamageModifier -= percentage;
-    public int ApplyDamageModifier(int damage) => DamageModifier == 0 ? damage : Mathf.CeilToInt(damage * (1 + DamageModifier));
+    public void ModifyDamageModifier(float percentage) => DamageModifier += percentage;
+    public int ApplyDamageModifier(int damage) => (int)Math.Ceiling(damage * DamageModifier);
+    
+    public void ModifyDefenseModifier(float percentage) => DefenseModifier += percentage;
+    public int ApplyDefenseModifier(int damage)
+    {
+        // Modifier > 1 ==> reduce damage received
+        // Modifier < 1 ==> increase damage received
+        var modification = 0f;
 
-    public void IncreaseDefenseModifier(float percentage) => DefenseModifier += percentage;
-    public void DecreaseDefenseModifier(float percentage) => DefenseModifier -= percentage;
-    public int ApplyDefenseModifier(int damage) => DefenseModifier == 0 ? damage : Mathf.CeilToInt(damage * (1 - DefenseModifier));
+        if (DefenseModifier > 1f)
+            modification = (1f - DefenseModifier) * damage;
+        else if (DefenseModifier < 1f)
+            modification = -(DefenseModifier - 1f) * damage;
+        else
+            modification = 0f;
+
+        return (int)Math.Ceiling(damage + modification);
+    }
+    
+    public void ModifyNormalSegmentValueModifier(float percentage) => NormalSegmentModifier.Value += percentage;
+    public void ModifyNormalSegmentWidthModifier(float percentage) => NormalSegmentModifier.Width += percentage;
+
+    public void ModifyCriticalSegmentValueModifier(float percentage) => CriticalSegmentModifier.Value += percentage;
+    public void ModifyCriticalSegmentWidthModifier(float percentage) => CriticalSegmentModifier.Width += percentage;
 
     public void SetCurrentHP(int amount) => _currentHP = amount;
     public void IncreaseCurrentHP(int amount) => _currentHP = Math.Min(_baseHP, CurrentHP + amount);

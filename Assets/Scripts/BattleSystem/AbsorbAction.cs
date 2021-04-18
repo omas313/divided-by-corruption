@@ -14,19 +14,16 @@ public class AbsorbAction : BattleAction, IActionBarAction
 
     public ActionBarResult ActionBarResult { get; set; }
     public AbsorbDefinition AbsorbDefinition { get; set; }
-    public List<SegmentData> SegmentData => _segmentData;
-
-    List<SegmentData> _segmentData;
+    public ActionBarData ActionBarData {get; set; }
 
     public AbsorbAction(BattleParticipant performer, AbsorbDefinition absorbDefinition)
     {
         BattleActionType = BattleActionType.Absorb;
         Performer = performer;
         AbsorbDefinition = absorbDefinition;
-
-        _segmentData = new List<SegmentData>() 
-        { 
-            new SegmentData(0.8f, 1f)
+        ActionBarData = new ActionBarData
+        {
+            SegmentsData = new List<SegmentData>() { new SegmentData(0.8f, 1f) }
         };
     }
 

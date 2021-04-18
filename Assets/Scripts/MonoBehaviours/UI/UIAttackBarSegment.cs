@@ -12,8 +12,6 @@ public class UIAttackBarSegment : MonoBehaviour
     public Area NormalArea { get; private set; }
     public Area CriticalArea { get; private set; }
     public float AnchoredPosition => _mainRectTransform.anchoredPosition.x;
-    public float NormalMultiplier => _normalMultiplier;
-    public float CriticalMultiplier => _criticalMultiplier;
 
     [SerializeField] float _normalMultiplier = 1f;
     [SerializeField] float _criticalMultiplier = 1.25f;
@@ -23,11 +21,17 @@ public class UIAttackBarSegment : MonoBehaviour
     [SerializeField] bool _criticalAreaFirst;
 
     RectTransform _mainRectTransform;
+    SegmentModifier _normalSegmentModifier;
+    SegmentModifier _criticalSegmentModifier;
     float _mainHeight;
 
-    public void Init(SegmentData data, float mainXPosition)
+    public void Init(SegmentData data, SegmentModifier normalSegmentModifier, SegmentModifier criticalSegmentModifier, float mainXPosition)
     {
-        var mainWidth = data.NormalSubSegmentWidth + data.CriticalSubSegmentWidth;
+        _normalSegmentModifier = normalSegmentModifier;
+        _criticalSegmentModifier = criticalSegmentModifier;
+        var normalWidth = data.NormalSubSegmentWidth * normalSegmentModifier.Width;
+        var criticalWidth = data.CriticalSubSegmentWidth * criticalSegmentModifier.Width;
+        var mainWidth = normalWidth + criticalWidth;
 
         _mainRectTransform.anchoredPosition = new Vector2(mainXPosition, 0f);
         _mainRectTransform.sizeDelta = new Vector2(mainWidth, _mainHeight);
@@ -35,32 +39,27 @@ public class UIAttackBarSegment : MonoBehaviour
         if (HasNormalArea && data.HasNormalArea)
         {
             var normalXPosition = 0f; // for now, assuming normal is first
-            var normalXWidth = data.NormalSubSegmentWidth;
 
             _normalAreaRect.anchoredPosition = new Vector2(normalXPosition, 0f);
-            _normalAreaRect.sizeDelta = new Vector2(normalXWidth, _mainHeight);
+            _normalAreaRect.sizeDelta = new Vector2(normalWidth, _mainHeight);
 
             NormalArea = new Area(
                 mainXPosition + normalXPosition, 
-                mainXPosition + normalXPosition + normalXWidth);
+                mainXPosition + normalXPosition + normalWidth);
         }
 
         if (HasCriticalArea && data.HasCriticalArea)
         {
             // for now, assuming normal is first
             var normalXPosition = HasNormalArea ? _normalAreaRect.anchoredPosition.x : 0f; 
-            var normalWidth = HasNormalArea ? _normalAreaRect.sizeDelta.x : 0f;
-
-            var criticalXPosition = normalXPosition + normalWidth; 
-            var criticalXWidth = data.CriticalSubSegmentWidth;
+            var criticalXPosition = normalXPosition + (HasNormalArea ? normalWidth : 0f);
 
             _criticalAreaRect.anchoredPosition = new Vector2(criticalXPosition, 0f);
-            _criticalAreaRect.sizeDelta = new Vector2(criticalXWidth, _mainHeight);
+            _criticalAreaRect.sizeDelta = new Vector2(criticalWidth, _mainHeight);
 
-            _criticalAreaRect.sizeDelta = new Vector2(data.CriticalSubSegmentWidth, _mainHeight);
             CriticalArea = new Area(
                 mainXPosition + criticalXPosition,
-                mainXPosition + criticalXPosition + criticalXWidth);
+                mainXPosition + criticalXPosition + criticalWidth);
         }
         
         Area = new Area(mainXPosition, mainXPosition + mainWidth);
@@ -80,9 +79,9 @@ public class UIAttackBarSegment : MonoBehaviour
     public float GetMultiplier(float position)
     {
         if (HasNormalArea && NormalArea.IsInside(position))
-            return NormalMultiplier;
+            return _normalMultiplier * _normalSegmentModifier.Value;
         else if (HasCriticalArea && CriticalArea.IsInside(position))
-            return CriticalMultiplier;
+            return _criticalMultiplier * _criticalSegmentModifier.Value;
         else 
             return 0f;
     }

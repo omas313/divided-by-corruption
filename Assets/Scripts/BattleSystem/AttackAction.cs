@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
 public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 {
@@ -16,15 +17,29 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
     public AttackDefinition AttackDefinition { get; set; }
     public bool HasAttacks => _battleAttacks.Count > 0;
     public ActionBarResult ActionBarResult { get; set; }
-    public List<SegmentData> SegmentData => AttackDefinition.SegmentData;
-
+    public ActionBarData ActionBarData {get; set; }
+    
     Queue<BattleAttack> _battleAttacks;
 
     public AttackAction(BattleParticipant performer, BattleActionType battleActionType, AttackDefinition attackDefinition = null)
     {
         BattleActionType = battleActionType;
         Performer = performer;
+        ActionBarData = new ActionBarData()
+        {
+            NormalSegmentModifier = performer.CharacterStats.NormalSegmentModifier,
+            CriticalSegmentModifier = performer.CharacterStats.CriticalSegmentModifier,
+        };
+
+        if (attackDefinition != null)  
+            SetAttackDefinition(attackDefinition);
+        
+    }
+
+    public void SetAttackDefinition(AttackDefinition attackDefinition)
+    {
         AttackDefinition = attackDefinition;
+        ActionBarData.SegmentsData = AttackDefinition.SegmentData;
     }
 
     protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)

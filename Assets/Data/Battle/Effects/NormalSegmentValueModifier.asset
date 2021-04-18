@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ab34ed9f4974244794b53106d260fa3, type: 3}
-  m_Name: DefenseIncreaseModifier
+  m_Script: {fileID: 11500000, guid: 91a4c65a81f5ad44c8d84eb3cd24f9de, type: 3}
+  m_Name: NormalSegmentValueModifier
   m_EditorClassIdentifier: 
-  _name: Defense Increase
-  _description: Defense modified by
-  _shortDescription: DEF
+  _name: Normals Damage Modifier
+  _description: Normal damage modified by
+  _shortDescription: NORM
   _iconSprite: {fileID: 0}

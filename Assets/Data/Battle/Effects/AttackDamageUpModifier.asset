@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: AttackDamageUpModifier
   m_EditorClassIdentifier: 
   _name: Damage increase
-  _description: Damage increased by
+  _description: Damage modified by
   _shortDescription: DMG
   _iconSprite: {fileID: 0}

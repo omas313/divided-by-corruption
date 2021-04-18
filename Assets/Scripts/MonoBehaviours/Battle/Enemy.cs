@@ -146,7 +146,7 @@ public class Enemy : BattleParticipant
     {
         BattleEvents.InvokeArmourBreak(this);
 
-        _stats.DecreaseDamageModifier(_stats.ArmourDefenseModifier);
+        _stats.RemoveArmourModifier();
 
         _armourParticles.Play();
         _armouredSpriteRenderer.enabled = false;
@@ -161,9 +161,7 @@ public class Enemy : BattleParticipant
         base.Awake();
         spriteRenderer = _armouredSpriteRenderer;
 
-        if (_stats.ArmourDefenseModifier != 0f)
-            _stats.IncreaseDefenseModifier(_stats.ArmourDefenseModifier);
-
+        _stats.Init();
         // Initialize(_definition);
     }
 

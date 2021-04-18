@@ -39,26 +39,27 @@ public class UIAttackBar : MonoBehaviour
 
     void Show() => _canvasGroup.alpha = 1f;
 
-    void StartWithSegments(List<SegmentData> segmentsData, float pinSpeed)
+    void StartWithSegments(ActionBarData actionBarData, float pinSpeed)
     {
-        if (segmentsData.Count > MAX_SEGMENT_COUNT)
-            Debug.Log($"Error: received {segmentsData.Count} segment count, where max is {MAX_SEGMENT_COUNT}");
+        if (actionBarData.SegmentsData.Count > MAX_SEGMENT_COUNT)
+            Debug.Log($"Error: received {actionBarData.SegmentsData.Count} segment count, where max is {MAX_SEGMENT_COUNT}");
 
-        CreateSegments(segmentsData);
+        CreateSegments(actionBarData);
         Show();
         StartCoroutine(StartOperation(pinSpeed));
     }
 
-    void CreateSegments(List<SegmentData> segmentsData)
+    void CreateSegments(ActionBarData actionBarData)
     {
         _uiSegments = new List<UIAttackBarSegment>();
+        var segmentsData = actionBarData.SegmentsData;
 
         for (int i = 0; i < segmentsData.Count; i++)
         {
             var data = segmentsData[i];
             var xPosition = (_firstSegmentPosition + _segmentSpacing * i) % _totalWidth;
             var segment = Instantiate(data.UIAttackBarSegmentPrefab, Vector3.zero, Quaternion.identity, _segmentsParent);
-            segment.Init(data, xPosition);
+            segment.Init(data, actionBarData.NormalSegmentModifier, actionBarData.CriticalSegmentModifier, xPosition);
             _uiSegments.Add(segment);
         }
 
@@ -201,7 +202,7 @@ public class UIAttackBar : MonoBehaviour
     void OnRequestedActionBar()
     {
         Show();
-        StartWithSegments(CurrentBattleAction.SegmentData, _pinSpeed);
+        StartWithSegments(CurrentBattleAction.ActionBarData, _pinSpeed);
     }
 
     void Update()

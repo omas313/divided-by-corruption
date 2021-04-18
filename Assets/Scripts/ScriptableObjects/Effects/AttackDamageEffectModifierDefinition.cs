@@ -5,13 +5,17 @@ public class AttackDamageEffectModifierDefinition : EffectModifierDefinition
 {    
     public override void Apply(BattleParticipant target, float value)
     {
-        target.CharacterStats.IncreaseDamageModifier(value);
+        target.CharacterStats.ModifyDamageModifier(value);
     }
 
     public override void Undo(BattleParticipant target, float value)
     {
-        target.CharacterStats.DecreaseDamageModifier(value);
+        target.CharacterStats.ModifyDamageModifier(-value);
     }
 
-    public override string Stringify(float value) => $"{value * 100}%";
+    public override string Stringify(float value)
+    {
+        var positiveSign = value > 0 ? "+" : "";
+        return $"{positiveSign}{value * 100}%";
+    }
 }

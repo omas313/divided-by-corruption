@@ -131,7 +131,7 @@ public class UISpecialAttackMenu : MonoBehaviour
             return;
 
         var attackDefinition = _items[_currentIndex].AttackDefinition;
-        CurrentBattleAction.AttackDefinition = attackDefinition;
+        CurrentBattleAction.SetAttackDefinition(attackDefinition);
 
         var isSingleTargetType = attackDefinition.ActionTargetterType == ActionTargetterType.Single;
         var isAOETargetType = attackDefinition.ActionTargetterType == ActionTargetterType.All;

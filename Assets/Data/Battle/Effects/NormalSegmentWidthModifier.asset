@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ab34ed9f4974244794b53106d260fa3, type: 3}
-  m_Name: DefenseIncreaseModifier
+  m_Script: {fileID: 11500000, guid: 70f4c70d31879fc429beeeb24d631f29, type: 3}
+  m_Name: NormalSegmentWidthModifier
   m_EditorClassIdentifier: 
-  _name: Defense Increase
-  _description: Defense modified by
-  _shortDescription: DEF
+  _name: Normal Segment Width Modifier
+  _description: Normal Segments width modified by
+  _shortDescription: NORM-W
   _iconSprite: {fileID: 0}
