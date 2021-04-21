@@ -134,6 +134,16 @@ public class Enemy : BattleParticipant
     {
         if (!attack.IsSplashAttack)
             BattleEvents.InvokeBattleAttackReceived(this, attack);
+
+        if (attack.IsHit && attack.Damage == 0)
+        {
+            if (HasArmour)
+                BattleEvents.InvokeArmourDamageReceived(this, 0, false);
+            else
+                BattleEvents.InvokeHealthDamageReceived(this, 0, false);
+
+            return;
+        }
         
         if (armourDamageTaken > 0)
             BattleEvents.InvokeArmourDamageReceived(this, armourDamageTaken, attack.IsCritical && healthDamageTaken == 0);

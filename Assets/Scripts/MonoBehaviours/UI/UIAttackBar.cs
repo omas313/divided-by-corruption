@@ -151,13 +151,13 @@ public class UIAttackBar : MonoBehaviour
 
             if (uiSegment.IsInsideNormalArea(pinPositionX))
             {
-                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].NormalMultiplier));
+                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], uiSegment.GetMultiplier(pinPositionX)));
                 CreateText("hit", Color.white);
                 return;
             }
             else if (uiSegment.IsInsideCriticalArea(pinPositionX))
             {
-                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], _uiSegmentsDataMap[uiSegment].CriticalMultiplier, isCritical: true));
+                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], uiSegment.GetMultiplier(pinPositionX), isCritical: true));
                 CreateText("critical!", Color.red, scale: 1.1f);
                 return;
             }

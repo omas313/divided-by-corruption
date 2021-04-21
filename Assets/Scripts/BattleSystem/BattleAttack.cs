@@ -26,4 +26,16 @@ public class BattleAttack
             AttackDefinition = AttackDefinition,
             IsSplashAttack = true
         };
+
+    public BattleAttack CreateSplashAttackFor(BattleParticipant target) => new BattleAttack()
+        {
+            Attacker = Attacker,
+            Targets = new List<BattleParticipant>() { target },
+            Name = Name,
+            Damage = (int)Math.Ceiling(Damage * AttackDefinition.SplashDamageModifier),
+            IsHit = IsHit,
+            IsCritical = IsCritical,
+            AttackDefinition = AttackDefinition,
+            IsSplashAttack = true
+        };
 }

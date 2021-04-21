@@ -45,7 +45,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
     protected override IEnumerator Perform(List<PartyMember> party, List<Enemy> enemies)
     {
         InitBattleAttacks();
-        
+
         Performer.ConsumeMP(AttackDefinition.MPCost);
 
         BattleEvents.InvokeBattleParticipantsTargetted(Targets);
@@ -71,16 +71,16 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
                 else
                     AttackDefinition.SpawnOnHitEffect(target.BodyMidPointPosition);
 
-                Performer.StartCoroutine(target.ReceiveAttack(attack));    
+                Performer.StartCoroutine(target.ReceiveAttack(attack));
             }
 
             yield return new WaitForSeconds(0.25f);
 
+            HandleSplashDamage(enemies, attack);
+
             if (AreTargetsDead())
                 break;
         }
-
-        yield return new WaitForSeconds(0.5f);
     }
 
     void InitBattleAttacks()
@@ -105,6 +105,19 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
             IsCritical = segmentResult.IsCritical,
             AttackDefinition = AttackDefinition
         };
+
+    void HandleSplashDamage(List<Enemy> enemies, BattleAttack attack)
+    {
+        if (Targets.Count == enemies.Count || !Performer.CharacterStats.HasSplashDamage)
+            return;
+
+        var otherTargets = enemies.Where(e => !Targets.Contains(e)).ToList();
+        foreach (var target in otherTargets)
+        {
+            var splashAttack = attack.CreateSplashAttackFor(target);
+            Performer.StartCoroutine(target.ReceiveAttack(splashAttack));
+        }
+    }
 
     bool AreTargetsDead()
     {

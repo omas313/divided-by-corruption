@@ -8,6 +8,7 @@ public class CharacterStats
     public float DefenseModifier { get; private set; } = 1f;
     public SegmentModifier NormalSegmentModifier { get; private set; } = new SegmentModifier();
     public SegmentModifier CriticalSegmentModifier { get; private set; } = new SegmentModifier();
+    public bool HasSplashDamage { get; private set; } = false;
 
     public int BaseHP => _baseHP;
     public int CurrentHP => _currentHP;
@@ -19,7 +20,6 @@ public class CharacterStats
     public int CurrentSpeed => _currentSpeed;
 
     public float MotionSpeed => _motionSpeed;
-
 
     [SerializeField] int _currentHP = 10;
     [SerializeField] int _baseHP = 10;
@@ -57,6 +57,9 @@ public class CharacterStats
 
     public void ModifyCriticalSegmentValueModifier(float percentage) => CriticalSegmentModifier.Value += percentage;
     public void ModifyCriticalSegmentWidthModifier(float percentage) => CriticalSegmentModifier.Width += percentage;
+
+    public void ActivateSplashDamage() => HasSplashDamage = true;
+    public void DeactivateSplashDamage() => HasSplashDamage = false;
 
     public void SetCurrentHP(int amount) => _currentHP = amount;
     public void IncreaseCurrentHP(int amount) => _currentHP = Math.Min(_baseHP, CurrentHP + amount);
