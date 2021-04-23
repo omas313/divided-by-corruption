@@ -6,6 +6,7 @@ public abstract class BattleParticipant : MonoBehaviour
 {
     public abstract string Name { get; }
     public abstract CharacterStats CharacterStats { get; }
+    public abstract BattleModifiers BattleModifiers { get; } 
     public bool IsDead => CharacterStats.CurrentHP <= 0;
     public Sprite PortraitSprite => portraitSprite;
 

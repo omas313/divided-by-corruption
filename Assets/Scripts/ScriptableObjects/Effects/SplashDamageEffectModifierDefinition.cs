@@ -5,12 +5,12 @@ public class SplashDamageEffectModifierDefinition : EffectModifierDefinition
 {    
     public override void Apply(BattleParticipant target, float value)
     {
-        target.CharacterStats.ActivateSplashDamage();
+        target.BattleModifiers.ActivateSplashDamage();
     }
 
     public override void Undo(BattleParticipant target, float value)
     {
-        target.CharacterStats.DeactivateSplashDamage();
+        target.BattleModifiers.DeactivateSplashDamage();
     }
 
     public override string Stringify(float value) => "";

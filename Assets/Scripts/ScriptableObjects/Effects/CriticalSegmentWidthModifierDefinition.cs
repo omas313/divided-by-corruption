@@ -5,12 +5,12 @@ public class CriticalSegmentWidthModifierDefinition : EffectModifierDefinition
 {    
     public override void Apply(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyCriticalSegmentWidthModifier(value);
+        target.BattleModifiers.ModifyCriticalSegmentWidthModifier(value);
     }
 
     public override void Undo(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyCriticalSegmentWidthModifier(-value);
+        target.BattleModifiers.ModifyCriticalSegmentWidthModifier(-value);
     }
 
     public override string Stringify(float value)

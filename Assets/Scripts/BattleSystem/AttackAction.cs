@@ -27,8 +27,8 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
         Performer = performer;
         ActionBarData = new ActionBarData()
         {
-            NormalSegmentModifier = performer.CharacterStats.NormalSegmentModifier,
-            CriticalSegmentModifier = performer.CharacterStats.CriticalSegmentModifier,
+            NormalSegmentModifier = performer.BattleModifiers.NormalSegmentModifier,
+            CriticalSegmentModifier = performer.BattleModifiers.CriticalSegmentModifier,
         };
 
         if (attackDefinition != null)  
@@ -56,7 +56,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
         while (HasAttacks)
         {
             var attack = GetNextBattleAttack();
-            attack.Damage = Performer.CharacterStats.ApplyDamageModifier(attack.Damage);
+            attack.Damage = Performer.BattleModifiers.ApplyDamageModifier(attack.Damage);
 
             if (AttackDefinition.HasTriggerAnimation)
                 yield return Performer.TriggerAnimation(AttackDefinition.AnimationTriggerName);
@@ -108,7 +108,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 
     void HandleSplashDamage(List<Enemy> enemies, BattleAttack attack)
     {
-        if (Targets.Count == enemies.Count || !Performer.CharacterStats.HasSplashDamage)
+        if (Targets.Count == enemies.Count || !Performer.BattleModifiers.HasSplashDamage)
             return;
 
         var otherTargets = enemies.Where(e => !Targets.Contains(e)).ToList();

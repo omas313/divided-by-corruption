@@ -12,6 +12,7 @@ public class PartyMember : BattleParticipant
     
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
+    public override BattleModifiers BattleModifiers => _battleModifiers;
     public AttackDefinition NormalAttackDefinition => _normalAttackDefinition;
     public DefendDefinition DefendDefinition => _defendDefinition;
     public AbsorbDefinition AbsorbDefinition => _absorbDefinition;
@@ -19,8 +20,10 @@ public class PartyMember : BattleParticipant
     public ComboTrialDefinition ComboTrialDefinition => _comboTrialDefinition;
     public List<AttackDefinition> SpecialAttacksDefinitions => _specialAttackDefinitions;
 
+
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
+    [SerializeField] BattleModifiers _battleModifiers;
     [SerializeField] AttackDefinition _normalAttackDefinition;
     [SerializeField] DefendDefinition _defendDefinition;
     [SerializeField] AbsorbDefinition _absorbDefinition;
@@ -46,7 +49,7 @@ public class PartyMember : BattleParticipant
 
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
-        var damageToTake = CharacterStats.ApplyDefenseModifier(attack.Damage);
+        var damageToTake = BattleModifiers.ApplyDefenseModifier(attack.Damage);
         attack.ActualDamageTaken = damageToTake;
         CharacterStats.ReduceCurrentHP(damageToTake);
         BattleEvents.InvokePartyMemberHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);

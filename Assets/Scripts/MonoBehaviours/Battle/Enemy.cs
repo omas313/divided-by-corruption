@@ -15,10 +15,12 @@ public class Enemy : BattleParticipant
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
     public EnemyStats EnemyStats => _stats;
+    public override BattleModifiers BattleModifiers => _battleModifiers;
     public bool HasArmour => _stats.CurrentArmour > 0;
 
     [SerializeField] string _name;
     [SerializeField] EnemyStats _stats;
+    [SerializeField] BattleModifiers _battleModifiers;
     [SerializeField] float _criticalChance = 0.2f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
     [SerializeField] float _additionalCriticalMultiplier = 1f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
     [SerializeField] float _missChance = 0.2f; // put in enemy stats or attack definitnion
@@ -82,7 +84,7 @@ public class Enemy : BattleParticipant
 
         animator.SetTrigger(HIT_ANIMATION_TRIGGER_KEY);
 
-        var modifiedDamageToTake = _stats.ApplyDefenseModifier(attack.Damage);
+        var modifiedDamageToTake = BattleModifiers.ApplyDefenseModifier(attack.Damage);
         var damageLeftToTake = modifiedDamageToTake;
         attack.ActualDamageTaken = damageLeftToTake;
         
@@ -156,7 +158,7 @@ public class Enemy : BattleParticipant
     {
         BattleEvents.InvokeArmourBreak(this);
 
-        _stats.RemoveArmourModifier();
+        _battleModifiers.ModifyDefenseModifier(-_stats.ArmourDefenseModifier);
 
         _armourParticles.Play();
         _armouredSpriteRenderer.enabled = false;
@@ -166,12 +168,19 @@ public class Enemy : BattleParticipant
         animator.runtimeAnimatorController = _armourlessAnimatorController;
     }
 
+    void Initialize()
+    {
+        if (_stats.ArmourDefenseModifier != 0)
+            _battleModifiers.ModifyDefenseModifier(_stats.ArmourDefenseModifier);
+
+    }
+
     protected override void Awake()
     {
         base.Awake();
         spriteRenderer = _armouredSpriteRenderer;
 
-        _stats.Init();
+        Initialize();
         // Initialize(_definition);
     }
 

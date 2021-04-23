@@ -5,12 +5,12 @@ public class DefenseEffectModifierDefinition : EffectModifierDefinition
 {
     public override void Apply(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyDefenseModifier(value);
+        target.BattleModifiers.ModifyDefenseModifier(value);
     }
 
     public override void Undo(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyDefenseModifier(-value);
+        target.BattleModifiers.ModifyDefenseModifier(-value);
     }
  
     public override string Stringify(float value)

@@ -5,12 +5,12 @@ public class NormalSegmentWidthModifierDefinition : EffectModifierDefinition
 {    
     public override void Apply(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyNormalSegmentWidthModifier(value);
+        target.BattleModifiers.ModifyNormalSegmentWidthModifier(value);
     }
 
     public override void Undo(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyNormalSegmentWidthModifier(-value);
+        target.BattleModifiers.ModifyNormalSegmentWidthModifier(-value);
     }
 
     public override string Stringify(float value)

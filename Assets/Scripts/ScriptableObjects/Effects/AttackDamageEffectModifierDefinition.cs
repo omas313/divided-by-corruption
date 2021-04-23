@@ -5,12 +5,12 @@ public class AttackDamageEffectModifierDefinition : EffectModifierDefinition
 {    
     public override void Apply(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyDamageModifier(value);
+        target.BattleModifiers.ModifyDamageModifier(value);
     }
 
     public override void Undo(BattleParticipant target, float value)
     {
-        target.CharacterStats.ModifyDamageModifier(-value);
+        target.BattleModifiers.ModifyDamageModifier(-value);
     }
 
     public override string Stringify(float value)
