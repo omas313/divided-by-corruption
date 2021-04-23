@@ -34,4 +34,4 @@ MonoBehaviour:
   _environmentalEffectPrefab: {fileID: 0}
   _comboEffectDefinitions:
   - {fileID: 11400000, guid: 562ca91fda3c1074c90fa581f1dca091, type: 2}
-  - {fileID: 11400000, guid: aef8289246c0da64084f693ad0acbcdc, type: 2}
+  - {fileID: 11400000, guid: db33e496dfe11544a8fb4ce968557200, type: 2}

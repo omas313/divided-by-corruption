@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2619b349d486d80429e2757aba8f2a3a, type: 3}
+  m_Name: DoubleArmourDamage-HalfHealthDamage
+  m_EditorClassIdentifier: 
+  _duration: 1
+  _modifiers:
+  - _effectModifierDefinition: {fileID: 11400000, guid: fec1e9acfb8a49f48aa6fd8525229e3d, type: 2}
+    _value: 1
+  - _effectModifierDefinition: {fileID: 11400000, guid: 7f714dd2dde7f8c4eaca14ade5b2e1a7, type: 2}
+    _value: -0.5
