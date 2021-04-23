@@ -50,7 +50,9 @@ public class PartyMember : BattleParticipant
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, true);
 
         var damageToTake = BattleModifiers.ApplyDefenseModifier(attack.Damage);
+        damageToTake = attack.Attacker.BattleModifiers.ApplyHealthDamageModifier(damageToTake);
         attack.ActualDamageTaken = damageToTake;
+        
         CharacterStats.ReduceCurrentHP(damageToTake);
         BattleEvents.InvokePartyMemberHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
         BattleEvents.InvokeHealthDamageReceived(this, damageToTake, attack.IsCritical);

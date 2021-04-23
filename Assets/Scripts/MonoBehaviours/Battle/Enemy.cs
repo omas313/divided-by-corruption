@@ -84,17 +84,18 @@ public class Enemy : BattleParticipant
 
         animator.SetTrigger(HIT_ANIMATION_TRIGGER_KEY);
 
-        var modifiedDamageToTake = BattleModifiers.ApplyDefenseModifier(attack.Damage);
-        var damageLeftToTake = modifiedDamageToTake;
-        attack.ActualDamageTaken = damageLeftToTake;
-        
+        var damageLeftToTake = BattleModifiers.ApplyDefenseModifier(attack.Damage);
         var armourDamageTaken = 0;
 
         if (HasArmour)
-            (armourDamageTaken, damageLeftToTake) = TakePossibleArmourDamage(modifiedDamageToTake);
-
+            (armourDamageTaken, damageLeftToTake) = TakePossibleArmourDamage(damageLeftToTake, attack.Attacker.BattleModifiers);
+        
+        attack.ActualDamageTaken += armourDamageTaken;
+        
         if (damageLeftToTake > 0)
         {
+            damageLeftToTake = attack.Attacker.BattleModifiers.ApplyHealthDamageModifier(damageLeftToTake);
+            attack.ActualDamageTaken += damageLeftToTake;
             CharacterStats.ReduceCurrentHP(damageLeftToTake);
             BattleEvents.InvokeEnemyHealthChanged(this, _stats.CurrentHP, _stats.BaseHP);
         }
@@ -119,17 +120,18 @@ public class Enemy : BattleParticipant
         _armourlessSpriteRenderer.sortingOrder = order;
     }
 
-    (int, int) TakePossibleArmourDamage(int damage)
+    (int, int) TakePossibleArmourDamage(int damage, BattleModifiers battleModifiers)
     {
         var initialArmour = _stats.CurrentArmour;
-        _stats.ReduceCurrentArmour(damage);
+        var armourDamage = battleModifiers.ApplyArmourDamageModifier(damage);
+        _stats.ReduceCurrentArmour(armourDamage);
 
         BattleEvents.InvokeEnemyArmourChanged(this, _stats.CurrentArmour, _stats.BaseArmour);
         
         if (!HasArmour)
             RemoveArmour();
 
-        return (HasArmour ? damage : initialArmour, HasArmour ? 0 : damage - initialArmour);
+        return (HasArmour ? armourDamage : initialArmour, HasArmour ? 0 : damage - initialArmour);
     }
 
     void InvokeReceivedAttackEvents(BattleAttack attack, int armourDamageTaken, int healthDamageTaken)
@@ -158,7 +160,7 @@ public class Enemy : BattleParticipant
     {
         BattleEvents.InvokeArmourBreak(this);
 
-        _battleModifiers.ModifyDefenseModifier(-_stats.ArmourDefenseModifier);
+        _battleModifiers.ModifyDefenseModifier(-_stats.ArmourDefenseModifierPercentage);
 
         _armourParticles.Play();
         _armouredSpriteRenderer.enabled = false;
@@ -170,9 +172,7 @@ public class Enemy : BattleParticipant
 
     void Initialize()
     {
-        if (_stats.ArmourDefenseModifier != 0)
-            _battleModifiers.ModifyDefenseModifier(_stats.ArmourDefenseModifier);
-
+        _battleModifiers.ModifyDefenseModifier(_stats.ArmourDefenseModifierPercentage);
     }
 
     protected override void Awake()

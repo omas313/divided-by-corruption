@@ -56,7 +56,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
         while (HasAttacks)
         {
             var attack = GetNextBattleAttack();
-            attack.Damage = Performer.BattleModifiers.ApplyDamageModifier(attack.Damage);
+            attack.Damage = Performer.BattleModifiers.ApplyOverallDamageModifier(attack.Damage);
 
             if (AttackDefinition.HasTriggerAnimation)
                 yield return Performer.TriggerAnimation(AttackDefinition.AnimationTriggerName);

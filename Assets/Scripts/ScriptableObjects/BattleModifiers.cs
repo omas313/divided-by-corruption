@@ -3,14 +3,22 @@ using System;
 [System.Serializable]
 public class BattleModifiers
 {
-    public float DamageModifier { get; private set; } = 1f;
+    public float OverallDamageModifier { get; private set; } = 1f;
+    public float HealthDamageModifier { get; private set; } = 1f;
+    public float ArmourDamageModifier { get; private set; } = 1f;
     public float DefenseModifier { get; private set; } = 1f;
     public SegmentModifier NormalSegmentModifier { get; private set; } = new SegmentModifier();
     public SegmentModifier CriticalSegmentModifier { get; private set; } = new SegmentModifier();
     public bool HasSplashDamage { get; private set; } = false;
 
-    public void ModifyDamageModifier(float percentage) => DamageModifier += percentage;
-    public int ApplyDamageModifier(int damage) => (int)Math.Ceiling(damage * DamageModifier);
+    public void ModifyOverallDamageModifier(float percentage) => OverallDamageModifier += percentage;
+    public int ApplyOverallDamageModifier(int damage) => (int)Math.Ceiling(damage * OverallDamageModifier);
+
+    public void ModifyHealthDamageModifier(float percentage) => HealthDamageModifier += percentage;
+    public int ApplyHealthDamageModifier(int damage) => (int)Math.Ceiling(damage * HealthDamageModifier);
+
+    public void ModifyArmourDamageModifier(float percentage) => ArmourDamageModifier += percentage;
+    public int ApplyArmourDamageModifier(int damage) => (int)Math.Ceiling(damage * ArmourDamageModifier);
     
     public void ModifyDefenseModifier(float percentage) => DefenseModifier += percentage;
     public int ApplyDefenseModifier(int damage)
