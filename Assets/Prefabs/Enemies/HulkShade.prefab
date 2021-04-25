@@ -30,7 +30,7 @@ PrefabInstance:
       objectReference: {fileID: -1643258707582339430, guid: 9e6268ac9ea2ed3418a9a4ff58f00828, type: 3}
     - target: {fileID: 1411981539020209031, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1411981539020209031, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: m_LocalPosition.x
@@ -76,6 +76,10 @@ PrefabInstance:
       propertyPath: _stats._baseHP
       value: 20
       objectReference: {fileID: 0}
+    - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f146b6b0e2653f44d9a81524cb47fe93, type: 3}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _portraitSprite
       value: 
@@ -202,7 +206,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7787476356412695076, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: m_RootOrder
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7787476356412695076, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: m_AnchoredPosition.y

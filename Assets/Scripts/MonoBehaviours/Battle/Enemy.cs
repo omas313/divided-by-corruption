@@ -21,9 +21,6 @@ public class Enemy : BattleParticipant
     [SerializeField] string _name;
     [SerializeField] EnemyStats _stats;
     [SerializeField] BattleModifiers _battleModifiers;
-    [SerializeField] float _criticalChance = 0.2f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
-    [SerializeField] float _additionalCriticalMultiplier = 1f; // put in enemy stats or possibly let enemy also have randomized Attack bar results
-    [SerializeField] float _missChance = 0.2f; // put in enemy stats or attack definitnion
     [SerializeField] ParticleSystem _armourParticles;
     [SerializeField] SpriteRenderer _armouredSpriteRenderer;
     [SerializeField] SpriteRenderer _armourlessSpriteRenderer;
@@ -63,9 +60,17 @@ public class Enemy : BattleParticipant
         var segmentResults = new List<SegmentResult>();
         foreach (var segment in attackAction.AttackDefinition.SegmentData)
         {
-            var isMiss = UnityEngine.Random.value < _missChance;
-            var isCritical = isMiss ? false : UnityEngine.Random.value < _criticalChance;
-            var multiplier = isMiss ? 0f : (isCritical ? segment.CriticalMultiplier : segment.NormalMultiplier);
+            var isMiss = UnityEngine.Random.value < _stats.MissChance;
+            var isCritical = isMiss ? false : UnityEngine.Random.value < _stats.CriticalChance;
+            
+            float multiplier;
+            if (isMiss)
+                multiplier = 0f;
+            else if (isCritical)
+                multiplier = segment.CriticalMultiplier + _stats.AdditionalCriticalMultiplier;
+            else 
+                multiplier = segment.NormalMultiplier;
+
             var result = new SegmentResult(segment, multiplier, isCritical, isMiss);
             segmentResults.Add(result);
         }
