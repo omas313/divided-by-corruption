@@ -4496,10 +4496,6 @@ PrefabInstance:
       value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 5015783631149270604, guid: dab76179ce813904da85b89dd5df889a, type: 3}
-      propertyPath: portraitSprite
-      value: 
-      objectReference: {fileID: 21300000, guid: f146b6b0e2653f44d9a81524cb47fe93, type: 3}
-    - target: {fileID: 5015783631149270604, guid: dab76179ce813904da85b89dd5df889a, type: 3}
       propertyPath: _stats._currentHP
       value: 20
       objectReference: {fileID: 0}
@@ -4511,6 +4507,10 @@ PrefabInstance:
       propertyPath: _stats._currentArmour
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5015783631149270604, guid: dab76179ce813904da85b89dd5df889a, type: 3}
+      propertyPath: _manuallySetDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: 57e6f276105d22545b9ff95afda4cc0a, type: 2}
     - target: {fileID: 5015783631149270605, guid: dab76179ce813904da85b89dd5df889a, type: 3}
       propertyPath: m_RootOrder
       value: 3

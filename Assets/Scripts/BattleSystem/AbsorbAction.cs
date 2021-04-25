@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class AbsorbAction : BattleAction, IActionBarAction
@@ -23,7 +25,9 @@ public class AbsorbAction : BattleAction, IActionBarAction
         AbsorbDefinition = absorbDefinition;
         ActionBarData = new ActionBarData
         {
-            SegmentsData = new List<SegmentData>() { new SegmentData(0.8f, 1f) }
+            SegmentsData = absorbDefinition.SegmentsData,
+            NormalSegmentModifier = new SegmentModifier(),
+            CriticalSegmentModifier = new SegmentModifier()
         };
     }
 
@@ -31,15 +35,19 @@ public class AbsorbAction : BattleAction, IActionBarAction
     {
         if (ActionBarResult.SegmentsResults[0].IsMiss)
         {
-            Debug.Log("absorb failed");
             yield return new WaitForSeconds(0.5f);
             yield break;
         }
 
         BattleEvents.InvokeBattleParticipantsTargetted(Targets);
-
         yield return AbsorbDefinition.SpawnEffect(Targets[0].BodyMidPointPosition, Performer.BodyMidPointPosition);
+        AbsorbMP();
+        TryToLearnComboEffectModifier();
+        yield return new WaitForSeconds(0.25f);
+    }
 
+    private void AbsorbMP()
+    {
         var amountToAbsorb = Mathf.CeilToInt(ActionBarResult.SegmentsResults[0].Multiplier * AbsorbDefinition.AbsorbtionPercentage);
         var amountAbsorbed = 0;
         foreach (var target in Targets)
@@ -47,6 +55,21 @@ public class AbsorbAction : BattleAction, IActionBarAction
 
         Performer.AddMP(amountAbsorbed);
         BattleEvents.InvokeMPAbsorbed(Performer, Targets[0], amountAbsorbed);
-        yield return new WaitForSeconds(0.25f);
+    }
+
+    void TryToLearnComboEffectModifier()
+    {
+        var randomEnemy = Targets[UnityEngine.Random.Range(0, Targets.Count)] as Enemy;
+        var partyMember = Performer as PartyMember;
+        var teachableEffectModifiers = randomEnemy.Definition.EffectDefinitions
+            .Where(em => partyMember.CanLearnEffectModifier(em))
+            .ToList();
+        
+        if (teachableEffectModifiers.Count <= 0)
+            return;
+
+        var randomEffectModifier = teachableEffectModifiers[UnityEngine.Random.Range(0, teachableEffectModifiers.Count)];
+        partyMember.LearnEffectModifier(randomEffectModifier);
+        BattleEvents.InvokeEffectLearnt(partyMember, randomEffectModifier);
     }
 }

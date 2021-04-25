@@ -15,6 +15,7 @@ public class Enemy : BattleParticipant
     public override string Name => _name;
     public override CharacterStats CharacterStats => _stats;
     public EnemyStats EnemyStats => _stats;
+    public EnemyDefinition Definition => _definition;
     public override BattleModifiers BattleModifiers => _battleModifiers;
     public bool HasArmour => _stats.CurrentArmour > 0;
 
@@ -27,9 +28,10 @@ public class Enemy : BattleParticipant
     [SerializeField] RuntimeAnimatorController _armourlessAnimatorController;
 
     [SerializeField] AttackDefinition[] _attackDefinitions;
+    [SerializeField] EnemyDefinition _manuallySetDefinition;
 
 
-    // [SerializeField] EnemyDefinition _definition;
+    EnemyDefinition _definition;
 
     // public void Initialize(EnemyDefinition definition)
     // {
@@ -177,6 +179,9 @@ public class Enemy : BattleParticipant
 
     void Initialize()
     {
+        if (_manuallySetDefinition != null)
+            _definition = _manuallySetDefinition;
+            
         _battleModifiers.ModifyDefenseModifier(_stats.ArmourDefenseModifierPercentage);
     }
 

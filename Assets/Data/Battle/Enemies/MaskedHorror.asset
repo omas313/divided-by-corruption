@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd74a1b30470c44b93c079fe25a8035, type: 3}
+  m_Name: MaskedHorror
+  m_EditorClassIdentifier: 
+  _name: Masked Horror
+  _gameObjectprefab: {fileID: 2843647581125247503, guid: 1f51eb049403e8a46befeed9898c417e, type: 3}
+  _stats:
+    _currentHP: 6
+    _baseHP: 6
+    _currentMP: 10
+    _baseMP: 10
+    _currentSpeed: 7
+    _baseSpeed: 7
+    _motionSpeed: 3
+    _currentArmour: 3
+    _baseArmour: 3
+    _armourDefenseModifierPercentage: 0.5
+    _criticalChance: 0.2
+    _additionalCriticalMultiplier: 0.2
+    _missChance: 0.2
+  _attacks:
+  - {fileID: 11400000, guid: 4a4e17b8dd50dbd43b95a400833bc1d2, type: 2}
+  _effectDefinitions:
+  - {fileID: 11400000, guid: b9085bb25ee61d04a9f427d28a64f46e, type: 2}

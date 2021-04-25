@@ -95,6 +95,12 @@ public class UITextDisplayer : MonoBehaviour
         text.Play(effectsString, battleParticipant.BodyMidPointPosition, _comboTextColor);
     }
 
+    void OnEffectModifierLearnt(PartyMember partyMember, EffectDefinition effectDefinition)
+    {
+        var text = GetInactiveText();
+        text.Play($"Learned {effectDefinition.Name}!", partyMember.BodyMidPointPosition, _comboTextColor);
+    }
+
     void OnDestroy()
     {
         BattleEvents.HealthDamageReceived -= OnHealthDamageReceived;
@@ -105,6 +111,7 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.ComboBroken -= OnComboBroken;
         BattleEvents.ComboFinished -= OnComboFinished;
         BattleEvents.ComboEffectsGained -= OnComboEffectsGained;
+        BattleEvents.EffectLearnt -= OnEffectModifierLearnt;
     }
 
     void Awake()
@@ -121,5 +128,6 @@ public class UITextDisplayer : MonoBehaviour
         BattleEvents.ComboBroken += OnComboBroken;
         BattleEvents.ComboFinished += OnComboFinished;
         BattleEvents.ComboEffectsGained += OnComboEffectsGained;
+        BattleEvents.EffectLearnt += OnEffectModifierLearnt;
     }
 }

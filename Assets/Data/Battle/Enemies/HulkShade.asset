@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6fd74a1b30470c44b93c079fe25a8035, type: 3}
+  m_Name: HulkShade
+  m_EditorClassIdentifier: 
+  _name: Hulk Shade
+  _gameObjectprefab: {fileID: 5015783631149270594, guid: dab76179ce813904da85b89dd5df889a, type: 3}
+  _stats:
+    _currentHP: 20
+    _baseHP: 20
+    _currentMP: 10
+    _baseMP: 10
+    _currentSpeed: 1
+    _baseSpeed: 1
+    _motionSpeed: 0.5
+    _currentArmour: 6
+    _baseArmour: 6
+    _armourDefenseModifierPercentage: 0.5
+    _criticalChance: 0.2
+    _additionalCriticalMultiplier: 0
+    _missChance: 0.2
+  _attacks:
+  - {fileID: 11400000, guid: 4a4e17b8dd50dbd43b95a400833bc1d2, type: 2}
+  _effectDefinitions:
+  - {fileID: 11400000, guid: b9085bb25ee61d04a9f427d28a64f46e, type: 2}

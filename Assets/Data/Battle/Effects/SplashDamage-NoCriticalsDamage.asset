@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2619b349d486d80429e2757aba8f2a3a, type: 3}
   m_Name: SplashDamage-NoCriticalsDamage
   m_EditorClassIdentifier: 
+  _name: Divergent
   _duration: 1
   _modifiers:
   - _effectModifierDefinition: {fileID: 11400000, guid: 5068ac071163d144da122bb5f7816656, type: 2}

@@ -56,6 +56,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+      propertyPath: portraitSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 72379f06a6732874ab68a531795c3f39, type: 3}
+    - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _criticalChance
       value: 0.5
       objectReference: {fileID: 0}
@@ -67,6 +71,10 @@ PrefabInstance:
       propertyPath: _stats._currentHP
       value: 6
       objectReference: {fileID: 0}
+    - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+      propertyPath: _manuallySetDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: 97aca03f72b7e284fa5fd98220e87624, type: 2}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _additionalCriticalMultiplier
       value: 1.2

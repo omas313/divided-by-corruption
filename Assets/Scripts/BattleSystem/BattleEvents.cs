@@ -23,6 +23,7 @@ public class BattleEvents
     public static event Action<BattleActionPacket> ComboTrialRequested;
     public static event Action<Combo> ComboFinished;
     public static event Action<BattleParticipant, string> ComboEffectsGained;
+    public static event Action<PartyMember, EffectDefinition> EffectLearnt;
 
 
 
@@ -65,6 +66,8 @@ public class BattleEvents
     public static void InvokeComboTrialRequested(BattleActionPacket battleActionPacket) => ComboTrialRequested?.Invoke(battleActionPacket);
     public static void InvokeComboFinished(Combo combo) => ComboFinished?.Invoke(combo);
     public static void InvokeComboEffectsGained(BattleParticipant battleParticipant, string effectsString) => ComboEffectsGained?.Invoke(battleParticipant, effectsString);
+    public static void InvokeEffectLearnt(PartyMember partyMember, EffectDefinition effectDefinition) 
+        => EffectLearnt?.Invoke(partyMember, effectDefinition);
 
         
     public static void InvokeBattleAttackReceived(BattleParticipant recipient, BattleAttack battleAttack) => BattleAttackReceived?.Invoke(recipient, battleAttack);

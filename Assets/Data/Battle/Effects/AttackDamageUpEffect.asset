@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2619b349d486d80429e2757aba8f2a3a, type: 3}
   m_Name: AttackDamageUpEffect
   m_EditorClassIdentifier: 
+  _name: Attack Up
   _duration: 1
   _modifiers:
   - _effectModifierDefinition: {fileID: 11400000, guid: 3e99c9429512bd442acc64214a152a98, type: 2}

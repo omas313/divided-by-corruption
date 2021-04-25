@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2619b349d486d80429e2757aba8f2a3a, type: 3}
   m_Name: SmallerNormal-StrongerNormal
   m_EditorClassIdentifier: 
+  _name: Consistency
   _duration: 1
   _modifiers:
   - _effectModifierDefinition: {fileID: 11400000, guid: 0f21447b9dfe02a4baf66fc71179b194, type: 2}

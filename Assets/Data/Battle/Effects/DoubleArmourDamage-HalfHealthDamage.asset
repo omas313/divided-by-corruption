@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2619b349d486d80429e2757aba8f2a3a, type: 3}
   m_Name: DoubleArmourDamage-HalfHealthDamage
   m_EditorClassIdentifier: 
+  _name: Armour Break
   _duration: 1
   _modifiers:
   - _effectModifierDefinition: {fileID: 11400000, guid: fec1e9acfb8a49f48aa6fd8525229e3d, type: 2}

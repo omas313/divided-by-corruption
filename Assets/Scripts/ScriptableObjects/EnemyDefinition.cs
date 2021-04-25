@@ -1,17 +1,17 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "EnemyDefinition.asset", menuName = "Enemy Definition")]
+[CreateAssetMenu(fileName = "EnemyDefinition.asset", menuName = "Battle/Enemy Definition")]
 public class EnemyDefinition : ScriptableObject
 {
+    public string Name => _name;
     public GameObject GameObjectprefab => _gameObjectprefab;
     public EnemyStats Stats => _stats;
-    public Sprite Sprite => _sprite;
-    public string Name => _name;
     public AttackDefinition[] Attacks => _attacks;
+    public EffectDefinition[] EffectDefinitions => _effectDefinitions;
     
-    [SerializeField] GameObject _gameObjectprefab;
-    [SerializeField] EnemyStats _stats;
-    [SerializeField] AttackDefinition[] _attacks;
-    [SerializeField] Sprite _sprite;
     [SerializeField] string _name;
+    [SerializeField] GameObject _gameObjectprefab;
+    [SerializeField] [Tooltip("Starting Stats.")] EnemyStats _stats;
+    [SerializeField] AttackDefinition[] _attacks;
+    [SerializeField] [Tooltip("Effects that can be learnt by player.")] EffectDefinition[] _effectDefinitions;
 }

@@ -113,6 +113,10 @@ PrefabInstance:
       value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
+      propertyPath: _manuallySetDefinition
+      value: 
+      objectReference: {fileID: 11400000, guid: 57e6f276105d22545b9ff95afda4cc0a, type: 2}
+    - target: {fileID: 5696124140707043624, guid: a6a275722b9371143806bd6d302039bc, type: 3}
       propertyPath: _armourlessAnimatorController
       value: 
       objectReference: {fileID: 22100000, guid: 780c0114b3ae4cf44ae26da747c5a88c, type: 2}

@@ -6,9 +6,11 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "EffectDefinition.asset", menuName = "Battle/Effects/Effect Definition")]
 public class EffectDefinition : ScriptableObject
 {
+    public string Name => _name;
     public int Duration => _duration;
     public List<EffectModifier> Modifiers => _modifiers;
 
+    [SerializeField] string _name;
     [SerializeField] [Tooltip("# Turns")] int _duration;
     [SerializeField] List<EffectModifier> _modifiers;
 }

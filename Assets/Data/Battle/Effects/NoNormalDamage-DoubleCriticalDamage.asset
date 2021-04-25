@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2619b349d486d80429e2757aba8f2a3a, type: 3}
   m_Name: NoNormalDamage-DoubleCriticalDamage
   m_EditorClassIdentifier: 
+  _name: Ultimate Precision
   _duration: 1
   _modifiers:
   - _effectModifierDefinition: {fileID: 11400000, guid: fec986224661d604082ad9828f4eacba, type: 2}

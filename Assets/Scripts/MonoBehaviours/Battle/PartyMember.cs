@@ -20,7 +20,6 @@ public class PartyMember : BattleParticipant
     public ComboTrialDefinition ComboTrialDefinition => _comboTrialDefinition;
     public List<AttackDefinition> SpecialAttacksDefinitions => _specialAttackDefinitions;
 
-
     [SerializeField] string _name;
     [SerializeField] CharacterStats _stats;
     [SerializeField] BattleModifiers _battleModifiers;
@@ -30,6 +29,7 @@ public class PartyMember : BattleParticipant
     [SerializeField] ComboRequestDefinition _comboRequestDefinition;
     [SerializeField] ComboTrialDefinition _comboTrialDefinition;
     [SerializeField] List<AttackDefinition> _specialAttackDefinitions;
+    [SerializeField] List<EffectDefinition> _effectDefinitions;
 
     public override IEnumerator Die()
     {
@@ -62,5 +62,15 @@ public class PartyMember : BattleParticipant
         
         yield return new WaitForSeconds(0.25f);
         animator.SetBool(HIT_ANIMATION_BOOL_KEY, false);
+    }
+
+    public bool CanLearnEffectModifier(EffectDefinition effectDefinition)
+    {
+        return !_effectDefinitions.Any(emd => emd == effectDefinition);
+    }
+
+    public void LearnEffectModifier(EffectDefinition effectDefinition)
+    {
+        _effectDefinitions.Add(effectDefinition);
     }
 }
