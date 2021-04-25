@@ -22,3 +22,9 @@ MonoBehaviour:
   secondaryPowerColor: {r: 0.85395235, g: 0.5613208, b: 1, a: 1}
   _absorbtionPercentage: 0.3
   _effectPrefab: {fileID: 3607629409142431406, guid: aa2bb642f6d4acb4aa7c40b1913e9d78, type: 3}
+  _segmentsData:
+  - _normalMultiplier: 1
+    _normalSubSegmentSize: 100
+    _criticalMultiplier: 0
+    _criticalSubSegmentSize: 0
+    _segmentType: {fileID: 11400000, guid: a078cc31fcac0aa4bb1c6e7ba39819c6, type: 2}
