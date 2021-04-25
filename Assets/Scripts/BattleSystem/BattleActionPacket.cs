@@ -26,6 +26,8 @@ public class BattleActionPacket
 
     public bool HasSeveralComboTargets() => HasCombo && Combo.TargetsCount > 1;
 
+    public void ClearCombo() => Combo = null;
+
     public List<Enemy> GetSelectableTargets() => Combo?.Targets;
 
     public void SetTargets(BattleParticipant target) => SetTargets(new List<BattleParticipant>() { target });

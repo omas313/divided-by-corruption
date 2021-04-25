@@ -132,12 +132,15 @@ public abstract class PositionSelectionManager<T> : MonoBehaviour where T : Batt
 
     void GoBack()
     {
-        if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Attack
-            || _currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Absorb
-            || _currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.ComboRequest)
-            BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
-        else if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Special)
+        if (_currentBattleActionPacket.BattleAction.BattleActionType == BattleActionType.Special)
             BattleUIEvents.InvokeSpecialAttackSelectionRequested();
+        else
+        {
+            if (_currentBattleActionPacket.HasCombo)
+                _currentBattleActionPacket.ClearCombo();
+
+            BattleUIEvents.InvokeBattleActionTypeSelectionRequested();
+        }
 
         BattleUIEvents.InvokeTargetSelectionCancelled();
         BattleAudioSource.Instance.PlayUnselectSound();
