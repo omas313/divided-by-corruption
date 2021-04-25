@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2619b349d486d80429e2757aba8f2a3a, type: 3}
-  m_Name: SplashDamage-CriticalsDoZeroDamage
+  m_Name: NoNormalDamage-DoubleCriticalDamage
   m_EditorClassIdentifier: 
   _duration: 1
   _modifiers:
-  - _effectModifierDefinition: {fileID: 11400000, guid: 5068ac071163d144da122bb5f7816656, type: 2}
-    _value: 1
-  - _effectModifierDefinition: {fileID: 11400000, guid: f27ee4011a7d179498db2592f1909562, type: 2}
+  - _effectModifierDefinition: {fileID: 11400000, guid: fec986224661d604082ad9828f4eacba, type: 2}
     _value: -1
+  - _effectModifierDefinition: {fileID: 11400000, guid: f27ee4011a7d179498db2592f1909562, type: 2}
+    _value: 1

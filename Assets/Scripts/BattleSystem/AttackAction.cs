@@ -108,7 +108,7 @@ public class AttackAction : BattleAction, IAttackAction, IActionBarAction
 
     void HandleSplashDamage(List<Enemy> enemies, BattleAttack attack)
     {
-        if (Targets.Count == enemies.Count || !Performer.BattleModifiers.HasSplashDamage)
+        if (Targets.Count == enemies.Count || !Performer.BattleModifiers.HasSplashDamage || attack.Damage == 0)
             return;
 
         var otherTargets = enemies.Where(e => !Targets.Contains(e)).ToList();

@@ -148,25 +148,33 @@ public class UIAttackBar : MonoBehaviour
 
             uiSegment.SetActive(false);
             CreateConfirmPoint();
-
-            if (uiSegment.IsInsideNormalArea(pinPositionX))
-            {
-                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], uiSegment.GetMultiplier(pinPositionX)));
-                CreateText("hit", Color.white);
-                return;
-            }
-            else if (uiSegment.IsInsideCriticalArea(pinPositionX))
-            {
-                _currentSegmentResults.Add(new SegmentResult(_uiSegmentsDataMap[uiSegment], uiSegment.GetMultiplier(pinPositionX), isCritical: true));
-                CreateText("critical!", Color.red, scale: 1.1f);
-                return;
-            }
+            CreateResult(uiSegment, pinPositionX);
+            return;
         }
         
         ConfirmMissed();
     }
 
     void CreateConfirmPoint() => Instantiate(_confirmPointPrefab, _pin.position, Quaternion.identity, _confirmPointsParent);
+
+    bool CreateResult(UIAttackBarSegment uiSegment, float pinPositionX)
+    {
+        var isNormal = uiSegment.IsInsideNormalArea(pinPositionX);
+        var isCritical = uiSegment.IsInsideCriticalArea(pinPositionX);
+        var multiplier = uiSegment.GetMultiplier(pinPositionX);
+        var segmentResult = new SegmentResult(_uiSegmentsDataMap[uiSegment], multiplier, isCritical: isCritical);
+
+        _currentSegmentResults.Add(segmentResult);
+
+        if (multiplier < Mathf.Epsilon)
+            CreateText("0 damage", Color.gray);
+        else if (isCritical)
+            CreateText("critical!", Color.red, scale: 1.1f);
+        else if (isNormal)
+            CreateText("hit", Color.white);
+        
+        return true;
+    }
 
     void CreateText(string text, Color color, float scale = 1f)
     {

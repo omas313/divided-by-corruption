@@ -42,6 +42,8 @@ public class UIAttackBarSegment : MonoBehaviour
 
             _normalAreaRect.anchoredPosition = new Vector2(normalXPosition, 0f);
             _normalAreaRect.sizeDelta = new Vector2(normalWidth, _mainHeight);
+            if (normalSegmentModifier.Value < Mathf.Epsilon)
+                _normalAreaRect.GetComponent<Image>().color = Color.black;
 
             NormalArea = new Area(
                 mainXPosition + normalXPosition, 
@@ -56,6 +58,8 @@ public class UIAttackBarSegment : MonoBehaviour
 
             _criticalAreaRect.anchoredPosition = new Vector2(criticalXPosition, 0f);
             _criticalAreaRect.sizeDelta = new Vector2(criticalWidth, _mainHeight);
+            if (criticalSegmentModifier.Value < Mathf.Epsilon)
+                _criticalAreaRect.GetComponent<Image>().color = Color.black;
 
             CriticalArea = new Area(
                 mainXPosition + criticalXPosition,
